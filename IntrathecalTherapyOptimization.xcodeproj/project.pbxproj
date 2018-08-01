@@ -7,12 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1615FED52111F13600FB990C /* aspectGrapg.png in Resources */ = {isa = PBXBuildFile; fileRef = 1615FED42111F13600FB990C /* aspectGrapg.png */; };
+		1615FED72111FB4F00FB990C /* View_ConstantFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1615FED62111FB4F00FB990C /* View_ConstantFlow.swift */; };
+		1615FED92112046000FB990C /* View_MultipleRates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1615FED82112046000FB990C /* View_MultipleRates.swift */; };
+		1624162E2111148A00A96EEF /* View_PeriodicFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1624162D2111148A00A96EEF /* View_PeriodicFlow.swift */; };
 		16FB4CA4210F612F0039FC37 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FB4CA3210F612F0039FC37 /* AppDelegate.swift */; };
 		16FB4CA6210F612F0039FC37 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FB4CA5210F612F0039FC37 /* ViewController.swift */; };
 		16FB4CA9210F612F0039FC37 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16FB4CA7210F612F0039FC37 /* Main.storyboard */; };
 		16FB4CAB210F612F0039FC37 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 16FB4CAA210F612F0039FC37 /* Assets.xcassets */; };
 		16FB4CAE210F612F0039FC37 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16FB4CAC210F612F0039FC37 /* LaunchScreen.storyboard */; };
 		16FB4CB9210F612F0039FC37 /* IntrathecalTherapyOptimizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FB4CB8210F612F0039FC37 /* IntrathecalTherapyOptimizationTests.swift */; };
+		16FB4CC4210F61690039FC37 /* View_ModeSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FB4CC3210F61690039FC37 /* View_ModeSelect.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -26,6 +31,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1615FED42111F13600FB990C /* aspectGrapg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = aspectGrapg.png; sourceTree = "<group>"; };
+		1615FED62111FB4F00FB990C /* View_ConstantFlow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View_ConstantFlow.swift; sourceTree = "<group>"; };
+		1615FED82112046000FB990C /* View_MultipleRates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View_MultipleRates.swift; sourceTree = "<group>"; };
+		1624162D2111148A00A96EEF /* View_PeriodicFlow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View_PeriodicFlow.swift; sourceTree = "<group>"; };
 		16FB4CA0210F612F0039FC37 /* IntrathecalTherapyOptimization.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IntrathecalTherapyOptimization.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		16FB4CA3210F612F0039FC37 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		16FB4CA5210F612F0039FC37 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -36,6 +45,7 @@
 		16FB4CB4210F612F0039FC37 /* IntrathecalTherapyOptimizationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IntrathecalTherapyOptimizationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		16FB4CB8210F612F0039FC37 /* IntrathecalTherapyOptimizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntrathecalTherapyOptimizationTests.swift; sourceTree = "<group>"; };
 		16FB4CBA210F612F0039FC37 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		16FB4CC3210F61690039FC37 /* View_ModeSelect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View_ModeSelect.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,12 +87,17 @@
 		16FB4CA2210F612F0039FC37 /* IntrathecalTherapyOptimization */ = {
 			isa = PBXGroup;
 			children = (
+				1615FED42111F13600FB990C /* aspectGrapg.png */,
 				16FB4CA3210F612F0039FC37 /* AppDelegate.swift */,
 				16FB4CA5210F612F0039FC37 /* ViewController.swift */,
 				16FB4CA7210F612F0039FC37 /* Main.storyboard */,
 				16FB4CAA210F612F0039FC37 /* Assets.xcassets */,
 				16FB4CAC210F612F0039FC37 /* LaunchScreen.storyboard */,
 				16FB4CAF210F612F0039FC37 /* Info.plist */,
+				16FB4CC3210F61690039FC37 /* View_ModeSelect.swift */,
+				1624162D2111148A00A96EEF /* View_PeriodicFlow.swift */,
+				1615FED62111FB4F00FB990C /* View_ConstantFlow.swift */,
+				1615FED82112046000FB990C /* View_MultipleRates.swift */,
 			);
 			path = IntrathecalTherapyOptimization;
 			sourceTree = "<group>";
@@ -182,6 +197,7 @@
 				16FB4CAE210F612F0039FC37 /* LaunchScreen.storyboard in Resources */,
 				16FB4CAB210F612F0039FC37 /* Assets.xcassets in Resources */,
 				16FB4CA9210F612F0039FC37 /* Main.storyboard in Resources */,
+				1615FED52111F13600FB990C /* aspectGrapg.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -200,7 +216,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				16FB4CA6210F612F0039FC37 /* ViewController.swift in Sources */,
+				16FB4CC4210F61690039FC37 /* View_ModeSelect.swift in Sources */,
+				1615FED72111FB4F00FB990C /* View_ConstantFlow.swift in Sources */,
 				16FB4CA4210F612F0039FC37 /* AppDelegate.swift in Sources */,
+				1615FED92112046000FB990C /* View_MultipleRates.swift in Sources */,
+				1624162E2111148A00A96EEF /* View_PeriodicFlow.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -408,6 +428,7 @@
 				16FB4CBF210F612F0039FC37 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		16FB4CC0210F612F0039FC37 /* Build configuration list for PBXNativeTarget "IntrathecalTherapyOptimizationTests" */ = {
 			isa = XCConfigurationList;
@@ -416,6 +437,7 @@
 				16FB4CC2210F612F0039FC37 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
