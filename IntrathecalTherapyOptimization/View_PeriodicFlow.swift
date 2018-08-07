@@ -20,6 +20,7 @@ class View_PeriodicFlow: UIViewController {
     @IBOutlet weak var pumpRateLabel: UITextField!
     @IBOutlet weak var totalDoseLabel: UITextField!
 
+    @IBOutlet weak var warningImage: UIImageView!
     
     weak var shapeLayer: CAShapeLayer?
     var currentMinute = Float(0)
@@ -32,6 +33,12 @@ class View_PeriodicFlow: UIViewController {
         let calendar = Calendar.current
         currentHour = Float(calendar.component(.hour, from: date))
         currentMinute = Float(calendar.component(.minute, from: date))
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy/MM/dd HH:mm"
+        let initDateTime = formatter.date(from: "2016/10/08 00:10")
+        
+        durationPicker.setDate(initDateTime!, animated: true)
         controlView.layer.borderColor = #colorLiteral(red: 0.2017067671, green: 0.4073032141, blue: 0.4075613022, alpha: 1).cgColor
         controlView.layer.borderWidth = 1.0
         generateAndLoadGraph(yMargin: globalYMargin, xMargin: (Float(self.view.bounds.width) - Float(graphImage.bounds.width)) / Float(2), gHeight: Float(graphImage.bounds.height))
@@ -47,8 +54,11 @@ class View_PeriodicFlow: UIViewController {
     }
 
     @IBAction func durationPickerChanged(_ sender: UIDatePicker) {
-        generateAndLoadGraph(yMargin: globalYMargin, xMargin: (Float(self.view.bounds.width) - Float(graphImage.bounds.width)) / Float(2), gHeight: Float(graphImage.bounds.height))
-        calculatePumpRate()
+        if(isValid())
+        {
+            generateAndLoadGraph(yMargin: globalYMargin, xMargin: (Float(self.view.bounds.width) - Float(graphImage.bounds.width)) / Float(2), gHeight: Float(graphImage.bounds.height))
+            calculatePumpRate()
+        }
     }
     
     @IBAction func intervalStepperChanged(_ sender: UIStepper) {
@@ -61,8 +71,11 @@ class View_PeriodicFlow: UIViewController {
         {
             intervalStepperLabel.text = "\(cVal)" + " Periods"
         }
-        generateAndLoadGraph(yMargin: globalYMargin, xMargin: (Float(self.view.bounds.width) - Float(graphImage.bounds.width)) / Float(2), gHeight: Float(graphImage.bounds.height))
-        calculateTotalDose()
+        if(isValid())
+        {
+            generateAndLoadGraph(yMargin: globalYMargin, xMargin: (Float(self.view.bounds.width) - Float(graphImage.bounds.width)) / Float(2), gHeight: Float(graphImage.bounds.height))
+            calculateTotalDose()
+        }
     }
     
     func calculatePumpRate()
@@ -81,6 +94,20 @@ class View_PeriodicFlow: UIViewController {
         totalDoseLabel.text = "\(totalDose)" + " mg"
     }
 
+    func isValid() -> Bool
+    {
+        let components = Calendar.current.dateComponents([.hour, .minute], from: durationPicker.date)
+        let durTotal = ((Float(components.hour!)/24.00) + (Float(components.minute!)/(24.00*60.00))) * Float(Int(intervalStepper.value))
+        if durTotal > 1.00
+        {
+            warningImage.alpha = 0.9
+        }
+        else
+        {
+            warningImage.alpha = 0.00
+        }
+        return(durTotal <= 1.00)
+    }
     
     func generateAndLoadGraph(yMargin: Float, xMargin: Float, gHeight: Float)
     {
