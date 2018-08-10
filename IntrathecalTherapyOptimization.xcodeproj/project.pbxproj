@@ -10,6 +10,7 @@
 		1615FED72111FB4F00FB990C /* View_ConstantFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1615FED62111FB4F00FB990C /* View_ConstantFlow.swift */; };
 		1615FED92112046000FB990C /* View_MultipleRates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1615FED82112046000FB990C /* View_MultipleRates.swift */; };
 		1624162E2111148A00A96EEF /* View_PeriodicFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1624162D2111148A00A96EEF /* View_PeriodicFlow.swift */; };
+		162579D1211E142700B1CC40 /* Flowonix_WHITE.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 162579D0211E142700B1CC40 /* Flowonix_WHITE.JPG */; };
 		1646C4CE21139038006BA75E /* returnArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1646C4CC21139038006BA75E /* returnArrow.png */; };
 		1646C4CF21139038006BA75E /* aspectGraph.png in Resources */ = {isa = PBXBuildFile; fileRef = 1646C4CD21139038006BA75E /* aspectGraph.png */; };
 		165696E22114EB1A00E54421 /* upArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 165696E12114EB1A00E54421 /* upArrow.png */; };
@@ -37,6 +38,7 @@
 		1615FED62111FB4F00FB990C /* View_ConstantFlow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View_ConstantFlow.swift; sourceTree = "<group>"; };
 		1615FED82112046000FB990C /* View_MultipleRates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View_MultipleRates.swift; sourceTree = "<group>"; };
 		1624162D2111148A00A96EEF /* View_PeriodicFlow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View_PeriodicFlow.swift; sourceTree = "<group>"; };
+		162579D0211E142700B1CC40 /* Flowonix_WHITE.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Flowonix_WHITE.JPG; sourceTree = "<group>"; };
 		1646C4CC21139038006BA75E /* returnArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = returnArrow.png; sourceTree = "<group>"; };
 		1646C4CD21139038006BA75E /* aspectGraph.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = aspectGraph.png; sourceTree = "<group>"; };
 		165696E12114EB1A00E54421 /* upArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = upArrow.png; sourceTree = "<group>"; };
@@ -93,6 +95,7 @@
 		16FB4CA2210F612F0039FC37 /* IntrathecalTherapyOptimization */ = {
 			isa = PBXGroup;
 			children = (
+				162579D0211E142700B1CC40 /* Flowonix_WHITE.JPG */,
 				165696E32114F0D300E54421 /* warningIcon.png */,
 				165696E12114EB1A00E54421 /* upArrow.png */,
 				1646C4CC21139038006BA75E /* returnArrow.png */,
@@ -210,6 +213,7 @@
 				16FB4CAB210F612F0039FC37 /* Assets.xcassets in Resources */,
 				165696E22114EB1A00E54421 /* upArrow.png in Resources */,
 				16FB4CA9210F612F0039FC37 /* Main.storyboard in Resources */,
+				162579D1211E142700B1CC40 /* Flowonix_WHITE.JPG in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
