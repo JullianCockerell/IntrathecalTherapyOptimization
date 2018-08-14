@@ -23,6 +23,7 @@ class View_ConstantFlow: UIViewController {
     
     @IBOutlet weak var pumpConcentrationLabel: UILabel!
     
+    @IBOutlet weak var dosePerClickLabel: UILabel!
     @IBOutlet weak var dosePerClick: UITextField!
     
     @IBOutlet weak var labelStack24: UIStackView!
@@ -33,7 +34,8 @@ class View_ConstantFlow: UIViewController {
     
     @IBOutlet weak var pumpConcentration: UITextField!
     
-    let globalYMargin = Float(55)
+    @IBOutlet weak var graphYMargin: NSLayoutConstraint!
+    var globalYMargin = Float(55)
     
     @IBOutlet weak var scalePicker: UISegmentedControl!
     
@@ -44,8 +46,8 @@ class View_ConstantFlow: UIViewController {
             unitLabel = "mcg"
             mgMode = false
             doseSlider.maximumValue = Float(300)
-            doseSlider.value = Float(150)
-            pumpConcentration.text = "120.00"
+            doseSlider.value = Float(40)
+            pumpConcentration.text = "350.00"
             doseInputField.text = "\(doseSlider.value)"
         }
         else if(!mgMode)
@@ -53,8 +55,8 @@ class View_ConstantFlow: UIViewController {
             unitLabel = "mg"
             mgMode = true
             doseSlider.maximumValue = Float(5)
-            doseSlider.value = Float(2.5)
-            pumpConcentration.text = "6.00"
+            doseSlider.value = Float(1.0)
+            pumpConcentration.text = "8.00"
             doseInputField.text = "\(doseSlider.value)"
         }
         updateUI()
@@ -170,7 +172,8 @@ class View_ConstantFlow: UIViewController {
         pumpRateTextField.text = "1 click every " + timeBetween + " minutes"
         var dosePerClickVal = String(pumpConFloat * 0.002)
         dosePerClickVal = roundValue(inputText: dosePerClickVal, roundTo: 2)
-        dosePerClick.text = dosePerClickVal + " " + unitLabel
+        dosePerClick.text = dosePerClickVal
+        dosePerClickLabel.text = unitLabel
         doseSliderLabel.text = unitLabel
         doseInputField.text = inputPrefix
         pumpConcentrationLabel.text = unitLabel + "/ml"
@@ -192,13 +195,22 @@ class View_ConstantFlow: UIViewController {
         return String(inputText.characters.prefix(cap))
     }
     
-    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator)
+    {
+        super.viewWillTransition(to: size, with: coordinator)
+        coordinator.animate(alongsideTransition: nil, completion:
+        {
+            _ in
+            self.updateUI()
+        })
+    }
     
     override func viewWillAppear(_ animated: Bool)
     {
         self.borderImage.layer.borderColor = UIColor.white.cgColor
         self.borderImage.layer.borderWidth = 3
         self.borderImage.layer.cornerRadius = 15
+        globalYMargin = Float(graphYMargin.constant) + 15
         updateUI()
         
     }
