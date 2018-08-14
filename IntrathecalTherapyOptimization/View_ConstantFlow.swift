@@ -52,8 +52,8 @@ class View_ConstantFlow: UIViewController {
         {
             unitLabel = "mg"
             mgMode = true
-            doseSlider.maximumValue = Float(10)
-            doseSlider.value = Float(5)
+            doseSlider.maximumValue = Float(5)
+            doseSlider.value = Float(2.5)
             pumpConcentration.text = "6.00"
             doseInputField.text = "\(doseSlider.value)"
         }
@@ -86,8 +86,21 @@ class View_ConstantFlow: UIViewController {
     
     @IBAction func doseInputFieldChanged(_ sender: UITextField)
     {
-        let inputText = doseInputField.text!
-        let inputFloat = (inputText as NSString).floatValue
+        var inputText = doseInputField.text!
+        var inputFloat = (inputText as NSString).floatValue
+        if(inputFloat > doseSlider.maximumValue)
+        {
+            print("too much")
+            doseInputField.text = "\(doseSlider.maximumValue)"
+            inputFloat = doseSlider.maximumValue
+            inputText = doseInputField.text!
+        }
+        else if(inputFloat < doseSlider.minimumValue)
+        {
+            doseInputField.text = "\(doseSlider.minimumValue)"
+            inputFloat = doseSlider.minimumValue
+            inputText = doseInputField.text!
+        }
         if(!mgMode)
         {
             var inputInt = Int(inputFloat)
@@ -158,7 +171,7 @@ class View_ConstantFlow: UIViewController {
         var dosePerClickVal = String(pumpConFloat * 0.002)
         dosePerClickVal = roundValue(inputText: dosePerClickVal, roundTo: 2)
         dosePerClick.text = dosePerClickVal + " " + unitLabel
-        doseSliderLabel.text = inputPrefix + " " + unitLabel
+        doseSliderLabel.text = unitLabel
         doseInputField.text = inputPrefix
         pumpConcentrationLabel.text = unitLabel + "/ml"
         let pumpConText = pumpConcentration.text
@@ -187,14 +200,32 @@ class View_ConstantFlow: UIViewController {
         self.borderImage.layer.borderWidth = 3
         self.borderImage.layer.cornerRadius = 15
         updateUI()
+        
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        NotificationCenter.default.addObserver(self, selector: #selector(View_ConstantFlow.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(View_ConstantFlow.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
-
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y == 0{
+                self.view.frame.origin.y -= keyboardSize.height
+            }
+        }
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y != 0{
+                self.view.frame.origin.y += keyboardSize.height
+            }
+        }
+    }
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -207,7 +238,7 @@ class View_ConstantFlow: UIViewController {
         self.shapeLayer?.removeFromSuperlayer()
         
         //create path for graph to draw
-        //assign base constants (will be replaced by passed variables)
+        //assign base constants
         let path = UIBezierPath()
         let gWidth = Float(Float(self.view.bounds.width) - (xMargin*2))
         var xCoord = Float(0)
@@ -222,26 +253,26 @@ class View_ConstantFlow: UIViewController {
 
         
         //ok to use cartesian coordinates, will be shifted when assigning points to path
-        var coordArray = [[Int]]()
+        var coordArray = [[Float]]()
         var c = 0
-        var cSet: [Int] = [Int(xCoord), Int(yCoord)]
+        var cSet: [Float] = [xCoord, yCoord]
         coordArray.append(cSet)
         
         //points are calculated and added to array
         while (c < Int(bolNum))
         {
             yCoord += bolHeight
-            cSet = [Int(xCoord), Int(yCoord)]
+            cSet = [xCoord, yCoord]
             coordArray.append(cSet)
             yCoord -= bolHeight
-            cSet = [Int(xCoord), Int(yCoord)]
+            cSet = [xCoord, yCoord]
             coordArray.append(cSet)
             xCoord += bolSpacing
             if(xCoord > gWidth)
             {
                 xCoord = gWidth
             }
-            cSet = [Int(xCoord), Int(yCoord)]
+            cSet = [xCoord, yCoord]
             coordArray.append(cSet)
             c += 1
         }
@@ -273,17 +304,17 @@ class View_ConstantFlow: UIViewController {
         
         //add points to path
         c = 1
-        path.move(to: CGPoint(x: coordArray[0][0] + Int(xMargin), y: Int(gHeight + yMargin) - coordArray[0][1]))
+        path.move(to: CGPoint(x: Int(coordArray[0][0]) + Int(xMargin), y: Int(gHeight + yMargin) - Int(coordArray[0][1])))
         while(c < coordArray.count)
         {
             if(Float(coordArray[c][0]) < gWidth)
             {
-                path.addLine(to: CGPoint(x: coordArray[c][0] + Int(xMargin), y: Int(gHeight + yMargin) - coordArray[c][1]))
+                path.addLine(to: CGPoint(x: Int(coordArray[c][0]) + Int(xMargin), y: Int(gHeight + yMargin) - Int(coordArray[c][1])))
                 c += 1
             }
             else
             {
-                path.addLine(to: CGPoint(x: Int(gWidth) + Int(xMargin), y: Int(gHeight + yMargin) - coordArray[c][1]))
+                path.addLine(to: CGPoint(x: Int(gWidth) + Int(xMargin), y: Int(gHeight + yMargin) - Int(coordArray[c][1])))
                 c = coordArray.count
             }
         }
@@ -306,6 +337,5 @@ class View_ConstantFlow: UIViewController {
     }
 
 
-
-
+    
 }
