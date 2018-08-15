@@ -169,7 +169,14 @@ class View_ConstantFlow: UIViewController {
         let pumpConFloat = (pumpCon as NSString).floatValue
         var timeBetween = String(Float(1440) / ((totalDose / pumpConFloat) / 0.002))
         timeBetween = roundValue(inputText: timeBetween, roundTo: 2)
-        pumpRateTextField.text = "1 click every " + timeBetween + " minutes"
+        if(totalDose == 0)
+        {
+            pumpRateTextField.text = "0 clicks"
+        }
+        else
+        {
+            pumpRateTextField.text = "1 click every " + timeBetween + " minutes"
+        }
         var dosePerClickVal = String(pumpConFloat * 0.002)
         dosePerClickVal = roundValue(inputText: dosePerClickVal, roundTo: 2)
         dosePerClick.text = dosePerClickVal
@@ -262,75 +269,81 @@ class View_ConstantFlow: UIViewController {
         let bolHeight = 0.3 * gHeight
         let bolSpacing = gWidth / bolNum
         bolNum += 1
-
         
-        //ok to use cartesian coordinates, will be shifted when assigning points to path
-        var coordArray = [[Float]]()
-        var c = 0
-        var cSet: [Float] = [xCoord, yCoord]
-        coordArray.append(cSet)
-        
-        //points are calculated and added to array
-        while (c < Int(bolNum))
+        if(totalDose == 0)
         {
-            yCoord += bolHeight
-            cSet = [xCoord, yCoord]
+            path.move(to: CGPoint(x: Int(xMargin), y: Int(gHeight + yMargin)))
+            path.addLine(to: CGPoint(x: Int(xMargin + gWidth), y: Int(gHeight + yMargin)))
+        }
+        else
+        {
+            //ok to use cartesian coordinates, will be shifted when assigning points to path
+            var coordArray = [[Float]]()
+            var c = 0
+            var cSet: [Float] = [xCoord, yCoord]
             coordArray.append(cSet)
-            yCoord -= bolHeight
-            cSet = [xCoord, yCoord]
-            coordArray.append(cSet)
-            xCoord += bolSpacing
-            if(xCoord > gWidth)
+            
+            //points are calculated and added to array
+            while (c < Int(bolNum))
             {
-                xCoord = gWidth
+                yCoord += bolHeight
+                cSet = [xCoord, yCoord]
+                coordArray.append(cSet)
+                yCoord -= bolHeight
+                cSet = [xCoord, yCoord]
+                coordArray.append(cSet)
+                xCoord += bolSpacing
+                if(xCoord > gWidth)
+                {
+                    xCoord = gWidth
+                }
+                cSet = [xCoord, yCoord]
+                coordArray.append(cSet)
+                c += 1
             }
-            cSet = [xCoord, yCoord]
-            coordArray.append(cSet)
-            c += 1
-        }
-        
-        let scaling = scalePicker.selectedSegmentIndex
-        if(scaling == 0)
-        {
-            //do nothing
-        }
-        else if(scaling == 1)
-        {
-            c = 0
+            
+            let scaling = scalePicker.selectedSegmentIndex
+            if(scaling == 0)
+            {
+                //do nothing
+            }
+            else if(scaling == 1)
+            {
+                c = 0
+                while(c < coordArray.count)
+                {
+                    coordArray[c][0] = coordArray[c][0] * 4
+                    c += 1
+                }
+            }
+            else if(scaling == 2)
+            {
+                c = 0
+                while(c < coordArray.count)
+                {
+                    coordArray[c][0] = coordArray[c][0] * 48
+                    c += 1
+                }
+            }
+            
+            
+            //add points to path
+            c = 1
+            path.move(to: CGPoint(x: Int(coordArray[0][0]) + Int(xMargin), y: Int(gHeight + yMargin) - Int(coordArray[0][1])))
             while(c < coordArray.count)
             {
-                coordArray[c][0] = coordArray[c][0] * 4
-                c += 1
+                if(Float(coordArray[c][0]) < gWidth)
+                {
+                    path.addLine(to: CGPoint(x: Int(coordArray[c][0]) + Int(xMargin), y: Int(gHeight + yMargin) - Int(coordArray[c][1])))
+                    c += 1
+                }
+                else
+                {
+                    path.addLine(to: CGPoint(x: Int(gWidth) + Int(xMargin), y: Int(gHeight + yMargin) - Int(coordArray[c][1])))
+                    c = coordArray.count
+                }
             }
         }
-        else if(scaling == 2)
-        {
-            c = 0
-            while(c < coordArray.count)
-            {
-                coordArray[c][0] = coordArray[c][0] * 48
-                c += 1
-            }
-        }
-        
-        
-        //add points to path
-        c = 1
-        path.move(to: CGPoint(x: Int(coordArray[0][0]) + Int(xMargin), y: Int(gHeight + yMargin) - Int(coordArray[0][1])))
-        while(c < coordArray.count)
-        {
-            if(Float(coordArray[c][0]) < gWidth)
-            {
-                path.addLine(to: CGPoint(x: Int(coordArray[c][0]) + Int(xMargin), y: Int(gHeight + yMargin) - Int(coordArray[c][1])))
-                c += 1
-            }
-            else
-            {
-                path.addLine(to: CGPoint(x: Int(gWidth) + Int(xMargin), y: Int(gHeight + yMargin) - Int(coordArray[c][1])))
-                c = coordArray.count
-            }
-        }
-        
         
         //create shape layer for that path
         let shapeLayer = CAShapeLayer()

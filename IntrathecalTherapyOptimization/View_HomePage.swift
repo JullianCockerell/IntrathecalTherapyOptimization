@@ -19,33 +19,38 @@ class View_HomePage: UIViewController {
     @IBOutlet weak var subButton2: UIButton!
     @IBOutlet weak var subButton3: UIButton!
     
-    @IBOutlet weak var squareHeight: NSLayoutConstraint!
+    @IBOutlet weak var squareBottom: NSLayoutConstraint!
+    @IBOutlet weak var upButton: UIButton!
+
     var buttonPressed = false
     let globalRadius = CGFloat(10)
 
     @IBOutlet weak var flowOptions: UIStackView!
     
     @IBAction func button1Pressed(_ sender: UIButton) {
-        print("yep")
         if(buttonPressed)
         {
-            self.squareHeight.constant = 240
-            UIView.animate(withDuration: 0.6, animations: {
+            self.squareBottom.constant = 0
+            UIView.animate(withDuration: 0.3, animations:
+            {
                 self.view.layoutIfNeeded()
                 self.button2.alpha = 1.0
                 self.button3.alpha = 1.0
                 self.flowOptions.alpha = 0.0
+                self.upButton.alpha = 0.0
             })
             buttonPressed = false
         }
         else
         {
-            self.squareHeight.constant = 850
-            UIView.animate(withDuration: 0.6, animations: {
+            self.squareBottom.constant = 600
+            UIView.animate(withDuration: 0.3, animations:
+            {
                 self.view.layoutIfNeeded()
                 self.button2.alpha = 0.0
                 self.button3.alpha = 0.0
                 self.flowOptions.alpha = 1.0
+                self.upButton.alpha = 1.0
             })
             buttonPressed = true
         }
@@ -53,6 +58,18 @@ class View_HomePage: UIViewController {
         
     }
     
+    @IBAction func upButtonPressed(_ sender: UIButton)
+    {
+        self.squareBottom.constant = 0
+        UIView.animate(withDuration: 0.3, animations: {
+            self.view.layoutIfNeeded()
+            self.button2.alpha = 1.0
+            self.button3.alpha = 1.0
+            self.flowOptions.alpha = 0.0
+            self.upButton.alpha = 0.0
+        })
+        buttonPressed = false
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
