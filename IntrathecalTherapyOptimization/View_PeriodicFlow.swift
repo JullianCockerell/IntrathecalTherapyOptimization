@@ -10,7 +10,6 @@ import UIKit
 
 class View_PeriodicFlow: UIViewController {
 
-    @IBOutlet weak var controlView: UIView!
     @IBOutlet weak var doseSlider: UISlider!
     @IBOutlet weak var doseSliderLabel: UILabel!
     @IBOutlet weak var intervalStepper: UIStepper!
@@ -24,7 +23,8 @@ class View_PeriodicFlow: UIViewController {
     var currentMinute = Float(0)
     var currentHour = Float(0)
     let globalYMargin = Float(55)
-    
+    var mgMode = true
+    var unitLabel = "mg"
 
     @IBOutlet weak var scalePicker: UISegmentedControl!
     @IBOutlet weak var doseField: UITextField!
@@ -36,7 +36,88 @@ class View_PeriodicFlow: UIViewController {
     @IBOutlet weak var labelStack30: UIStackView!
     @IBOutlet weak var graphStyle: UIView!
     @IBOutlet weak var displayStyle: UIView!
+    @IBOutlet weak var controlStyle: UIView!
+    @IBOutlet weak var pumpConcentration: AllowedCharsTextField!
+    @IBOutlet weak var pumpConcentrationLabel: UILabel!
     
+    
+    
+    
+    @IBAction func doseFieldChanged(_ sender: UITextField)
+    {
+        var inputText = doseField.text!
+        var inputFloat = (inputText as NSString).floatValue
+        if(inputFloat > doseSlider.maximumValue)
+        {
+            doseField.text = "\(doseSlider.maximumValue)"
+            inputFloat = doseSlider.maximumValue
+            inputText = doseField.text!
+        }
+        else if(inputFloat < doseSlider.minimumValue)
+        {
+            doseField.text = "\(doseSlider.minimumValue)"
+            inputFloat = doseSlider.minimumValue
+            inputText = doseField.text!
+        }
+        if(!mgMode)
+        {
+            var inputInt = Int(inputFloat)
+            inputInt = inputInt - (inputInt % 5)
+            doseSlider.value = Float(inputInt)
+            let doseInputText = "\(doseSlider.value)"
+            doseField.text = roundValue(inputText: doseInputText, roundTo: 2)
+        }
+        else
+        {
+            let inputPrefix = roundValue(inputText: inputText, roundTo: 1)
+            doseField.text = inputPrefix
+            doseSlider.value = inputFloat
+        }
+        updateUI()
+    }
+    
+    func updateUI()
+    {
+        let inputText = doseField.text!
+        let inputFloat = (inputText as NSString).floatValue
+        let inputPrefix = roundValue(inputText: inputText, roundTo: 1)
+        doseSlider.value = inputFloat
+        doseField.text = inputPrefix
+        let totalDose = doseSlider.value * Float(intervalStepper.value)
+        totalDoseLabel.text = roundValue(inputText: "\(totalDose)", roundTo: 2)
+        let components = Calendar.current.dateComponents([.hour, .minute], from: durationPicker.date)
+        let durHour = Float(components.hour!)
+        let durMinute = Float(components.minute!)
+        let durTotal = (60*durHour) + durMinute
+        let pumpRate = doseSlider.value / durTotal
+        pumpRateLabel.text = roundValue(inputText: "\(pumpRate)", roundTo: 3) + " " + unitLabel + "/min"
+        doseFieldLabel.text = unitLabel
+        startTimeField.text = "\(Int(currentHour))" + ":" + "\(Int(currentMinute))"
+        pumpConcentrationLabel.text = unitLabel + "/ml"
+        generateAndLoadGraph(yMargin: globalYMargin, xMargin: (Float(self.view.bounds.width) - Float(graphImage.bounds.width)) / Float(2), gHeight: Float(graphImage.bounds.height))
+    }
+    
+    
+    @IBAction func unitPickerChanged(_ sender: UISwitch)
+    {
+        if(mgMode)
+        {
+            mgMode = false
+            unitLabel = "mcg"
+            doseSlider.maximumValue = 300
+            doseSlider.value = 100
+            doseField.text = "100.0"
+        }
+        else
+        {
+            mgMode = true
+            unitLabel = "mg"
+            doseSlider.maximumValue = 5
+            doseSlider.value = 2.5
+            doseField.text = "2.5"
+        }
+        updateUI()
+    }
     
     
     @IBAction func scalePickerChanged(_ sender: UISegmentedControl)
@@ -77,44 +158,44 @@ class View_PeriodicFlow: UIViewController {
     
     
     
-    
-    
-    
-    
-    
-    
     override func viewDidAppear(_ animated: Bool)
     {
-        let date = Date()
-        let calendar = Calendar.current
-        currentHour = Float(calendar.component(.hour, from: date))
-        currentMinute = Float(calendar.component(.minute, from: date))
         
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy/MM/dd HH:mm"
-        let initDateTime = formatter.date(from: "2016/10/08 00:10")
-        
-        durationPicker.setDate(initDateTime!, animated: true)
-        controlView.layer.borderColor = #colorLiteral(red: 0.2017067671, green: 0.4073032141, blue: 0.4075613022, alpha: 1).cgColor
-        controlView.layer.borderWidth = 1.0
-        generateAndLoadGraph(yMargin: globalYMargin, xMargin: (Float(self.view.bounds.width) - Float(graphImage.bounds.width)) / Float(2), gHeight: Float(graphImage.bounds.height))
     }
     
     
-    @IBAction func doseSliderChanged(_ sender: UISlider) {
-        let cVal = Int(sender.value)
-        doseSliderLabel.text = "\(cVal)" + " mg"
-        generateAndLoadGraph(yMargin: globalYMargin, xMargin: (Float(self.view.bounds.width) - Float(graphImage.bounds.width)) / Float(2), gHeight: Float(graphImage.bounds.height))
-        calculatePumpRate()
-        calculateTotalDose()
+    @IBAction func doseSliderChanged(_ sender: UISlider)
+    {
+        if(!mgMode)
+        {
+            var doseInt = Int(doseSlider.value)
+            doseInt = doseInt - (doseInt % 5)
+            doseSlider.value = Float(doseInt)
+            var doseValue = "\(doseSlider.value)"
+            doseValue = roundValue(inputText: doseValue, roundTo: 1)
+            doseField.text = doseValue
+        }
+        else
+        {
+            let inputText = "\(doseSlider.value)"
+            let inputPrefix = roundValue(inputText: inputText, roundTo: 1)
+            let inputFloat = (inputPrefix as NSString).floatValue
+            doseSlider.value = inputFloat
+            doseField.text = inputPrefix
+        }
+        updateUI()
+        
     }
-
-    @IBAction func durationPickerChanged(_ sender: UIDatePicker) {
+    
+    
+    @IBAction func durationPickerChanged(_ sender: UIDatePicker)
+    {
         if(isValid())
         {
             generateAndLoadGraph(yMargin: globalYMargin, xMargin: (Float(self.view.bounds.width) - Float(graphImage.bounds.width)) / Float(2), gHeight: Float(graphImage.bounds.height))
-            calculatePumpRate()
+            updateUI()
         }
+        
     }
     
     @IBAction func intervalStepperChanged(_ sender: UIStepper) {
@@ -129,26 +210,8 @@ class View_PeriodicFlow: UIViewController {
         }
         if(isValid())
         {
-            generateAndLoadGraph(yMargin: globalYMargin, xMargin: (Float(self.view.bounds.width) - Float(graphImage.bounds.width)) / Float(2), gHeight: Float(graphImage.bounds.height))
-            calculateTotalDose()
+            updateUI()
         }
-    }
-    
-    func calculatePumpRate()
-    {
-        let components = Calendar.current.dateComponents([.hour, .minute], from: durationPicker.date)
-        let durHour = Float(components.hour!)
-        let durMinute = Float(components.minute!)
-        let durTotal = (60*durHour) + durMinute
-        let rate = Float(doseSlider.value) / Float(durTotal)
-        pumpRateLabel.text = "\(rate)" + " mg/min"
-    }
-    
-    
-    func calculateTotalDose()
-    {
-        let totalDose = Float(doseSlider.value) * Float(intervalStepper.value)
-        totalDoseLabel.text = "\(totalDose)" + " mg"
     }
     
 
@@ -180,7 +243,7 @@ class View_PeriodicFlow: UIViewController {
         let xShift = Float(((currentHour + (currentMinute/Float(60))) / 24))*gWidth
         let bolNum = Float(intervalStepper.value)
         let cycWidth = gWidth / bolNum
-        let bolHeight = (Float(doseSlider.value) / 100) * gHeight
+        let bolHeight = (doseSlider.value / doseSlider.maximumValue) * gHeight
         var xCoord = Float(0)
         var yCoord = Float(0)
         let components = Calendar.current.dateComponents([.hour, .minute], from: durationPicker.date)
@@ -296,7 +359,6 @@ class View_PeriodicFlow: UIViewController {
             }
         }
         
-        
         //create shape layer for that path
         let shapeLayer = CAShapeLayer()
         shapeLayer.fillColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0).cgColor
@@ -332,17 +394,48 @@ class View_PeriodicFlow: UIViewController {
         coordinator.animate(alongsideTransition: nil, completion:
             {
                 _ in
-                //self.updateUI()
+                self.updateUI()
         })
+    }
+    
+    override func viewWillAppear(_ animated: Bool)
+    {
+        super.viewWillAppear(animated)
+        let date = Date()
+        let calendar = Calendar.current
+        currentHour = Float(calendar.component(.hour, from: date))
+        currentMinute = Float(calendar.component(.minute, from: date))
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy/MM/dd HH:mm"
+        let initDateTime = formatter.date(from: "2016/10/08 00:10")
+        
+        durationPicker.setDate(initDateTime!, animated: true)
+        updateUI()
     }
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        durationPicker.layer.borderColor = UIColor.white.cgColor
+        NotificationCenter.default.addObserver(self, selector: #selector(View_ConstantFlow.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(View_ConstantFlow.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+
+        
+        
+        let borderColor = UIColor.lightGray.cgColor
+        durationPicker.layer.borderColor = borderColor
         durationPicker.layer.borderWidth = 2.0
+        durationPicker.layer.cornerRadius = 5
         durationPicker.setValue(UIColor.white, forKeyPath: "textColor")
-       
+        graphStyle.layer.cornerRadius = 10
+        graphStyle.layer.borderColor = borderColor
+        graphStyle.layer.borderWidth = 2
+        displayStyle.layer.cornerRadius = 10
+        displayStyle.layer.borderColor = borderColor
+        displayStyle.layer.borderWidth = 2
+        controlStyle.layer.cornerRadius = 10
+        controlStyle.layer.borderColor = borderColor
+        controlStyle.layer.borderWidth = 2
     }
 
     override func didReceiveMemoryWarning() {
@@ -350,31 +443,22 @@ class View_PeriodicFlow: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y == 0{
+                self.view.frame.origin.y -= keyboardSize.height
+            }
+        }
     }
-    */
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y != 0{
+                self.view.frame.origin.y += keyboardSize.height
+            }
+        }
+    }
+    
+
 
 }

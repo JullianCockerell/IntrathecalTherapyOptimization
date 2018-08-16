@@ -72,7 +72,12 @@ class View_ConstantFlow: UIViewController {
         }
         else
         {
-            doseInputField.text = "\(doseSlider.value)"
+            let inputVal = doseSlider.value
+            var inputText = "\(inputVal)"
+            inputText = roundValue(inputText: inputText, roundTo: 1)
+            let inputFloat = (inputText as NSString).floatValue
+            doseSlider.value = inputFloat
+            doseInputField.text = inputText
         }
         updateUI()
     }
@@ -91,7 +96,6 @@ class View_ConstantFlow: UIViewController {
         var inputFloat = (inputText as NSString).floatValue
         if(inputFloat > doseSlider.maximumValue)
         {
-            print("too much")
             doseInputField.text = "\(doseSlider.maximumValue)"
             inputFloat = doseSlider.maximumValue
             inputText = doseInputField.text!
@@ -222,12 +226,12 @@ class View_ConstantFlow: UIViewController {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(View_ConstantFlow.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(View_ConstantFlow.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-        self.borderImage.layer.borderColor = UIColor.white.cgColor
+        self.borderImage.layer.borderColor = UIColor.lightGray.cgColor
         self.borderImage.layer.borderWidth = 2
         self.borderImage.layer.cornerRadius = 10
         self.graphStyle.layer.borderWidth = 2
         self.graphStyle.layer.cornerRadius = 10
-        self.graphStyle.layer.borderColor = UIColor.white.cgColor
+        self.graphStyle.layer.borderColor = UIColor.lightGray.cgColor
         
     }
     
