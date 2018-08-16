@@ -19,13 +19,69 @@ class View_PeriodicFlow: UIViewController {
     @IBOutlet weak var graphImage: UIImageView!
     @IBOutlet weak var pumpRateLabel: UITextField!
     @IBOutlet weak var totalDoseLabel: UITextField!
-
     @IBOutlet weak var warningImage: UIImageView!
-    
     weak var shapeLayer: CAShapeLayer?
     var currentMinute = Float(0)
     var currentHour = Float(0)
     let globalYMargin = Float(55)
+    
+
+    @IBOutlet weak var scalePicker: UISegmentedControl!
+    @IBOutlet weak var doseField: UITextField!
+    @IBOutlet weak var doseFieldLabel: UILabel!
+    @IBOutlet weak var startTimeField: UITextField!
+    @IBOutlet weak var unitPicker: UISwitch!
+    @IBOutlet weak var labelStack6: UIStackView!
+    @IBOutlet weak var labelStack24: UIStackView!
+    @IBOutlet weak var labelStack30: UIStackView!
+    @IBOutlet weak var graphStyle: UIView!
+    @IBOutlet weak var displayStyle: UIView!
+    
+    
+    
+    @IBAction func scalePickerChanged(_ sender: UISegmentedControl)
+    {
+        let pickerValue = scalePicker.selectedSegmentIndex
+        if(pickerValue == 0)
+        {
+            generateAndLoadGraph(yMargin: globalYMargin, xMargin: (Float(self.view.bounds.width) - Float(graphImage.bounds.width)) / Float(2), gHeight: Float(graphImage.bounds.height))
+            UIView.animate(withDuration: 0.5, animations: {
+                self.labelStack6.alpha = 0.0
+                self.labelStack24.alpha = 1.0
+                self.labelStack30.alpha = 0.0
+            })
+        }
+        else if (pickerValue == 1)
+        {
+            generateAndLoadGraph(yMargin: globalYMargin, xMargin: (Float(self.view.bounds.width) - Float(graphImage.bounds.width)) / Float(2), gHeight: Float(graphImage.bounds.height))
+            UIView.animate(withDuration: 0.5, animations: {
+                self.labelStack6.alpha = 1.0
+                self.labelStack24.alpha = 0.0
+                self.labelStack30.alpha = 0.0
+            })
+        }
+        else if (pickerValue == 2)
+        {
+            generateAndLoadGraph(yMargin: globalYMargin, xMargin: (Float(self.view.bounds.width) - Float(graphImage.bounds.width)) / Float(2), gHeight: Float(graphImage.bounds.height))
+            UIView.animate(withDuration: 0.5, animations: {
+                self.labelStack6.alpha = 0.0
+                self.labelStack24.alpha = 0.0
+                self.labelStack30.alpha = 1.0
+            })
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     override func viewDidAppear(_ animated: Bool)
     {
@@ -88,11 +144,13 @@ class View_PeriodicFlow: UIViewController {
         pumpRateLabel.text = "\(rate)" + " mg/min"
     }
     
+    
     func calculateTotalDose()
     {
         let totalDose = Float(doseSlider.value) * Float(intervalStepper.value)
         totalDoseLabel.text = "\(totalDose)" + " mg"
     }
+    
 
     func isValid() -> Bool
     {
@@ -109,13 +167,14 @@ class View_PeriodicFlow: UIViewController {
         return(durTotal <= 1.00)
     }
     
+    
     func generateAndLoadGraph(yMargin: Float, xMargin: Float, gHeight: Float)
     {
         //remove old shape layer if any is present
         self.shapeLayer?.removeFromSuperlayer()
         
         //create path for graph to draw
-        //assign base constants (will be replaced by passed variables)
+        //assign base constants
         let path = UIBezierPath()
         let gWidth = Float(Float(self.view.bounds.width) - (xMargin*2))
         let xShift = Float(((currentHour + (currentMinute/Float(60))) / 24))*gWidth
@@ -132,10 +191,10 @@ class View_PeriodicFlow: UIViewController {
         let basWidth = cycWidth - bolWidth
         
         //ok to use cartesian coordinates, will be shifted when assigning points to path
-        var coordArray = [[Int]]()
+        var coordArray = [[Float]]()
         var c = 0
         xCoord += xShift
-        var cSet: [Int] = [Int(xCoord), Int(yCoord)]
+        var cSet: [Float] = [xCoord, yCoord]
         coordArray.append(cSet)
         //stores index where beginning of graph is for later swapping
         var zeroIndex = 0
@@ -143,45 +202,45 @@ class View_PeriodicFlow: UIViewController {
         while (c < Int(bolNum))
         {
             yCoord = yCoord + bolHeight
-            cSet = [Int(xCoord), Int(yCoord)]
+            cSet = [xCoord, yCoord]
             coordArray.append(cSet)
             xCoord += bolWidth
             if (xCoord > gWidth)
             {
-                cSet = [Int(gWidth), Int(yCoord)]
+                cSet = [gWidth, yCoord]
                 coordArray.append(cSet)
                 zeroIndex = coordArray.count
                 xCoord = xCoord - gWidth
-                cSet = [Int(0), Int(yCoord)]
+                cSet = [0, yCoord]
                 coordArray.append(cSet)
-                cSet = [Int(xCoord), Int(yCoord)]
+                cSet = [xCoord, yCoord]
                 coordArray.append(cSet)
                 
             }
             else
             {
-                cSet = [Int(xCoord), Int(yCoord)]
+                cSet = [xCoord, yCoord]
                 coordArray.append(cSet)
             }
             yCoord = yCoord - bolHeight
-            cSet = [Int(xCoord), Int(yCoord)]
+            cSet = [xCoord, yCoord]
             coordArray.append(cSet)
             xCoord += basWidth
             if (xCoord > gWidth)
             {
-                cSet = [Int(gWidth), Int(yCoord)]
+                cSet = [gWidth, yCoord]
                 coordArray.append(cSet)
                 zeroIndex = coordArray.count
                 xCoord = xCoord - gWidth
-                cSet = [Int(0), Int(yCoord)]
+                cSet = [0, yCoord]
                 coordArray.append(cSet)
-                cSet = [Int(xCoord), Int(yCoord)]
+                cSet = [xCoord, yCoord]
                 coordArray.append(cSet)
                 
             }
             else
             {
-                cSet = [Int(xCoord), Int(yCoord)]
+                cSet = [xCoord, yCoord]
                 coordArray.append(cSet)
             }
             c += 1
@@ -194,13 +253,47 @@ class View_PeriodicFlow: UIViewController {
             let beginArray = Array(coordArray[zeroIndex..<coordArray.count])
             coordArray = beginArray + endArray
         }
+        
+        //scaling is applied if zoom feature is in use
+        let scaling = scalePicker.selectedSegmentIndex
+        if(scaling == 0)
+        {
+            //do nothing
+        }
+        else if(scaling == 1)
+        {
+            c = 0
+            while(c < coordArray.count)
+            {
+                coordArray[c][0] = coordArray[c][0] * 4
+                c += 1
+            }
+        }
+        else if(scaling == 2)
+        {
+            c = 0
+            while(c < coordArray.count)
+            {
+                coordArray[c][0] = coordArray[c][0] * 48
+                c += 1
+            }
+        }
+        
         //add points to path
         c = 1
-        path.move(to: CGPoint(x: coordArray[0][0] + Int(xMargin), y: Int(gHeight + yMargin) - coordArray[0][1]))
+        path.move(to: CGPoint(x: Int(coordArray[0][0] + xMargin), y: Int(gHeight + yMargin - coordArray[0][1])))
         while(c < coordArray.count)
         {
-            path.addLine(to: CGPoint(x: coordArray[c][0] + Int(xMargin), y: Int(gHeight + yMargin) - coordArray[c][1]))
-            c += 1
+            if(coordArray[c][0] <= gWidth)
+            {
+                path.addLine(to: CGPoint(x: Int(coordArray[c][0] + xMargin), y: Int(gHeight + yMargin - coordArray[c][1])))
+                c += 1
+            }
+            else
+            {
+                path.addLine(to: CGPoint(x: Int(gWidth + xMargin), y: Int(gHeight + yMargin - coordArray[c][1])))
+                c = coordArray.count
+            }
         }
         
         
@@ -221,15 +314,35 @@ class View_PeriodicFlow: UIViewController {
     }
 
     
+    func roundValue(inputText: String, roundTo: Int) -> String
+    {
+        var cap = 0
+        let inputFloat = (inputText as NSString).floatValue
+        if(inputFloat >= 1000){ cap = 5 + roundTo }
+        else if(inputFloat >= 100){ cap = 4 + roundTo }
+        else if(inputFloat >= 10){ cap = 3 + roundTo }
+        else{ cap = 2 + roundTo }
+        return String(inputText.characters.prefix(cap))
+    }
     
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator)
+    {
+        super.viewWillTransition(to: size, with: coordinator)
+        coordinator.animate(alongsideTransition: nil, completion:
+            {
+                _ in
+                //self.updateUI()
+        })
+    }
     
-    
-    
-    override func viewDidLoad() {
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        durationPicker.layer.borderColor = UIColor.white.cgColor
+        durationPicker.layer.borderWidth = 2.0
+        durationPicker.setValue(UIColor.white, forKeyPath: "textColor")
+       
     }
 
     override func didReceiveMemoryWarning() {

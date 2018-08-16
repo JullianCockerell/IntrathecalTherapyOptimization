@@ -31,9 +31,10 @@ class View_HomePage: UIViewController {
         if(buttonPressed)
         {
             self.squareBottom.constant = 0
-            UIView.animate(withDuration: 0.3, animations:
+            UIView.animate(withDuration: 0.5, animations:
             {
                 self.view.layoutIfNeeded()
+                self.button1.layer.shadowOpacity = 1.0
                 self.button2.alpha = 1.0
                 self.button3.alpha = 1.0
                 self.flowOptions.alpha = 0.0
@@ -43,10 +44,13 @@ class View_HomePage: UIViewController {
         }
         else
         {
-            self.squareBottom.constant = 600
-            UIView.animate(withDuration: 0.3, animations:
+            self.squareBottom.constant = 620
+            UIView.animate(withDuration: 0.5, animations:
             {
                 self.view.layoutIfNeeded()
+                self.button1.layer.shadowOpacity = 0.0
+                self.squareBackground.layer.shadowOffset = CGSize(width: 0.0, height: 6.0)
+                self.squareBackground.layer.shadowOpacity = 1.0
                 self.button2.alpha = 0.0
                 self.button3.alpha = 0.0
                 self.flowOptions.alpha = 1.0
@@ -63,6 +67,7 @@ class View_HomePage: UIViewController {
         self.squareBottom.constant = 0
         UIView.animate(withDuration: 0.3, animations: {
             self.view.layoutIfNeeded()
+            self.button1.layer.shadowOpacity = 1.0
             self.button2.alpha = 1.0
             self.button3.alpha = 1.0
             self.flowOptions.alpha = 0.0
@@ -83,15 +88,43 @@ class View_HomePage: UIViewController {
     }
     
 
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool)
+    {
         squareBackground.layer.cornerRadius = globalRadius
         button1.layer.cornerRadius = globalRadius
         button2.layer.cornerRadius = globalRadius
         button3.layer.cornerRadius = globalRadius
         subButton1.layer.cornerRadius = globalRadius
+        subButton1.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.25).cgColor
+        subButton1.layer.shadowOffset = CGSize(width: 0.0, height: 4.0)
+        subButton1.layer.shadowOpacity = 1.0
         subButton2.layer.cornerRadius = globalRadius
+        subButton2.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.25).cgColor
+        subButton2.layer.shadowOffset = CGSize(width: 0.0, height: 4.0)
+        subButton2.layer.shadowOpacity = 1.0
         subButton3.layer.cornerRadius = globalRadius
+        subButton3.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.25).cgColor
+        subButton3.layer.shadowOffset = CGSize(width: 0.0, height: 4.0)
+        subButton3.layer.shadowOpacity = 1.0
+        button1.layer.cornerRadius = globalRadius
+        button1.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5).cgColor
+        button1.layer.shadowOffset = CGSize(width: 0.0, height: 6.0)
+        button1.layer.shadowOpacity = 1.0
+        button2.layer.cornerRadius = globalRadius
+        button2.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5).cgColor
+        button2.layer.shadowOffset = CGSize(width: 0.0, height: 6.0)
+        button2.layer.shadowOpacity = 1.0
+        button3.layer.cornerRadius = globalRadius
+        button3.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5).cgColor
+        button3.layer.shadowOffset = CGSize(width: 0.0, height: 6.0)
+        button3.layer.shadowOpacity = 1.0
+        squareBackground.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.25).cgColor
+        squareBackground.layer.shadowOffset = CGSize(width: 0.0, height: 6.0)
+        squareBackground.layer.shadowOpacity = 1.0
+
         squareBackground.layer.cornerRadius = globalRadius
+        
+        
     }
 
 }

@@ -18,26 +18,25 @@ class View_ConstantFlow: UIViewController {
     @IBOutlet weak var graphImage: UIImageView!
     @IBOutlet weak var doseSlider: UISlider!
     @IBOutlet weak var doseSliderLabel: UILabel!
-
     @IBOutlet weak var doseInputField: UITextField!
-    
     @IBOutlet weak var pumpConcentrationLabel: UILabel!
-    
     @IBOutlet weak var dosePerClickLabel: UILabel!
     @IBOutlet weak var dosePerClick: UITextField!
-    
     @IBOutlet weak var labelStack24: UIStackView!
     @IBOutlet weak var labelStack30: UIStackView!
     @IBOutlet weak var labelStack6: UIStackView!
-    
     @IBOutlet weak var borderImage: UIImageView!
-    
     @IBOutlet weak var pumpConcentration: UITextField!
-    
     @IBOutlet weak var graphYMargin: NSLayoutConstraint!
     var globalYMargin = Float(55)
-    
     @IBOutlet weak var scalePicker: UISegmentedControl!
+    @IBOutlet weak var graphStyle: UIView!
+    
+    
+    
+    
+    
+    
     
     @IBAction func unitSwitchChanged(_ sender: UISwitch)
     {
@@ -214,9 +213,6 @@ class View_ConstantFlow: UIViewController {
     
     override func viewWillAppear(_ animated: Bool)
     {
-        self.borderImage.layer.borderColor = UIColor.white.cgColor
-        self.borderImage.layer.borderWidth = 3
-        self.borderImage.layer.cornerRadius = 15
         globalYMargin = Float(graphYMargin.constant) + 15
         updateUI()
         
@@ -226,6 +222,13 @@ class View_ConstantFlow: UIViewController {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(View_ConstantFlow.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(View_ConstantFlow.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        self.borderImage.layer.borderColor = UIColor.white.cgColor
+        self.borderImage.layer.borderWidth = 2
+        self.borderImage.layer.cornerRadius = 10
+        self.graphStyle.layer.borderWidth = 2
+        self.graphStyle.layer.cornerRadius = 10
+        self.graphStyle.layer.borderColor = UIColor.white.cgColor
+        
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
