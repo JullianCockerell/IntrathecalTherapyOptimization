@@ -243,13 +243,21 @@ class View_PeriodicFlow: UIViewController {
         let xShift = Float(((currentHour + (currentMinute/Float(60))) / 24))*gWidth
         let bolNum = Float(intervalStepper.value)
         let cycWidth = gWidth / bolNum
-        let bolHeight = (doseSlider.value / doseSlider.maximumValue) * gHeight
+        //let bolHeight = (doseSlider.value / doseSlider.maximumValue) * gHeight
+        
         var xCoord = Float(0)
         var yCoord = Float(0)
         let components = Calendar.current.dateComponents([.hour, .minute], from: durationPicker.date)
         let durHour = Float(components.hour!)
         let durMinute = Float(components.minute!)
         let durTotal = (60*durHour) + durMinute
+        
+        let bolusRate = doseSlider.value / durTotal
+        let pumpConText = pumpConcentration.text!
+        let pumpConFloat = (pumpConText as NSString).floatValue
+        let flowRate = bolusRate / pumpConFloat
+        let bolHeight = (flowRate / Float(0.3)) * gHeight
+        
         let bolWidth = (durTotal / (60*24)) * gWidth
         let basWidth = cycWidth - bolWidth
         
