@@ -91,9 +91,17 @@ class View_HomePage: UIViewController {
     {
         return false
     }
+    
+    override func viewWillDisappear(_ animated: Bool)
+    {
+        super.viewWillDisappear(animated)
+        AppDelegate.AppUtility.lockOrientation(UIInterfaceOrientationMask.portrait, andRotateTo: UIInterfaceOrientation.portrait)
+    }
 
     override func viewWillAppear(_ animated: Bool)
     {
+        AppDelegate.AppUtility.lockOrientation(UIInterfaceOrientationMask.portrait, andRotateTo: UIInterfaceOrientation.portrait)
+        
         squareBackground.layer.cornerRadius = globalRadius
         button1.layer.cornerRadius = globalRadius
         button2.layer.cornerRadius = globalRadius

@@ -266,6 +266,12 @@ class View_PeriodicFlow: UIViewController {
         })
     }
 
+
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        AppDelegate.AppUtility.lockOrientation(UIInterfaceOrientationMask.portrait)
+    }
     
     
     func generateAndLoadGraph(yMargin: Float, xMargin: Float, gHeight: Float)
@@ -436,6 +442,7 @@ class View_PeriodicFlow: UIViewController {
     override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(animated)
+        AppDelegate.AppUtility.lockOrientation(UIInterfaceOrientationMask.all)
         let date = Date()
         let calendar = Calendar.current
         currentHour = Float(calendar.component(.hour, from: date))
