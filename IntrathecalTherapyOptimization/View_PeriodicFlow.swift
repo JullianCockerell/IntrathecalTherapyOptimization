@@ -40,8 +40,11 @@ class View_PeriodicFlow: UIViewController {
     @IBOutlet weak var pumpConcentration: AllowedCharsTextField!
     @IBOutlet weak var pumpConcentrationLabel: UILabel!
     
-    
-    
+    @IBOutlet weak var graphHeight: NSLayoutConstraint!
+    @IBOutlet weak var block1Height: NSLayoutConstraint!
+    @IBOutlet weak var block2Height: NSLayoutConstraint!
+    @IBOutlet weak var scalePickerHeight: NSLayoutConstraint!
+    @IBOutlet weak var block3Height: NSLayoutConstraint!
     
     @IBAction func doseFieldChanged(_ sender: UITextField)
     {
@@ -84,15 +87,22 @@ class View_PeriodicFlow: UIViewController {
         doseSlider.value = inputFloat
         doseField.text = inputPrefix
         let totalDose = doseSlider.value * Float(intervalStepper.value)
-        totalDoseLabel.text = roundValue(inputText: "\(totalDose)", roundTo: 2)
+        totalDoseLabel.text = roundValue(inputText: "\(totalDose)", roundTo: 2) + " " + unitLabel
         let components = Calendar.current.dateComponents([.hour, .minute], from: durationPicker.date)
         let durHour = Float(components.hour!)
         let durMinute = Float(components.minute!)
         let durTotal = (60*durHour) + durMinute
         let pumpRate = doseSlider.value / durTotal
-        pumpRateLabel.text = roundValue(inputText: "\(pumpRate)", roundTo: 3) + " " + unitLabel + "/min"
+        pumpRateLabel.text = roundValue(inputText: "\(pumpRate)", roundTo: 2) + " " + unitLabel + "/min"
         doseFieldLabel.text = unitLabel
-        startTimeField.text = "\(Int(currentHour))" + ":" + "\(Int(currentMinute))"
+        var currentHourVar = currentHour
+        var timeLabel = "AM"
+        if(currentHourVar > 12)
+        {
+            currentHourVar -= 12
+            timeLabel = "PM"
+        }
+        startTimeField.text = "\(Int(currentHourVar))" + ":" + "\(Int(currentMinute))" + " " + timeLabel
         pumpConcentrationLabel.text = unitLabel + "/ml"
         generateAndLoadGraph(yMargin: globalYMargin, xMargin: (Float(self.view.bounds.width) - Float(graphImage.bounds.width)) / Float(2), gHeight: Float(graphImage.bounds.height))
     }
@@ -230,6 +240,33 @@ class View_PeriodicFlow: UIViewController {
         return(durTotal <= 1.00)
     }
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator)
+    {
+        if( size.width > 1000)
+        {
+            graphHeight.constant = 260
+            block1Height.constant = 10
+            block2Height.constant = 30
+            block3Height.constant = 40
+            scalePickerHeight.constant = 35
+        }
+        else
+        {
+            graphHeight.constant = 370
+            block1Height.constant = 30
+            block2Height.constant = 40
+            block3Height.constant = 50
+            scalePickerHeight.constant = 50
+        }
+        super.viewWillTransition(to: size, with: coordinator)
+        coordinator.animate(alongsideTransition: nil, completion:
+            {
+                _ in
+                self.updateUI()
+        })
+    }
+
+    
     
     func generateAndLoadGraph(yMargin: Float, xMargin: Float, gHeight: Float)
     {
@@ -243,7 +280,6 @@ class View_PeriodicFlow: UIViewController {
         let xShift = Float(((currentHour + (currentMinute/Float(60))) / 24))*gWidth
         let bolNum = Float(intervalStepper.value)
         let cycWidth = gWidth / bolNum
-        //let bolHeight = (doseSlider.value / doseSlider.maximumValue) * gHeight
         
         var xCoord = Float(0)
         var yCoord = Float(0)
@@ -256,7 +292,7 @@ class View_PeriodicFlow: UIViewController {
         let pumpConText = pumpConcentration.text!
         let pumpConFloat = (pumpConText as NSString).floatValue
         let flowRate = bolusRate / pumpConFloat
-        let bolHeight = (flowRate / Float(0.3)) * gHeight
+        let bolHeight = (flowRate / Float(0.03)) * gHeight
         
         let bolWidth = (durTotal / (60*24)) * gWidth
         let basWidth = cycWidth - bolWidth
@@ -396,15 +432,6 @@ class View_PeriodicFlow: UIViewController {
     }
     
     
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator)
-    {
-        super.viewWillTransition(to: size, with: coordinator)
-        coordinator.animate(alongsideTransition: nil, completion:
-            {
-                _ in
-                self.updateUI()
-        })
-    }
     
     override func viewWillAppear(_ animated: Bool)
     {

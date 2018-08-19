@@ -32,6 +32,7 @@ class View_ConstantFlow: UIViewController {
     @IBOutlet weak var scalePicker: UISegmentedControl!
     @IBOutlet weak var graphStyle: UIView!
     
+    @IBOutlet weak var graphHeight: NSLayoutConstraint!
     
     
     
@@ -207,6 +208,14 @@ class View_ConstantFlow: UIViewController {
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator)
     {
+        if( size.width > 1000)
+        {
+            graphHeight.constant = 280
+        }
+        else    
+        {
+            graphHeight.constant = 409.5
+        }
         super.viewWillTransition(to: size, with: coordinator)
         coordinator.animate(alongsideTransition: nil, completion:
         {

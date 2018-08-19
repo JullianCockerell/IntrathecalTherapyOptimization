@@ -87,6 +87,10 @@ class View_HomePage: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    override var shouldAutorotate: Bool
+    {
+        return false
+    }
 
     override func viewWillAppear(_ animated: Bool)
     {

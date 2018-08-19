@@ -12,27 +12,30 @@ class View_EntryPage: UIViewController {
     @IBOutlet weak var entryButton: UIButton!
 
     
-    override func viewWillAppear(_ animated: Bool) {
-        entryButton.backgroundColor = .clear
-        entryButton.layer.cornerRadius = 20
-        entryButton.layer.borderWidth = 5
-        entryButton.layer.borderColor = UIColor.white.cgColor
-        entryButton.layer.backgroundColor = UIColor.white.cgColor
-        entryButton.layer.opacity = 0.22
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        DispatchQueue.main.asyncAfter(deadline:.now() + 2.0, execute: {
+            self.performSegue(withIdentifier:"showHomePage",sender: self)
+        })
+    }
+    
+    override var shouldAutorotate: Bool
+    {
+        return false
+    }
+    
     /*
     // MARK: - Navigation
 

@@ -11,7 +11,6 @@
 		1615FED92112046000FB990C /* View_MultipleRates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1615FED82112046000FB990C /* View_MultipleRates.swift */; };
 		1624162E2111148A00A96EEF /* View_PeriodicFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1624162D2111148A00A96EEF /* View_PeriodicFlow.swift */; };
 		162579D1211E142700B1CC40 /* Flowonix_WHITE.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 162579D0211E142700B1CC40 /* Flowonix_WHITE.JPG */; };
-		162579D3211E16E400B1CC40 /* View_ModeSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162579D2211E16E400B1CC40 /* View_ModeSelect.swift */; };
 		162579D5211E19C000B1CC40 /* Flowonix_Light.png in Resources */ = {isa = PBXBuildFile; fileRef = 162579D4211E19C000B1CC40 /* Flowonix_Light.png */; };
 		162579D7211E1CD700B1CC40 /* Swoosh.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 162579D6211E1CD700B1CC40 /* Swoosh.jpg */; };
 		162579D9211E1E8100B1CC40 /* View_EntryPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162579D8211E1E8100B1CC40 /* View_EntryPage.swift */; };
@@ -21,6 +20,7 @@
 		1646C4CF21139038006BA75E /* aspectGraph.png in Resources */ = {isa = PBXBuildFile; fileRef = 1646C4CD21139038006BA75E /* aspectGraph.png */; };
 		165696E22114EB1A00E54421 /* upArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 165696E12114EB1A00E54421 /* upArrow.png */; };
 		165696E42114F0D300E54421 /* warningIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 165696E32114F0D300E54421 /* warningIcon.png */; };
+		168945232128C89B00190D6B /* FlowLogoWhite.png in Resources */ = {isa = PBXBuildFile; fileRef = 168945222128C89B00190D6B /* FlowLogoWhite.png */; };
 		16D794A821235D980016EB56 /* MaxLengthTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D794A721235D980016EB56 /* MaxLengthTextField.swift */; };
 		16D794AA21235DCD0016EB56 /* AllowedCharsTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16D794A921235DCD0016EB56 /* AllowedCharsTextField.swift */; };
 		16FB4CA4210F612F0039FC37 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FB4CA3210F612F0039FC37 /* AppDelegate.swift */; };
@@ -46,7 +46,6 @@
 		1615FED82112046000FB990C /* View_MultipleRates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View_MultipleRates.swift; sourceTree = "<group>"; };
 		1624162D2111148A00A96EEF /* View_PeriodicFlow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View_PeriodicFlow.swift; sourceTree = "<group>"; };
 		162579D0211E142700B1CC40 /* Flowonix_WHITE.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Flowonix_WHITE.JPG; sourceTree = "<group>"; };
-		162579D2211E16E400B1CC40 /* View_ModeSelect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View_ModeSelect.swift; sourceTree = "<group>"; };
 		162579D4211E19C000B1CC40 /* Flowonix_Light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Flowonix_Light.png; sourceTree = "<group>"; };
 		162579D6211E1CD700B1CC40 /* Swoosh.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Swoosh.jpg; sourceTree = "<group>"; };
 		162579D8211E1E8100B1CC40 /* View_EntryPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View_EntryPage.swift; sourceTree = "<group>"; };
@@ -56,6 +55,7 @@
 		1646C4CD21139038006BA75E /* aspectGraph.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = aspectGraph.png; sourceTree = "<group>"; };
 		165696E12114EB1A00E54421 /* upArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = upArrow.png; sourceTree = "<group>"; };
 		165696E32114F0D300E54421 /* warningIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = warningIcon.png; sourceTree = "<group>"; };
+		168945222128C89B00190D6B /* FlowLogoWhite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FlowLogoWhite.png; sourceTree = "<group>"; };
 		16D794A721235D980016EB56 /* MaxLengthTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaxLengthTextField.swift; sourceTree = "<group>"; };
 		16D794A921235DCD0016EB56 /* AllowedCharsTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllowedCharsTextField.swift; sourceTree = "<group>"; };
 		16FB4CA0210F612F0039FC37 /* IntrathecalTherapyOptimization.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IntrathecalTherapyOptimization.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -109,6 +109,7 @@
 		16FB4CA2210F612F0039FC37 /* IntrathecalTherapyOptimization */ = {
 			isa = PBXGroup;
 			children = (
+				168945222128C89B00190D6B /* FlowLogoWhite.png */,
 				162579DA211E250100B1CC40 /* homeIcon.png */,
 				162579D6211E1CD700B1CC40 /* Swoosh.jpg */,
 				162579D4211E19C000B1CC40 /* Flowonix_Light.png */,
@@ -126,7 +127,6 @@
 				1624162D2111148A00A96EEF /* View_PeriodicFlow.swift */,
 				1615FED62111FB4F00FB990C /* View_ConstantFlow.swift */,
 				1615FED82112046000FB990C /* View_MultipleRates.swift */,
-				162579D2211E16E400B1CC40 /* View_ModeSelect.swift */,
 				162579D8211E1E8100B1CC40 /* View_EntryPage.swift */,
 				162579DC211E292E00B1CC40 /* View_HomePage.swift */,
 				16D794A721235D980016EB56 /* MaxLengthTextField.swift */,
@@ -233,6 +233,7 @@
 				1646C4CE21139038006BA75E /* returnArrow.png in Resources */,
 				16FB4CAB210F612F0039FC37 /* Assets.xcassets in Resources */,
 				165696E22114EB1A00E54421 /* upArrow.png in Resources */,
+				168945232128C89B00190D6B /* FlowLogoWhite.png in Resources */,
 				162579DB211E250100B1CC40 /* homeIcon.png in Resources */,
 				16FB4CA9210F612F0039FC37 /* Main.storyboard in Resources */,
 				162579D1211E142700B1CC40 /* Flowonix_WHITE.JPG in Resources */,
@@ -256,7 +257,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				16FB4CA6210F612F0039FC37 /* ViewController.swift in Sources */,
-				162579D3211E16E400B1CC40 /* View_ModeSelect.swift in Sources */,
 				162579D9211E1E8100B1CC40 /* View_EntryPage.swift in Sources */,
 				1615FED72111FB4F00FB990C /* View_ConstantFlow.swift in Sources */,
 				16D794A821235D980016EB56 /* MaxLengthTextField.swift in Sources */,
