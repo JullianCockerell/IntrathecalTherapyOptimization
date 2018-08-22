@@ -20,11 +20,12 @@ class View_PeriodicFlow: UIViewController {
     @IBOutlet weak var totalDoseLabel: UITextField!
     @IBOutlet weak var warningImage: UIImageView!
     weak var shapeLayer: CAShapeLayer?
-    var currentMinute = Float(0)
-    var currentHour = Float(0)
+    var startMinute = Float(0)
+    var startHour = Float(0)
     let globalYMargin = Float(55)
     var mgMode = true
     var unitLabel = "mg"
+    var yScale = Float(0.03)
 
     @IBOutlet weak var scalePicker: UISegmentedControl!
     @IBOutlet weak var doseField: UITextField!
@@ -45,6 +46,39 @@ class View_PeriodicFlow: UIViewController {
     @IBOutlet weak var block2Height: NSLayoutConstraint!
     @IBOutlet weak var scalePickerHeight: NSLayoutConstraint!
     @IBOutlet weak var block3Height: NSLayoutConstraint!
+    
+
+    @IBOutlet weak var dosePerClickField: UITextField!
+    
+        
+    
+    
+    lazy var datePicker: UIDatePicker =
+    {
+        let picker = UIDatePicker()
+        picker.datePickerMode = .time
+        // picker.addTarget(self, action: #selector(datePickerChanged(_:)), for: .editingDidEnd)
+        return picker
+    }()
+    
+    lazy var dateFormatter: DateFormatter =
+    {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+        return formatter
+    }()
+    
+    // Currently deprecated
+    @objc func datePickerChanged(_ sender: UIDatePicker)
+    {
+        updateUI()
+    }
+    
+    @IBAction func pumpConcentrationChaned(_ sender: AllowedCharsTextField)
+    {
+        updateUI()
+    }
     
     @IBAction func doseFieldChanged(_ sender: UITextField)
     {
@@ -91,18 +125,16 @@ class View_PeriodicFlow: UIViewController {
         let components = Calendar.current.dateComponents([.hour, .minute], from: durationPicker.date)
         let durHour = Float(components.hour!)
         let durMinute = Float(components.minute!)
+        let pumpConText = pumpConcentration.text!
+        let pumpConFloat = (pumpConText as NSString).floatValue
+        let bolusGrams = 0.002 * pumpConFloat
         let durTotal = (60*durHour) + durMinute
-        let pumpRate = doseSlider.value / durTotal
-        pumpRateLabel.text = roundValue(inputText: "\(pumpRate)", roundTo: 2) + " " + unitLabel + "/min"
+        let pumpClicksNum = inputFloat / bolusGrams
+        let pumpRateInClicks = durTotal / pumpClicksNum
+        let dosePerClickFloat = Float(0.002) * pumpConFloat
+        dosePerClickField.text = roundValue(inputText: "\(dosePerClickFloat)", roundTo: 2) + " " + unitLabel
+        pumpRateLabel.text = "1 click every " + roundValue(inputText: "\(pumpRateInClicks)", roundTo: 2) + " min"
         doseFieldLabel.text = unitLabel
-        var currentHourVar = currentHour
-        var timeLabel = "AM"
-        if(currentHourVar > 12)
-        {
-            currentHourVar -= 12
-            timeLabel = "PM"
-        }
-        startTimeField.text = "\(Int(currentHourVar))" + ":" + "\(Int(currentMinute))" + " " + timeLabel
         pumpConcentrationLabel.text = unitLabel + "/ml"
         generateAndLoadGraph(yMargin: globalYMargin, xMargin: (Float(self.view.bounds.width) - Float(graphImage.bounds.width)) / Float(2), gHeight: Float(graphImage.bounds.height))
     }
@@ -117,6 +149,7 @@ class View_PeriodicFlow: UIViewController {
             doseSlider.maximumValue = 300
             doseSlider.value = 100
             doseField.text = "100.0"
+            yScale = Float(1.5)
         }
         else
         {
@@ -125,6 +158,7 @@ class View_PeriodicFlow: UIViewController {
             doseSlider.maximumValue = 5
             doseSlider.value = 2.5
             doseField.text = "2.5"
+            yScale = Float(0.03)
         }
         updateUI()
     }
@@ -184,6 +218,7 @@ class View_PeriodicFlow: UIViewController {
             var doseValue = "\(doseSlider.value)"
             doseValue = roundValue(inputText: doseValue, roundTo: 1)
             doseField.text = doseValue
+            yScale = Float(1.5)
         }
         else
         {
@@ -192,9 +227,9 @@ class View_PeriodicFlow: UIViewController {
             let inputFloat = (inputPrefix as NSString).floatValue
             doseSlider.value = inputFloat
             doseField.text = inputPrefix
+            yScale = Float(0.03)
         }
         updateUI()
-        
     }
     
     
@@ -202,13 +237,18 @@ class View_PeriodicFlow: UIViewController {
     {
         if(isValid())
         {
-            generateAndLoadGraph(yMargin: globalYMargin, xMargin: (Float(self.view.bounds.width) - Float(graphImage.bounds.width)) / Float(2), gHeight: Float(graphImage.bounds.height))
             updateUI()
         }
-        
+        else
+        {
+            self.shapeLayer?.removeFromSuperlayer()
+        }
     }
     
-    @IBAction func intervalStepperChanged(_ sender: UIStepper) {
+    
+    
+    @IBAction func intervalStepperChanged(_ sender: UIStepper)
+    {
         let cVal = Int(sender.value)
         if (cVal == 1)
         {
@@ -268,7 +308,8 @@ class View_PeriodicFlow: UIViewController {
 
 
     
-    override func viewWillDisappear(_ animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool)
+    {
         super.viewWillDisappear(animated)
         AppDelegate.AppUtility.lockOrientation(UIInterfaceOrientationMask.portrait)
     }
@@ -283,7 +324,7 @@ class View_PeriodicFlow: UIViewController {
         //assign base constants
         let path = UIBezierPath()
         let gWidth = Float(Float(self.view.bounds.width) - (xMargin*2))
-        let xShift = Float(((currentHour + (currentMinute/Float(60))) / 24))*gWidth
+        let xShift = Float(((startHour + (startMinute/Float(60))) / 24))*gWidth
         let bolNum = Float(intervalStepper.value)
         let cycWidth = gWidth / bolNum
         
@@ -298,7 +339,7 @@ class View_PeriodicFlow: UIViewController {
         let pumpConText = pumpConcentration.text!
         let pumpConFloat = (pumpConText as NSString).floatValue
         let flowRate = bolusRate / pumpConFloat
-        let bolHeight = (flowRate / Float(0.03)) * gHeight
+        let bolHeight = (flowRate / yScale) * gHeight
         
         let bolWidth = (durTotal / (60*24)) * gWidth
         let basWidth = cycWidth - bolWidth
@@ -445,24 +486,38 @@ class View_PeriodicFlow: UIViewController {
         AppDelegate.AppUtility.lockOrientation(UIInterfaceOrientationMask.all)
         let date = Date()
         let calendar = Calendar.current
-        currentHour = Float(calendar.component(.hour, from: date))
-        currentMinute = Float(calendar.component(.minute, from: date))
+        startHour = Float(calendar.component(.hour, from: date))
+        startMinute = Float(calendar.component(.minute, from: date))
         
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy/MM/dd HH:mm"
         let initDateTime = formatter.date(from: "2016/10/08 00:10")
-        
         durationPicker.setDate(initDateTime!, animated: true)
+        var currentHourVar = startHour
+        var timeLabel = "AM"
+        if(currentHourVar > 12)
+        {
+            currentHourVar -= 12
+            timeLabel = "PM"
+        }
+        var minuteSpacer = ""
+        if(startMinute < 10)
+        {
+            minuteSpacer = "0"
+        }
+        startTimeField.text = "\(Int(currentHourVar))" + ":" + minuteSpacer + "\(Int(startMinute))" + " " + timeLabel
         updateUI()
     }
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(View_ConstantFlow.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(View_ConstantFlow.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-
+        NotificationCenter.default.addObserver(self, selector: #selector(View_PeriodicFlow.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(View_PeriodicFlow.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        startTimeField.inputView = datePicker
         
+        let toolBar = UIToolbar().ToolbarPicker(mySelect: #selector(View_PeriodicFlow.dismissPicker))
+        startTimeField.inputAccessoryView = toolBar
         
         let borderColor = UIColor.lightGray.cgColor
         durationPicker.layer.borderColor = borderColor
@@ -479,13 +534,25 @@ class View_PeriodicFlow: UIViewController {
         controlStyle.layer.borderColor = borderColor
         controlStyle.layer.borderWidth = 2
     }
+    
+    func dismissPicker()
+    {
+        view.endEditing(true)
+        let components = Calendar.current.dateComponents([.hour, .minute], from: datePicker.date)
+        startHour = Float(components.hour!)
+        startMinute = Float(components.minute!)
+        startTimeField.text = dateFormatter.string(from: datePicker.date)
+        updateUI()
+    }
 
-    override func didReceiveMemoryWarning() {
+    override func didReceiveMemoryWarning()
+    {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-    @objc func keyboardWillShow(notification: NSNotification) {
+    @objc func keyboardWillShow(notification: NSNotification)
+    {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             if self.view.frame.origin.y == 0{
                 self.view.frame.origin.y -= keyboardSize.height
@@ -493,13 +560,15 @@ class View_PeriodicFlow: UIViewController {
         }
     }
     
-    @objc func keyboardWillHide(notification: NSNotification) {
+    @objc func keyboardWillHide(notification: NSNotification)
+    {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             if self.view.frame.origin.y != 0{
                 self.view.frame.origin.y += keyboardSize.height
             }
         }
     }
+    
     
 
 
