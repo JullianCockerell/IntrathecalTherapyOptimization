@@ -44,9 +44,6 @@ class View_ConstantFlow: UIViewController {
     @IBOutlet weak var graphHeight: NSLayoutConstraint!
     
     
-    
-    
-    
     @IBAction func unitSwitchChanged(_ sender: UISwitch)
     {
         if(mgMode)
@@ -69,6 +66,7 @@ class View_ConstantFlow: UIViewController {
         }
         updateUI()
     }
+    
     
     @IBAction func doseSliderChanged(_ sender: UISlider)
     {
@@ -237,7 +235,7 @@ class View_ConstantFlow: UIViewController {
         }
         else
         {
-            pumpRateTextField.text = "1 Valve Actuation every " + timeBetween + " minutes"
+            pumpRateTextField.text = "1 V.A. every " + timeBetween + " minutes"
         }
         var dosePerClickVal = String(pumpConFloat * accumVol)
         dosePerClickVal = roundValue(inputText: dosePerClickVal, roundTo: 2)

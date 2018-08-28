@@ -32,9 +32,9 @@ class View_PeriodicFlow: UIViewController {
     // Defaults: Dose, Concentration, Accumulator Volume, Maximum Dose, Y Scale
     // index 0 for mg, index 1 for mcg
     let defAccumVol = Float(0.0025)
-    let defDose = [Float(2.5), Float(100.0)]
+    let defDose = [Float(2.5), Float(50.0)]
     let defConcentration = [Float(20.0), Float(350.0)]
-    let defDoseMax = [Float(5), Float(300)]
+    let defDoseMax = [Float(5), Float(100)]
     let defYScale = [Float(0.03), Float(1.5)]
 
     @IBOutlet weak var scalePicker: UISegmentedControl!
@@ -56,6 +56,16 @@ class View_PeriodicFlow: UIViewController {
     @IBOutlet weak var scalePickerHeight: NSLayoutConstraint!
     @IBOutlet weak var block3Height: NSLayoutConstraint!
     
+    @IBOutlet weak var yScale1: UILabel!
+    @IBOutlet weak var yScale2: UILabel!
+    @IBOutlet weak var yScale3: UILabel!
+    @IBOutlet weak var yScale4: UILabel!
+    @IBOutlet weak var yScale5: UILabel!
+    @IBOutlet weak var yScale6: UILabel!
+    @IBOutlet weak var yScale7: UILabel!
+    @IBOutlet weak var yScale8: UILabel!
+    @IBOutlet weak var yScale9: UILabel!
+    @IBOutlet weak var yScale10: UILabel!
 
     @IBOutlet weak var dosePerClickField: UITextField!
     
@@ -101,7 +111,7 @@ class View_PeriodicFlow: UIViewController {
     
 
     
-    @IBAction func pumpConcentrationChanged(_ sender: AllowedCharsTextField)
+    @IBAction func pumpConcentrationChaned(_ sender: AllowedCharsTextField)
     {
         if(pumpConcentration.text == "")
         {
@@ -155,6 +165,7 @@ class View_PeriodicFlow: UIViewController {
         pumpConcentration.text = "\(defConcentration[0])"
         accumVol = defAccumVol
         yScale = defYScale[0]
+        setYScaleLabels()
         updateUI()
     }
     
@@ -177,14 +188,14 @@ class View_PeriodicFlow: UIViewController {
         let pumpClicksNum = inputFloat / bolusGrams
         let pumpRateInClicks = durTotal / pumpClicksNum
         let dosePerClickFloat = Float(accumVol) * pumpConFloat
-        dosePerClickField.text = roundValue(inputText: "\(dosePerClickFloat)", roundTo: 2) + " " + unitLabel
+        dosePerClickField.text = roundValue(inputText: "\(dosePerClickFloat)", roundTo: 4) + " " + unitLabel
         if(pumpRateInClicks == 0)
         {
             pumpRateLabel.text = "0 Valve Actuations"
         }
         else
         {
-            pumpRateLabel.text = "1 Valve Actuation every " + roundValue(inputText: "\(pumpRateInClicks)", roundTo: 2) + " min"
+            pumpRateLabel.text = "1 V.A. every " + roundValue(inputText: "\(pumpRateInClicks)", roundTo: 2) + " min"
         }
         doseFieldLabel.text = unitLabel
         pumpConcentrationLabel.text = unitLabel + "/ml"
@@ -214,7 +225,33 @@ class View_PeriodicFlow: UIViewController {
             yScale = defYScale[0]
             pumpConcentration.text = "\(defConcentration[0])"
         }
+        setYScaleLabels()
         updateUI()
+    }
+    
+    func setYScaleLabels() -> Void
+    {
+        let maxRate = doseSlider.maximumValue / 10
+        let maxRateInterval = (maxRate / 10)
+        var roundNumber = 2
+        if(mgMode)
+        {
+            roundNumber = 2
+        }
+        else
+        {
+            roundNumber = 1
+        }
+        yScale1.text = roundValue(inputText: "\(maxRateInterval)", roundTo: roundNumber)
+        yScale2.text = roundValue(inputText: "\(maxRateInterval * 2)", roundTo: roundNumber)
+        yScale3.text = roundValue(inputText: "\(maxRateInterval * 3)", roundTo: roundNumber)
+        yScale4.text = roundValue(inputText: "\(maxRateInterval * 4)", roundTo: roundNumber)
+        yScale5.text = roundValue(inputText: "\(maxRateInterval * 5)", roundTo: roundNumber)
+        yScale6.text = roundValue(inputText: "\(maxRateInterval * 6)", roundTo: roundNumber)
+        yScale7.text = roundValue(inputText: "\(maxRateInterval * 7)", roundTo: roundNumber)
+        yScale8.text = roundValue(inputText: "\(maxRateInterval * 8)", roundTo: roundNumber)
+        yScale9.text = roundValue(inputText: "\(maxRateInterval * 9)", roundTo: roundNumber)
+        yScale10.text = roundValue(inputText: "\(maxRateInterval * 10)", roundTo: roundNumber)
     }
     
     
@@ -366,7 +403,6 @@ class View_PeriodicFlow: UIViewController {
         let graphWidth = Float(graphImage.bounds.width)
         let graphHeight = Float(graphImage.bounds.height)
         
-        
         //create path for graph to draw
         //assign base constants
         let path = UIBezierPath()
@@ -382,17 +418,22 @@ class View_PeriodicFlow: UIViewController {
         let durTotal = (60*durHour) + durMinute
         
         let bolusRate = doseSlider.value / durTotal
+        let maxBolusRate = doseSlider.maximumValue / 10
         let pumpConText = pumpConcentration.text!
         let pumpConFloat = (pumpConText as NSString).floatValue
-        let flowRate = bolusRate / pumpConFloat
-        let bolHeight = (flowRate / yScale) * graphHeight
-        
+        // let flowRate = bolusRate / pumpConFloat
+        // let bolHeight = (bolusRate / maxBolusRate) * graphHeight
+        let bolHeight = 0.5 * graphHeight
         let bolWidth = (durTotal / (60*24)) * graphWidth
         let basWidth = cycWidth - bolWidth
+        
+        let bolPerPeriod = (doseSlider.value / pumpConFloat) / accumVol
+        let distBetweenBol = ((durTotal / bolPerPeriod) / (24*60)) * graphWidth    //in coordinate points
         
         //ok to use cartesian coordinates, will be shifted when assigning points to path
         var coordArray = [[Float]]()
         var c = 0
+        var bolCounter = 0
         xCoord += xShift
         var cSet: [Float] = [xCoord, yCoord]
         coordArray.append(cSet)
@@ -401,30 +442,34 @@ class View_PeriodicFlow: UIViewController {
         //points are calculated and added to array
         while (c < Int(bolNum))
         {
-            yCoord = yCoord + bolHeight
-            cSet = [xCoord, yCoord]
-            coordArray.append(cSet)
-            xCoord += bolWidth
-            if (xCoord > graphWidth)
+            bolCounter = 0
+            while(bolCounter < Int(bolPerPeriod))
             {
-                cSet = [graphWidth, yCoord]
-                coordArray.append(cSet)
-                zeroIndex = coordArray.count
-                xCoord = xCoord - graphWidth
-                cSet = [0, yCoord]
-                coordArray.append(cSet)
+                yCoord += bolHeight
                 cSet = [xCoord, yCoord]
                 coordArray.append(cSet)
-                
-            }
-            else
-            {
+                yCoord -= bolHeight
                 cSet = [xCoord, yCoord]
                 coordArray.append(cSet)
+                xCoord += distBetweenBol
+                if (xCoord > graphWidth)
+                {
+                    cSet = [graphWidth, yCoord]
+                    coordArray.append(cSet)
+                    zeroIndex = coordArray.count
+                    xCoord = xCoord - graphWidth
+                    cSet = [0, yCoord]
+                    coordArray.append(cSet)
+                    cSet = [xCoord, yCoord]
+                    coordArray.append(cSet)
+                }
+                else
+                {
+                    cSet = [xCoord, yCoord]
+                    coordArray.append(cSet)
+                }
+                bolCounter += 1
             }
-            yCoord = yCoord - bolHeight
-            cSet = [xCoord, yCoord]
-            coordArray.append(cSet)
             xCoord += basWidth
             if (xCoord > graphWidth)
             {
@@ -506,6 +551,163 @@ class View_PeriodicFlow: UIViewController {
         shapeLayer.lineJoin = kCALineJoinRound
         view.layer.addSublayer(shapeLayer)
 
+        
+        //save shape layer to viewcontroller
+        self.shapeLayer = shapeLayer
+    }
+    
+    func generateAndLoadGraph2()
+    {
+        //remove old shape layer if any is present
+        self.shapeLayer?.removeFromSuperlayer()
+        let graphX = Float(graphImage.frame.origin.x)
+        let graphY = Float(graphImage.frame.origin.y)
+        let graphWidth = Float(graphImage.bounds.width)
+        let graphHeight = Float(graphImage.bounds.height)
+        
+        
+        //create path for graph to draw
+        //assign base constants
+        let path = UIBezierPath()
+        let xShift = Float(((startHour + (startMinute/Float(60))) / 24))*graphWidth
+        let bolNum = Float(intervalStepper.value)
+        let cycWidth = graphWidth / bolNum
+        
+        var xCoord = Float(0)
+        var yCoord = Float(0)
+        let components = Calendar.current.dateComponents([.hour, .minute], from: durationPicker.date)
+        let durHour = Float(components.hour!)
+        let durMinute = Float(components.minute!)
+        let durTotal = (60*durHour) + durMinute
+        
+        let bolusRate = doseSlider.value / durTotal
+        let maxBolusRate = doseSlider.maximumValue / 10
+        let pumpConText = pumpConcentration.text!
+        let pumpConFloat = (pumpConText as NSString).floatValue
+        // let flowRate = bolusRate / pumpConFloat
+        let bolHeight = (bolusRate / maxBolusRate) * graphHeight
+        
+        let bolWidth = (durTotal / (60*24)) * graphWidth
+        let basWidth = cycWidth - bolWidth
+        
+        //ok to use cartesian coordinates, will be shifted when assigning points to path
+        var coordArray = [[Float]]()
+        var c = 0
+        xCoord += xShift
+        var cSet: [Float] = [xCoord, yCoord]
+        coordArray.append(cSet)
+        //stores index where beginning of graph is for later swapping
+        var zeroIndex = 0
+        //points are calculated and added to array
+        while (c < Int(bolNum))
+        {
+            yCoord = yCoord + bolHeight
+            cSet = [xCoord, yCoord]
+            coordArray.append(cSet)
+            xCoord += bolWidth
+            if (xCoord > graphWidth)
+            {
+                cSet = [graphWidth, yCoord]
+                coordArray.append(cSet)
+                zeroIndex = coordArray.count
+                xCoord = xCoord - graphWidth
+                cSet = [0, yCoord]
+                coordArray.append(cSet)
+                cSet = [xCoord, yCoord]
+                coordArray.append(cSet)
+                
+            }
+            else
+            {
+                cSet = [xCoord, yCoord]
+                coordArray.append(cSet)
+            }
+            yCoord = yCoord - bolHeight
+            cSet = [xCoord, yCoord]
+            coordArray.append(cSet)
+            xCoord += basWidth
+            if (xCoord > graphWidth)
+            {
+                cSet = [graphWidth, yCoord]
+                coordArray.append(cSet)
+                zeroIndex = coordArray.count
+                xCoord = xCoord - graphWidth
+                cSet = [0, yCoord]
+                coordArray.append(cSet)
+                cSet = [xCoord, yCoord]
+                coordArray.append(cSet)
+                
+            }
+            else
+            {
+                cSet = [xCoord, yCoord]
+                coordArray.append(cSet)
+            }
+            c += 1
+        }
+        
+        
+        
+        //if shift is needed, array is shifted
+        if(zeroIndex > 0)
+        {
+            let endArray = Array(coordArray[0..<zeroIndex])
+            let beginArray = Array(coordArray[zeroIndex..<coordArray.count])
+            coordArray = beginArray + endArray
+        }
+        
+        //scaling is applied if zoom feature is in use
+        let scaling = scalePicker.selectedSegmentIndex
+        if(scaling == 0)
+        {
+            //do nothing
+        }
+        else if(scaling == 1)
+        {
+            c = 0
+            while(c < coordArray.count)
+            {
+                coordArray[c][0] = coordArray[c][0] * 4
+                c += 1
+            }
+        }
+        else if(scaling == 2)
+        {
+            c = 0
+            while(c < coordArray.count)
+            {
+                coordArray[c][0] = coordArray[c][0] * 48
+                c += 1
+            }
+        }
+        
+        //add points to path
+        c = 1
+        path.move(to: CGPoint(x: Int(coordArray[0][0] + graphX), y: Int(graphHeight + graphY - coordArray[0][1])))
+        while(c < coordArray.count)
+        {
+            if(coordArray[c][0] <= graphWidth)
+            {
+                path.addLine(to: CGPoint(x: Int(coordArray[c][0] + graphX), y: Int(graphHeight + graphY - coordArray[c][1])))
+                c += 1
+            }
+            else
+            {
+                path.addLine(to: CGPoint(x: Int(graphWidth + graphX), y: Int(graphHeight + graphY - coordArray[c][1])))
+                c = coordArray.count
+            }
+        }
+        
+        //create shape layer for that path
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.fillColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0).cgColor
+        shapeLayer.strokeColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+        shapeLayer.lineWidth = 3
+        shapeLayer.path = path.cgPath
+        shapeLayer.lineCap = kCALineCapRound
+        shapeLayer.lineJoin = kCALineJoinRound
+        view.layer.addSublayer(shapeLayer)
+        
         
         //save shape layer to viewcontroller
         self.shapeLayer = shapeLayer

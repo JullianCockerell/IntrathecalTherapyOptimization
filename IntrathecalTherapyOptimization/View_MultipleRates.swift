@@ -21,10 +21,10 @@ class View_MultipleRates: UIViewController {
     // Defaults: Dose, Concentration, Accumulator Volume, Maximum Dose, Y Scale
     // index 0 for mg, index 1 for mcg
     let defAccumVol = Float(0.0025)
-    let defDoseMg = [Float(1.0), Float(2.0), Float(3.0), Float(4.0)]
+    let defDoseMg = [Float(0.5), Float(1.0), Float(1.5), Float(2.0)]
     let defDoseMcg = [Float(20.0), Float(30.0), Float(40.0), Float(50.0)]
     let defConcentration = [Float(20.0), Float(350.0)]
-    let defDoseMax = [Float(5), Float(300)]
+    let defDoseMax = [Float(5), Float(100)]
     let defYScale = [Float(7.0), Float(300.0)]
     
     
@@ -62,10 +62,21 @@ class View_MultipleRates: UIViewController {
     @IBOutlet weak var doseLabel4: UILabel!
     @IBOutlet weak var controlBorder: UIView!
     @IBOutlet weak var graphBorder: UIView!
+    @IBOutlet weak var graphBorder2: UIView!
     @IBOutlet weak var miscBorder: UIView!
     
     @IBOutlet weak var controlBorderHeight: NSLayoutConstraint!
     @IBOutlet weak var miscStackTopDistance: NSLayoutConstraint!
+    
+    @IBOutlet weak var yScale1: UILabel!
+    @IBOutlet weak var yScale2: UILabel!
+    @IBOutlet weak var yScale3: UILabel!
+    @IBOutlet weak var yScale4: UILabel!
+    @IBOutlet weak var yScale5: UILabel!
+    
+    @IBOutlet weak var topGraph: UIImageView!
+    @IBOutlet weak var bottomGraph: UIImageView!
+
     
     @IBAction func doseInput1Selected(_ sender: AllowedCharsTextField)
     {
@@ -440,11 +451,33 @@ class View_MultipleRates: UIViewController {
             doseSlider4.value = defDoseMg[3]
             doseInput4.text = "\(defDoseMg[3])"
         }
+        setYScaleLabels()
         updateUI()
+    }
+    
+    func setYScaleLabels() -> Void
+    {
+        let maxRate = doseSlider1.maximumValue
+        let maxRateInterval = (maxRate / 5)
+        var roundNumber = 2
+        if(mgMode)
+        {
+            roundNumber = 2
+        }
+        else
+        {
+            roundNumber = 1
+        }
+        yScale1.text = roundValue(inputText: "\(maxRateInterval)", roundTo: roundNumber)
+        yScale2.text = roundValue(inputText: "\(maxRateInterval * 2)", roundTo: roundNumber)
+        yScale3.text = roundValue(inputText: "\(maxRateInterval * 3)", roundTo: roundNumber)
+        yScale4.text = roundValue(inputText: "\(maxRateInterval * 4)", roundTo: roundNumber)
+        yScale5.text = roundValue(inputText: "\(maxRateInterval * 5)", roundTo: roundNumber)
     }
     
     
     weak var shapeLayer: CAShapeLayer?
+    weak var shapeLayer2: CAShapeLayer?
     
     @IBAction func periodStepperChanged(_ sender: UIStepper)
     {
@@ -582,6 +615,9 @@ class View_MultipleRates: UIViewController {
         self.graphBorder.layer.borderWidth = 2
         self.graphBorder.layer.cornerRadius = 10
         self.graphBorder.layer.borderColor = UIColor.lightGray.cgColor
+        self.graphBorder2.layer.borderWidth = 2
+        self.graphBorder2.layer.cornerRadius = 10
+        self.graphBorder2.layer.borderColor = UIColor.lightGray.cgColor
         self.controlBorder.layer.borderWidth = 2
         self.controlBorder.layer.cornerRadius = 10
         self.controlBorder.layer.borderColor = UIColor.lightGray.cgColor
@@ -683,6 +719,7 @@ class View_MultipleRates: UIViewController {
         concentrationField.text = "\(defConcentration[0])"
         accumVol = defAccumVol
         yScale = defYScale[0]
+        setYScaleLabels()
         updateUI()
     }
     
@@ -707,7 +744,7 @@ class View_MultipleRates: UIViewController {
         }
         else
         {
-            rate1.text = "1 Valve Actuation every \(pumpRate1Round) min"
+            rate1.text = "1 V.A. every \(pumpRate1Round) min"
         }
         let pumpRate2 = Float(minuteArray[1]) / (doseSlider2.value / bolusGrams)
         let pumpRate2Round = roundValue(inputText: "\(pumpRate2)", roundTo: 1)
@@ -717,7 +754,7 @@ class View_MultipleRates: UIViewController {
         }
         else
         {
-            rate2.text = "1 Valve Actuation every \(pumpRate2Round) min"
+            rate2.text = "1 V.A. every \(pumpRate2Round) min"
         }
         if(periods > 2)
         {
@@ -729,7 +766,7 @@ class View_MultipleRates: UIViewController {
             }
             else
             {
-                rate3.text = "1 Valve Actuation every \(pumpRate3Round) min"
+                rate3.text = "1 V.A. every \(pumpRate3Round) min"
             }
             totalDose += doseSlider3.value
         }
@@ -743,12 +780,13 @@ class View_MultipleRates: UIViewController {
             }
             else
             {
-                rate4.text = "1 Valve Actuation every \(pumpRate4Round) min"
+                rate4.text = "1 V.A. every \(pumpRate4Round) min"
             }
             totalDose += doseSlider4.value
         }
         totalDoseField.text = "\(totalDose)" + " " + unitLabel
         generateAndLoadGraph()
+        generateAndLoadGraph2()
     }
     
     func calcMinuteArray(stepperState: Int) -> [Int]
@@ -818,10 +856,10 @@ class View_MultipleRates: UIViewController {
         var coordArray = [[Int]]()
         var c = 0
         
-        let graphX = Float(graphImage.frame.origin.x)
-        let graphY = Float(graphImage.frame.origin.y)
-        let graphWidth = Float(graphImage.bounds.width)
-        let graphHeight = Float(graphImage.bounds.height)
+        let graphX = Float(topGraph.frame.origin.x)
+        let graphY = Float(topGraph.frame.origin.y)
+        let graphWidth = Float(topGraph.bounds.width)
+        let graphHeight = Float(topGraph.bounds.height)
         
         //stores index where beginning of graph should be for later swapping
         var zeroIndex = 0
@@ -829,7 +867,8 @@ class View_MultipleRates: UIViewController {
         //points are calculated and added to array
         var components = Calendar.current.dateComponents([.hour, .minute], from: startPicker1.date)
         xCoord += ((Float(components.hour!) / 24.00) + (Float(components.minute!) / (24.00 * 60.00))) * graphWidth
-        yCoord = (doseSlider1.value / yScale) * graphHeight
+        let maxYValue = doseSlider1.maximumValue
+        yCoord = (doseSlider1.value / maxYValue) * graphHeight
         var cSet: [Int] = [Int(xCoord), Int(yCoord)]
         coordArray.append(cSet)
         var date1 = startPicker1.date
@@ -883,7 +922,7 @@ class View_MultipleRates: UIViewController {
                 {
                     let xDiff = xCoord - graphWidth
                     xCoord = graphWidth
-                    cSet = [Int(xCoord), Int(yCoord)]
+                        cSet = [Int(xCoord), Int(yCoord)]
                     coordArray.append(cSet)
                     zeroIndex = coordArray.count
                     xCoord = 0
@@ -915,7 +954,7 @@ class View_MultipleRates: UIViewController {
                 cSet = [Int(xCoord), Int(yCoord)]
                 coordArray.append(cSet)
             }
-            yCoord = (sliderVal / yScale) * graphHeight
+            yCoord = (sliderVal / maxYValue) * graphHeight
             cSet = [Int(xCoord), Int(yCoord)]
             coordArray.append(cSet)
             c += 1
@@ -947,9 +986,168 @@ class View_MultipleRates: UIViewController {
         shapeLayer.lineJoin = kCALineJoinRound
         view.layer.addSublayer(shapeLayer)
         
-        
         //save shape layer to viewcontroller
         self.shapeLayer = shapeLayer
+    }
+    
+    func generateAndLoadGraph2()
+    {
+        //remove old shape layer if any is present
+        self.shapeLayer2?.removeFromSuperlayer()
+        
+        //create path for graph to draw
+        let stepperState = Int(periodStepper.value)
+        let path = UIBezierPath()
+        var xCoord = Float(0)
+        var yCoord = Float(0)
+        
+        
+        //ok to use cartesian coordinates, will be shifted when assigning points to path
+        var coordArray = [[Float]]()
+        var c = 0
+        
+        let graphX = Float(bottomGraph.frame.origin.x)
+        let graphY = Float(bottomGraph.frame.origin.y)
+        let graphWidth = Float(bottomGraph.bounds.width)
+        let graphHeight = Float(bottomGraph.bounds.height)
+        
+        //stores index where beginning of graph should be for later swapping
+        var zeroIndex = 0
+        
+        //points are calculated and added to array
+        var components = Calendar.current.dateComponents([.hour, .minute], from: startPicker1.date)
+        xCoord += ((Float(components.hour!) / 24.00) + (Float(components.minute!) / (24.00 * 60.00))) * graphWidth
+
+        var cSet: [Float] = [xCoord, yCoord]
+        coordArray.append(cSet)
+        var date1 = startPicker1.date
+        var date2 = startPicker1.date
+        var sliderVal = doseSlider1.value
+        var bolusNumber = 0
+        
+        while(c < stepperState)
+        {
+            if(c == 0)
+            {
+                date1 = startPicker1.date
+                date2 = startPicker2.date
+                sliderVal = doseSlider1.value
+            }
+            else if(c == 1)
+            {
+                date1 = startPicker2.date
+                date2 = startPicker3.date
+                sliderVal = doseSlider2.value
+            }
+            else if(c == 2)
+            {
+                date1 = startPicker3.date
+                date2 = startPicker4.date
+                sliderVal = doseSlider3.value
+            }
+            else if(c == 3)
+            {
+                date1 = startPicker4.date
+                date2 = startPicker1.date
+                sliderVal = doseSlider4.value
+            }
+            if(stepperState - c == 1)
+            {
+                date2 = startPicker1.date
+            }
+            
+            let pumpConFloat = (concentrationField.text! as NSString).floatValue
+            let bolPerPeriod = (sliderVal / pumpConFloat) / accumVol
+            let distBetweenBol = (calculateXDistance(startTime: date1, endTime: date2, gWidth: graphWidth)) / bolPerPeriod
+            bolusNumber = 0
+            if(bolPerPeriod == 0)
+            {
+                xCoord += calculateXDistance(startTime: date1, endTime: date2, gWidth: graphWidth)
+                if(xCoord > graphWidth)
+                {
+                    let xDiff = xCoord - graphWidth
+                    xCoord = graphWidth
+                    cSet = [xCoord, yCoord]
+                    coordArray.append(cSet)
+                    zeroIndex = coordArray.count
+                    xCoord = 0
+                    cSet = [xCoord, yCoord]
+                    coordArray.append(cSet)
+                    xCoord = xDiff
+                    cSet = [xCoord, yCoord]
+                    coordArray.append(cSet)
+                }
+                else
+                {
+                    cSet = [xCoord, yCoord]
+                    coordArray.append(cSet)
+                }
+            }
+            else
+            {
+                while(bolusNumber < Int(bolPerPeriod))
+                {
+                    yCoord += (0.5 * graphHeight)
+                    cSet = [xCoord, yCoord]
+                    coordArray.append(cSet)
+                    yCoord -= (0.5 * graphHeight)
+                    cSet = [xCoord, yCoord]
+                    coordArray.append(cSet)
+                    xCoord += distBetweenBol
+                    if(xCoord > graphWidth)
+                    {
+                        let xDiff = xCoord - graphWidth
+                        xCoord = graphWidth
+                        cSet = [xCoord, yCoord]
+                        coordArray.append(cSet)
+                        zeroIndex = coordArray.count
+                        xCoord = 0
+                        cSet = [xCoord, yCoord]
+                        coordArray.append(cSet)
+                        xCoord = xDiff
+                        cSet = [xCoord, yCoord]
+                        coordArray.append(cSet)
+                    }
+                    else
+                    {
+                        cSet = [xCoord, yCoord]
+                        coordArray.append(cSet)
+                    }
+                    bolusNumber += 1
+                }
+            }
+            c += 1
+        }
+        
+        //if shift is needed, array is shifted
+        if(zeroIndex > 0)
+        {
+            let endArray = Array(coordArray[0..<zeroIndex])
+            let beginArray = Array(coordArray[zeroIndex..<coordArray.count])
+            coordArray = beginArray + endArray
+        }
+        //add points to path
+        c = 1
+        path.move(to: CGPoint(x: Int(coordArray[0][0] + graphX), y: Int(graphHeight + graphY - coordArray[0][1])))
+        while(c < coordArray.count)
+        {
+            path.addLine(to: CGPoint(x: Int(coordArray[c][0] + graphX), y: Int(graphHeight + graphY - coordArray[c][1])))
+            c += 1
+        }
+        
+        //create shape layer for that path
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.fillColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0).cgColor
+        shapeLayer.strokeColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+        shapeLayer.lineWidth = 3
+        shapeLayer.path = path.cgPath
+        shapeLayer.lineCap = kCALineCapRound
+        shapeLayer.lineJoin = kCALineJoinRound
+        view.layer.addSublayer(shapeLayer)
+        
+        
+        //save shape layer to viewcontroller
+        self.shapeLayer2 = shapeLayer
         
     }
     
