@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import NumericKeyboard
 
 class View_MultipleRates: UIViewController {
 
@@ -14,6 +15,19 @@ class View_MultipleRates: UIViewController {
     var mgMode = true
     var unitLabel = "mg"
     var yScale = Float(7.0)
+    var accumVol = Float(0.0025)
+    var textHolder = ""
+    
+    // Defaults: Dose, Concentration, Accumulator Volume, Maximum Dose, Y Scale
+    // index 0 for mg, index 1 for mcg
+    let defAccumVol = Float(0.0025)
+    let defDoseMg = [Float(1.0), Float(2.0), Float(3.0), Float(4.0)]
+    let defDoseMcg = [Float(20.0), Float(30.0), Float(40.0), Float(50.0)]
+    let defConcentration = [Float(20.0), Float(350.0)]
+    let defDoseMax = [Float(5), Float(300)]
+    let defYScale = [Float(7.0), Float(300.0)]
+    
+    
     @IBOutlet weak var periodStepper: UIStepper!
     @IBOutlet weak var periodStepperLabel: UILabel!
     @IBOutlet weak var doseSlider1: UISlider!
@@ -39,7 +53,8 @@ class View_MultipleRates: UIViewController {
     @IBOutlet weak var doseInput3: AllowedCharsTextField!
     @IBOutlet weak var doseInput4: AllowedCharsTextField!
     @IBOutlet weak var totalDoseField: UITextField!
-    @IBOutlet weak var concentrationField: UITextField!
+
+    @IBOutlet weak var concentrationField: AllowedCharsTextField!
     @IBOutlet weak var concentrationFieldLabel: UILabel!
     @IBOutlet weak var doseLabel1: UILabel!
     @IBOutlet weak var doseLabel2: UILabel!
@@ -52,10 +67,71 @@ class View_MultipleRates: UIViewController {
     @IBOutlet weak var controlBorderHeight: NSLayoutConstraint!
     @IBOutlet weak var miscStackTopDistance: NSLayoutConstraint!
     
+    @IBAction func doseInput1Selected(_ sender: AllowedCharsTextField)
+    {
+        textHolder = doseInput1.text!
+        perform(#selector(selectDoseInput1), with: nil, afterDelay: 0.01)
+    }
+    
+    func selectDoseInput1() -> Void
+    {
+        doseInput1.selectAll(nil)
+    }
+    
+    @IBAction func doseInput2Selected(_ sender: AllowedCharsTextField)
+    {
+        textHolder = doseInput2.text!
+        perform(#selector(selectDoseInput2), with: nil, afterDelay: 0.01)
+    }
+    
+    func selectDoseInput2() -> Void
+    {
+        doseInput2.selectAll(nil)
+    }
+    
+    @IBAction func doseInput3Selected(_ sender: AllowedCharsTextField)
+    {
+        textHolder = doseInput3.text!
+        perform(#selector(selectDoseInput3), with: nil, afterDelay: 0.01)
+    }
+    
+    func selectDoseInput3() -> Void
+    {
+        doseInput3.selectAll(nil)
+    }
+    
+    @IBAction func doseInput4Selected(_ sender: AllowedCharsTextField)
+    {
+        textHolder = doseInput4.text!
+        perform(#selector(selectDoseInput4), with: nil, afterDelay: 0.01)
+    }
+    
+    func selectDoseInput4() -> Void
+    {
+        doseInput4.selectAll(nil)
+    }
+    
+    @IBAction func concentrationFieldSelected(_ sender: AllowedCharsTextField)
+    {
+        textHolder = concentrationField.text!
+        perform(#selector(selectConcentrationField), with: nil, afterDelay: 0.01)
+    }
+    
+    func selectConcentrationField() -> Void
+    {
+        concentrationField.selectAll(nil)
+    }
+    
+    
+    
     
     @IBAction func doseInput1Changed(_ sender: AllowedCharsTextField)
     {
         var inputText = doseInput1.text!
+        if (inputText == "")
+        {
+            inputText = textHolder
+        }
         var inputFloat = (inputText as NSString).floatValue
         if(inputFloat > doseSlider1.maximumValue)
         {
@@ -89,6 +165,11 @@ class View_MultipleRates: UIViewController {
     @IBAction func doseInput2Changed(_ sender: AllowedCharsTextField)
     {
         var inputText = doseInput2.text!
+        if (inputText == "")
+        {
+            inputText = textHolder
+        }
+        
         var inputFloat = (inputText as NSString).floatValue
         if(inputFloat > doseSlider2.maximumValue)
         {
@@ -122,6 +203,10 @@ class View_MultipleRates: UIViewController {
     @IBAction func doseInput3Changed(_ sender: AllowedCharsTextField)
     {
         var inputText = doseInput3.text!
+        if (inputText == "")
+        {
+            inputText = textHolder
+        }
         var inputFloat = (inputText as NSString).floatValue
         if(inputFloat > doseSlider3.maximumValue)
         {
@@ -155,6 +240,10 @@ class View_MultipleRates: UIViewController {
     @IBAction func doseInput4Changed(_ sender: AllowedCharsTextField)
     {
         var inputText = doseInput4.text!
+        if (inputText == "")
+        {
+            inputText = textHolder
+        }
         var inputFloat = (inputText as NSString).floatValue
         if(inputFloat > doseSlider4.maximumValue)
         {
@@ -190,7 +279,7 @@ class View_MultipleRates: UIViewController {
     {
         if(isValid())
         {
-            generateAndLoadGraph(yMargin: globalYMargin, gWidth: Float(graphImage.bounds.width), gHeight: Float(graphImage.bounds.height))
+            updateUI()
         }
         
     }
@@ -199,7 +288,7 @@ class View_MultipleRates: UIViewController {
     {
         if(isValid())
         {
-            generateAndLoadGraph(yMargin: globalYMargin, gWidth: Float(graphImage.bounds.width), gHeight: Float(graphImage.bounds.height))
+            updateUI()
         }
     }
 
@@ -207,7 +296,7 @@ class View_MultipleRates: UIViewController {
     {
         if(isValid())
         {
-            generateAndLoadGraph(yMargin: globalYMargin, gWidth: Float(graphImage.bounds.width), gHeight: Float(graphImage.bounds.height))
+            updateUI()
         }
     }
 
@@ -215,15 +304,12 @@ class View_MultipleRates: UIViewController {
     {
         if(isValid())
         {
-            generateAndLoadGraph(yMargin: globalYMargin, gWidth: Float(graphImage.bounds.width), gHeight: Float(graphImage.bounds.height))
+            updateUI()
         }
     }
 
 
 
-    
-    
-    
     
     @IBAction func slider2Changed(_ sender: UISlider)
     {
@@ -319,40 +405,40 @@ class View_MultipleRates: UIViewController {
         if(mgMode)
         {
             unitLabel = "mcg"
-            yScale = Float(300)
+            yScale = defYScale[1]
             mgMode = false
-            doseSlider1.maximumValue = Float(300)
-            doseSlider1.value = Float(40)
-            concentrationField.text = "350.00"
-            doseInput1.text = "\(doseSlider1.value)"
-            doseSlider2.maximumValue = Float(300)
-            doseSlider2.value = Float(40)
-            doseInput2.text = "\(doseSlider1.value)"
-            doseSlider3.maximumValue = Float(300)
-            doseSlider3.value = Float(40)
-            doseInput3.text = "\(doseSlider1.value)"
-            doseSlider4.maximumValue = Float(300)
-            doseSlider4.value = Float(40)
-            doseInput4.text = "\(doseSlider1.value)"
+            doseSlider1.maximumValue = defDoseMax[1]
+            doseSlider1.value = defDoseMcg[0]
+            concentrationField.text = "\(defConcentration[1])"
+            doseInput1.text = "\(defDoseMcg[0])"
+            doseSlider2.maximumValue = defDoseMax[1]
+            doseSlider2.value = defDoseMcg[1]
+            doseInput2.text = "\(defDoseMcg[1])"
+            doseSlider3.maximumValue = defDoseMax[1]
+            doseSlider3.value = defDoseMcg[2]
+            doseInput3.text = "\(defDoseMcg[2])"
+            doseSlider4.maximumValue = defDoseMax[1]
+            doseSlider4.value = defDoseMcg[3]
+            doseInput4.text = "\(defDoseMcg[3])"
         }
         else if(!mgMode)
         {
             unitLabel = "mg"
-            yScale = Float(7.0)
+            yScale = defYScale[0]
             mgMode = true
-            doseSlider1.maximumValue = Float(5)
-            doseSlider1.value = Float(1)
-            concentrationField.text = "20.00"
-            doseInput1.text = "\(doseSlider1.value)"
-            doseSlider2.maximumValue = Float(5)
-            doseSlider2.value = Float(2)
-            doseInput2.text = "\(doseSlider2.value)"
-            doseSlider3.maximumValue = Float(5)
-            doseSlider3.value = Float(3)
-            doseInput3.text = "\(doseSlider3.value)"
-            doseSlider4.maximumValue = Float(5)
-            doseSlider4.value = Float(4)
-            doseInput4.text = "\(doseSlider4.value)"
+            doseSlider1.maximumValue = defDoseMax[0]
+            doseSlider1.value = defDoseMg[0]
+            concentrationField.text = "\(defConcentration[0])"
+            doseInput1.text = "\(defDoseMg[0])"
+            doseSlider2.maximumValue = defDoseMax[0]
+            doseSlider2.value = defDoseMg[1]
+            doseInput2.text = "\(defDoseMg[1])"
+            doseSlider3.maximumValue = defDoseMax[0]
+            doseSlider3.value = defDoseMg[2]
+            doseInput3.text = "\(defDoseMg[2])"
+            doseSlider4.maximumValue = defDoseMax[0]
+            doseSlider4.value = defDoseMg[3]
+            doseInput4.text = "\(defDoseMg[3])"
         }
         updateUI()
     }
@@ -468,11 +554,26 @@ class View_MultipleRates: UIViewController {
     }
     
     
+    @IBAction func concentrationFieldChanged(_ sender: AllowedCharsTextField)
+    {
+        if (concentrationField.text == "")
+        {
+            concentrationField.text = textHolder
+        }
+    }
+    
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(View_ConstantFlow.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(View_ConstantFlow.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        
+        NKInputView.with(doseInput1, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
+        NKInputView.with(doseInput2, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
+        NKInputView.with(doseInput3, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
+        NKInputView.with(doseInput4, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
+        NKInputView.with(concentrationField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
         
         miscStackTopDistance.constant = 30
         controlStack3.alpha = 0.0
@@ -504,7 +605,7 @@ class View_MultipleRates: UIViewController {
         self.startPicker4.layer.borderWidth = 2.0
         self.startPicker4.layer.cornerRadius = 5
         self.startPicker4.setValue(UIColor.white, forKeyPath: "textColor")
-        updateUI()
+        initializeUI()
     }
     
     override func viewWillAppear(_ animated: Bool)
@@ -564,6 +665,27 @@ class View_MultipleRates: UIViewController {
         // Dispose of any resources that can be recreated
     }
     
+    
+    func initializeUI()
+    {
+        doseSlider1.value = defDoseMg[0]
+        doseInput1.text = "\(defDoseMg[0])"
+        doseSlider1.maximumValue = defDoseMax[0]
+        doseSlider2.value = defDoseMg[1]
+        doseInput2.text = "\(defDoseMg[1])"
+        doseSlider1.maximumValue = defDoseMax[0]
+        doseSlider3.value = defDoseMg[2 ]
+        doseInput3.text = "\(defDoseMg[2])"
+        doseSlider1.maximumValue = defDoseMax[0]
+        doseSlider4.value = defDoseMg[3]
+        doseInput4.text = "\(defDoseMg[3])"
+        doseSlider1.maximumValue = defDoseMax[0]
+        concentrationField.text = "\(defConcentration[0])"
+        accumVol = defAccumVol
+        yScale = defYScale[0]
+        updateUI()
+    }
+    
     func updateUI() -> Void
     {
         var totalDose = doseSlider1.value + doseSlider2.value
@@ -574,31 +696,59 @@ class View_MultipleRates: UIViewController {
         doseLabel4.text = unitLabel
         let pumpConText = concentrationField.text!
         let pumpConFloat = (pumpConText as NSString).floatValue
-        let bolusGrams = 0.002 * pumpConFloat
+        let bolusGrams = accumVol * pumpConFloat
         let periods = Int(periodStepper.value)
         let minuteArray = calcMinuteArray(stepperState: periods)
         let pumpRate1 = Float(minuteArray[0]) / (doseSlider1.value / bolusGrams)
         let pumpRate1Round = roundValue(inputText: "\(pumpRate1)", roundTo: 1)
-        rate1.text = "1 click every \(pumpRate1Round) min"
+        if (pumpRate1Round == "inf")
+        {
+            rate1.text = "0 Valve Actuations"
+        }
+        else
+        {
+            rate1.text = "1 Valve Actuation every \(pumpRate1Round) min"
+        }
         let pumpRate2 = Float(minuteArray[1]) / (doseSlider2.value / bolusGrams)
         let pumpRate2Round = roundValue(inputText: "\(pumpRate2)", roundTo: 1)
-        rate2.text = "1 click every \(pumpRate2Round) min"
+        if (pumpRate2Round == "inf")
+        {
+            rate2.text = "0 Valve Actuations"
+        }
+        else
+        {
+            rate2.text = "1 Valve Actuation every \(pumpRate2Round) min"
+        }
         if(periods > 2)
         {
             let pumpRate3 = Float(minuteArray[2]) / (doseSlider3.value / bolusGrams)
             let pumpRate3Round = roundValue(inputText: "\(pumpRate3)", roundTo: 1)
-            rate3.text = "1 click every \(pumpRate3Round) min"
+            if (pumpRate3Round == "inf")
+            {
+                rate3.text = "0 Valve Actuations"
+            }
+            else
+            {
+                rate3.text = "1 Valve Actuation every \(pumpRate3Round) min"
+            }
             totalDose += doseSlider3.value
         }
         if(periods > 3)
         {
             let pumpRate4 = Float(minuteArray[3]) / (doseSlider4.value / bolusGrams)
             let pumpRate4Round = roundValue(inputText: "\(pumpRate4)", roundTo: 1)
-            rate4.text = "1 click every \(pumpRate4Round) min"
+            if (pumpRate4Round == "inf")
+            {
+                rate4.text = "0 Valve Actuations"
+            }
+            else
+            {
+                rate4.text = "1 Valve Actuation every \(pumpRate4Round) min"
+            }
             totalDose += doseSlider4.value
         }
         totalDoseField.text = "\(totalDose)" + " " + unitLabel
-        generateAndLoadGraph(yMargin: globalYMargin, gWidth: Float(graphImage.bounds.width), gHeight: Float(graphImage.bounds.height))
+        generateAndLoadGraph()
     }
     
     func calcMinuteArray(stepperState: Int) -> [Int]
@@ -652,7 +802,7 @@ class View_MultipleRates: UIViewController {
         return minuteArray
     }
     
-    func generateAndLoadGraph(yMargin: Float, gWidth: Float, gHeight: Float)
+    func generateAndLoadGraph()
     {
         //remove old shape layer if any is present
         self.shapeLayer?.removeFromSuperlayer()
@@ -668,13 +818,18 @@ class View_MultipleRates: UIViewController {
         var coordArray = [[Int]]()
         var c = 0
         
-        //stores index where beginning of graph is for later swapping
+        let graphX = Float(graphImage.frame.origin.x)
+        let graphY = Float(graphImage.frame.origin.y)
+        let graphWidth = Float(graphImage.bounds.width)
+        let graphHeight = Float(graphImage.bounds.height)
+        
+        //stores index where beginning of graph should be for later swapping
         var zeroIndex = 0
         
         //points are calculated and added to array
         var components = Calendar.current.dateComponents([.hour, .minute], from: startPicker1.date)
-        xCoord += ((Float(components.hour!) / 24.00) + (Float(components.minute!) / (24.00 * 60.00))) * gWidth
-        yCoord = (doseSlider1.value / yScale) * gHeight
+        xCoord += ((Float(components.hour!) / 24.00) + (Float(components.minute!) / (24.00 * 60.00))) * graphWidth
+        yCoord = (doseSlider1.value / yScale) * graphHeight
         var cSet: [Int] = [Int(xCoord), Int(yCoord)]
         coordArray.append(cSet)
         var date1 = startPicker1.date
@@ -716,8 +871,8 @@ class View_MultipleRates: UIViewController {
             else if(c == 1){ sliderVal = doseSlider3.value }
             else if(c == 2){ sliderVal = doseSlider4.value }
             
-            xCoord += calculateXDistance(startTime: date1, endTime: date2, gWidth: gWidth)
-            if(xCoord == gWidth)
+            xCoord += calculateXDistance(startTime: date1, endTime: date2, gWidth: graphWidth)
+            if(xCoord == graphWidth)
             {
                 if(sliderVal < prevSliderVal)
                 {
@@ -726,8 +881,8 @@ class View_MultipleRates: UIViewController {
                 }
                 else
                 {
-                    let xDiff = xCoord - gWidth
-                    xCoord = gWidth
+                    let xDiff = xCoord - graphWidth
+                    xCoord = graphWidth
                     cSet = [Int(xCoord), Int(yCoord)]
                     coordArray.append(cSet)
                     zeroIndex = coordArray.count
@@ -739,11 +894,11 @@ class View_MultipleRates: UIViewController {
                     coordArray.append(cSet)
                 }
             }
-            else if(xCoord > gWidth)
+            else if(xCoord > graphWidth)
             {
 
-                let xDiff = xCoord - gWidth
-                xCoord = gWidth
+                let xDiff = xCoord - graphWidth
+                xCoord = graphWidth
                 cSet = [Int(xCoord), Int(yCoord)]
                 coordArray.append(cSet)
                 zeroIndex = coordArray.count
@@ -760,7 +915,7 @@ class View_MultipleRates: UIViewController {
                 cSet = [Int(xCoord), Int(yCoord)]
                 coordArray.append(cSet)
             }
-            yCoord = (sliderVal / yScale) * gHeight
+            yCoord = (sliderVal / yScale) * graphHeight
             cSet = [Int(xCoord), Int(yCoord)]
             coordArray.append(cSet)
             c += 1
@@ -775,14 +930,12 @@ class View_MultipleRates: UIViewController {
         }
         //add points to path
         c = 1
-        let xMargin = (self.view.bounds.width - graphImage.bounds.width) / 2.00
-        path.move(to: CGPoint(x: coordArray[0][0] + Int(xMargin), y: Int(gHeight + yMargin) - coordArray[0][1]))
+        path.move(to: CGPoint(x: coordArray[0][0] + Int(graphX), y: Int(graphHeight + graphY) - coordArray[0][1]))
         while(c < coordArray.count)
         {
-            path.addLine(to: CGPoint(x: coordArray[c][0] + Int(xMargin), y: Int(gHeight + yMargin) - coordArray[c][1]))
+            path.addLine(to: CGPoint(x: coordArray[c][0] + Int(graphX), y: Int(graphHeight + graphY) - coordArray[c][1]))
             c += 1
         }
-        
         
         //create shape layer for that path
         let shapeLayer = CAShapeLayer()

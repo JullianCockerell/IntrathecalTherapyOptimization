@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import NumericKeyboard
 
 class View_ConstantFlow: UIViewController {
 
@@ -15,12 +16,22 @@ class View_ConstantFlow: UIViewController {
     var unitLabel = "mg"
     var roundValue = 3
     var mgMode = true
+    var accumVol = Float(0.0025)
+    var textHolder = "Not Set"
+    var attributingText = false
+    
+    // Defaults: Dose, Concentration, Accumulator Volume, Maximum Dose
+    // index 0 for mg, index 1 for mcg
+    let defAccumVol = Float(0.0025)
+    let defDose = [Float(1.0), Float(40.0)]
+    let defConcentration = [Float(8.0), Float(350.0)]
+    let defDoseMax = [Float(5), Float(300)]
+
     @IBOutlet weak var graphImage: UIImageView!
     @IBOutlet weak var doseSlider: UISlider!
     @IBOutlet weak var doseSliderLabel: UILabel!
     @IBOutlet weak var doseInputField: UITextField!
     @IBOutlet weak var pumpConcentrationLabel: UILabel!
-    @IBOutlet weak var dosePerClickLabel: UILabel!
     @IBOutlet weak var dosePerClick: UITextField!
     @IBOutlet weak var labelStack24: UIStackView!
     @IBOutlet weak var labelStack30: UIStackView!
@@ -28,12 +39,9 @@ class View_ConstantFlow: UIViewController {
     @IBOutlet weak var borderImage: UIImageView!
     @IBOutlet weak var pumpConcentration: UITextField!
     @IBOutlet weak var graphYMargin: NSLayoutConstraint!
-    var globalYMargin = Float(55)
     @IBOutlet weak var scalePicker: UISegmentedControl!
     @IBOutlet weak var graphStyle: UIView!
-    
     @IBOutlet weak var graphHeight: NSLayoutConstraint!
-    
     
     
     
@@ -45,19 +53,19 @@ class View_ConstantFlow: UIViewController {
         {
             unitLabel = "mcg"
             mgMode = false
-            doseSlider.maximumValue = Float(300)
-            doseSlider.value = Float(40)
-            pumpConcentration.text = "350.00"
-            doseInputField.text = "\(doseSlider.value)"
+            doseSlider.maximumValue = defDoseMax[1]
+            doseSlider.value = defDose[1]
+            pumpConcentration.text = "\(defConcentration[1])"
+            doseInputField.text = "\(defDose[1])"
         }
         else if(!mgMode)
         {
             unitLabel = "mg"
             mgMode = true
-            doseSlider.maximumValue = Float(5)
-            doseSlider.value = Float(1.0)
-            pumpConcentration.text = "8.00"
-            doseInputField.text = "\(doseSlider.value)"
+            doseSlider.maximumValue = defDoseMax[0]
+            doseSlider.value = defDose[0]
+            pumpConcentration.text = "\(defConcentration[0])"
+            doseInputField.text = "\(defDose[0])"
         }
         updateUI()
     }
@@ -83,17 +91,56 @@ class View_ConstantFlow: UIViewController {
         updateUI()
     }
     
-    @IBAction func pumpConcentrationChanged(_ sender: UITextField)
+    @IBAction func pumpConcentrationSelected(_ sender: AllowedCharsTextField)
     {
-        let inputText = pumpConcentration.text!
+        textHolder = pumpConcentration.text!
+        perform(#selector(selectPumpConcentration), with: nil, afterDelay: 0.01)
+    }
+    
+    func selectPumpConcentration() -> Void
+    {
+        pumpConcentration.selectAll(nil)
+    }
+    
+    @IBAction func pumpConcentrationChanged(_ sender: AllowedCharsTextField)
+    {
+        var inputText = pumpConcentration.text!
+        if (inputText == "")
+        {
+            if (mgMode)
+            {
+                inputText = "\(defConcentration[0])"
+            }
+            else
+            {
+                inputText = "\(defConcentration[1])"
+            }
+        }
         let inputPrefix = roundValue(inputText: inputText, roundTo: 2)
         pumpConcentration.text = inputPrefix
         updateUI()
     }
     
-    @IBAction func doseInputFieldChanged(_ sender: UITextField)
+
+    @IBAction func doseInputFieldSelected(_ sender: AllowedCharsTextField)
     {
+        textHolder = doseInputField.text!
+        perform(#selector(selectDoseInputField), with: nil, afterDelay: 0.01)
+    }
+    
+    func selectDoseInputField() -> Void
+    {
+        doseInputField.selectAll(nil)
+    }
+    
+    @IBAction func doseInputFieldChanged(_ sender: AllowedCharsTextField)
+    {
+        
         var inputText = doseInputField.text!
+        if (inputText == "")
+        {
+            inputText = textHolder
+        }
         var inputFloat = (inputText as NSString).floatValue
         if(inputFloat > doseSlider.maximumValue)
         {
@@ -121,8 +168,9 @@ class View_ConstantFlow: UIViewController {
             doseInputField.text = inputPrefix
             doseSlider.value = inputFloat
         }
-        
+    
         updateUI()
+        
     }
     
     @IBAction func scalePickerChanged(_ sender: UISegmentedControl)
@@ -130,7 +178,7 @@ class View_ConstantFlow: UIViewController {
         let pickerValue = scalePicker.selectedSegmentIndex
         if(pickerValue == 0)
         {
-            generateAndLoadGraph(yMargin: globalYMargin, xMargin: (Float(self.view.bounds.width) - Float(graphImage.bounds.width)) / Float(2), gHeight: Float(graphImage.bounds.height))
+            generateAndLoadGraph()
             UIView.animate(withDuration: 0.7, animations: {
                 self.labelStack6.alpha = 0.0
                 self.labelStack24.alpha = 1.0
@@ -139,7 +187,7 @@ class View_ConstantFlow: UIViewController {
         }
         else if (pickerValue == 1)
         {
-            generateAndLoadGraph(yMargin: globalYMargin, xMargin: (Float(self.view.bounds.width) - Float(graphImage.bounds.width)) / Float(2), gHeight: Float(graphImage.bounds.height))
+            generateAndLoadGraph()
             UIView.animate(withDuration: 0.7, animations: {
                 self.labelStack6.alpha = 1.0
                 self.labelStack24.alpha = 0.0
@@ -148,7 +196,7 @@ class View_ConstantFlow: UIViewController {
         }
         else if (pickerValue == 2)
         {
-            generateAndLoadGraph(yMargin: globalYMargin, xMargin: (Float(self.view.bounds.width) - Float(graphImage.bounds.width)) / Float(2), gHeight: Float(graphImage.bounds.height))
+            generateAndLoadGraph()
             UIView.animate(withDuration: 0.7, animations: {
                 self.labelStack6.alpha = 0.0
                 self.labelStack24.alpha = 0.0
@@ -162,6 +210,16 @@ class View_ConstantFlow: UIViewController {
     
     weak var shapeLayer: CAShapeLayer?
     
+    func initializeUI()
+    {
+        doseSlider.value = defDose[0]
+        doseSlider.maximumValue = defDoseMax[0]
+        doseInputField.text = "\(defDose[0])"
+        pumpConcentration.text = "\(defConcentration[0])"
+        accumVol = defAccumVol
+        updateUI()
+    }
+    
     func updateUI() -> Void
     {
         let inputText = doseInputField.text!
@@ -171,28 +229,26 @@ class View_ConstantFlow: UIViewController {
         let totalDose = doseSlider.value
         let pumpCon = pumpConcentration.text!
         let pumpConFloat = (pumpCon as NSString).floatValue
-        var timeBetween = String(Float(1440) / ((totalDose / pumpConFloat) / 0.002))
+        var timeBetween = String(Float(1440) / ((totalDose / pumpConFloat) / defAccumVol))
         timeBetween = roundValue(inputText: timeBetween, roundTo: 2)
         if(totalDose == 0)
         {
-            pumpRateTextField.text = "0 clicks"
+            pumpRateTextField.text = "0 Valve Actuations"
         }
         else
         {
-            pumpRateTextField.text = "1 click every " + timeBetween + " minutes"
+            pumpRateTextField.text = "1 Valve Actuation every " + timeBetween + " minutes"
         }
-        var dosePerClickVal = String(pumpConFloat * 0.002)
+        var dosePerClickVal = String(pumpConFloat * accumVol)
         dosePerClickVal = roundValue(inputText: dosePerClickVal, roundTo: 2)
-        dosePerClick.text = dosePerClickVal
-        dosePerClickLabel.text = unitLabel
+        dosePerClick.text = dosePerClickVal + " " + unitLabel
         doseSliderLabel.text = unitLabel
         doseInputField.text = inputPrefix
         pumpConcentrationLabel.text = unitLabel + "/ml"
         let pumpConText = pumpConcentration.text
         let pumpConRound = roundValue(inputText: pumpConText!, roundTo: 2)
         pumpConcentration.text = pumpConRound
-        
-        generateAndLoadGraph(yMargin: globalYMargin, xMargin: (Float(self.view.bounds.width) - Float(graphImage.bounds.width)) / Float(2), gHeight: Float(graphImage.bounds.height))
+        generateAndLoadGraph()
     }
     
     func roundValue(inputText: String, roundTo: Int) -> String
@@ -227,8 +283,6 @@ class View_ConstantFlow: UIViewController {
     override func viewWillAppear(_ animated: Bool)
     {
         AppDelegate.AppUtility.lockOrientation(UIInterfaceOrientationMask.all)
-        globalYMargin = Float(graphYMargin.constant) + 15
-        updateUI()
     }
     
     override func viewWillDisappear(_ animated: Bool)
@@ -240,6 +294,10 @@ class View_ConstantFlow: UIViewController {
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        
+        NKInputView.with(doseInputField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
+        NKInputView.with(pumpConcentration, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
+        
         NotificationCenter.default.addObserver(self, selector: #selector(View_ConstantFlow.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(View_ConstantFlow.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         self.borderImage.layer.borderColor = UIColor.lightGray.cgColor
@@ -248,6 +306,8 @@ class View_ConstantFlow: UIViewController {
         self.graphStyle.layer.borderWidth = 2
         self.graphStyle.layer.cornerRadius = 10
         self.graphStyle.layer.borderColor = UIColor.lightGray.cgColor
+        
+        initializeUI()
     }
     
     @objc func keyboardWillShow(notification: NSNotification)
@@ -276,29 +336,32 @@ class View_ConstantFlow: UIViewController {
     }
     
     
-    func generateAndLoadGraph(yMargin: Float, xMargin: Float, gHeight: Float)
+    func generateAndLoadGraph()
     {
         //remove old shape layer if any is present
         self.shapeLayer?.removeFromSuperlayer()
+        let graphX = Float(graphImage.frame.origin.x)
+        let graphY = Float(graphImage.frame.origin.y)
+        let graphWidth = Float(graphImage.bounds.width)
+        let graphHeight = Float(graphImage.bounds.height)
         
         //create path for graph to draw
         //assign base constants
         let path = UIBezierPath()
-        let gWidth = Float(Float(self.view.bounds.width) - (xMargin*2))
         var xCoord = Float(0)
         var yCoord = Float(0)
         let totalDose = doseSlider.value
         let pumpCon = pumpConcentration.text!
         let pumpConFloat = (pumpCon as NSString).floatValue
-        var bolNum = ((totalDose / pumpConFloat) / 0.002)
-        let bolHeight = 0.3 * gHeight
-        let bolSpacing = gWidth / bolNum
+        var bolNum = ((totalDose / pumpConFloat) / defAccumVol)
+        let bolHeight = 0.3 * graphHeight
+        let bolSpacing = graphWidth / bolNum
         bolNum += 1
         
         if(totalDose == 0)
         {
-            path.move(to: CGPoint(x: Int(xMargin), y: Int(gHeight + yMargin)))
-            path.addLine(to: CGPoint(x: Int(xMargin + gWidth), y: Int(gHeight + yMargin)))
+            path.move(to: CGPoint(x: Int(graphX), y: Int(graphHeight + graphY)))
+            path.addLine(to: CGPoint(x: Int(graphX + graphWidth), y: Int(graphHeight + graphY)))
         }
         else
         {
@@ -318,9 +381,9 @@ class View_ConstantFlow: UIViewController {
                 cSet = [xCoord, yCoord]
                 coordArray.append(cSet)
                 xCoord += bolSpacing
-                if(xCoord > gWidth)
+                if(xCoord > graphWidth)
                 {
-                    xCoord = gWidth
+                    xCoord = graphWidth
                 }
                 cSet = [xCoord, yCoord]
                 coordArray.append(cSet)
@@ -354,17 +417,17 @@ class View_ConstantFlow: UIViewController {
             
             //add points to path
             c = 1
-            path.move(to: CGPoint(x: Int(coordArray[0][0]) + Int(xMargin), y: Int(gHeight + yMargin) - Int(coordArray[0][1])))
+            path.move(to: CGPoint(x: Int(coordArray[0][0]) + Int(graphX), y: Int(graphHeight + graphY) - Int(coordArray[0][1])))
             while(c < coordArray.count)
             {
-                if(Float(coordArray[c][0]) < gWidth)
+                if(Float(coordArray[c][0]) < graphWidth)
                 {
-                    path.addLine(to: CGPoint(x: Int(coordArray[c][0]) + Int(xMargin), y: Int(gHeight + yMargin) - Int(coordArray[c][1])))
+                    path.addLine(to: CGPoint(x: Int(coordArray[c][0]) + Int(graphX), y: Int(graphHeight + graphY) - Int(coordArray[c][1])))
                     c += 1
                 }
                 else
                 {
-                    path.addLine(to: CGPoint(x: Int(gWidth) + Int(xMargin), y: Int(gHeight + yMargin) - Int(coordArray[c][1])))
+                    path.addLine(to: CGPoint(x: Int(graphWidth) + Int(graphX), y: Int(graphHeight + graphY) - Int(coordArray[c][1])))
                     c = coordArray.count
                 }
             }

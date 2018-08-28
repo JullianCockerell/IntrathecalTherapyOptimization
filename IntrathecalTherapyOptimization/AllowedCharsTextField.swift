@@ -1,3 +1,5 @@
+
+
 import UIKit
 import Foundation
 
@@ -20,6 +22,7 @@ class AllowedCharsTextField: MaxLengthTextField {
         return super.allowedIntoTextField(text: text) &&
             text.containsOnlyCharactersIn(matchCharacters: allowedChars)
     }
+    
     
 }
 

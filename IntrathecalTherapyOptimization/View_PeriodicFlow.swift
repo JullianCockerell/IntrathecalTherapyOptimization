@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import NumericKeyboard
 
 class View_PeriodicFlow: UIViewController {
 
@@ -22,13 +23,22 @@ class View_PeriodicFlow: UIViewController {
     weak var shapeLayer: CAShapeLayer?
     var startMinute = Float(0)
     var startHour = Float(0)
-    let globalYMargin = Float(55)
     var mgMode = true
     var unitLabel = "mg"
     var yScale = Float(0.03)
+    var accumVol = Float(0.0025)
+    var textHolder = ""
+    
+    // Defaults: Dose, Concentration, Accumulator Volume, Maximum Dose, Y Scale
+    // index 0 for mg, index 1 for mcg
+    let defAccumVol = Float(0.0025)
+    let defDose = [Float(2.5), Float(100.0)]
+    let defConcentration = [Float(20.0), Float(350.0)]
+    let defDoseMax = [Float(5), Float(300)]
+    let defYScale = [Float(0.03), Float(1.5)]
 
     @IBOutlet weak var scalePicker: UISegmentedControl!
-    @IBOutlet weak var doseField: UITextField!
+    @IBOutlet weak var doseField: AllowedCharsTextField!
     @IBOutlet weak var doseFieldLabel: UILabel!
     @IBOutlet weak var startTimeField: UITextField!
     @IBOutlet weak var unitPicker: UISwitch!
@@ -40,7 +50,6 @@ class View_PeriodicFlow: UIViewController {
     @IBOutlet weak var controlStyle: UIView!
     @IBOutlet weak var pumpConcentration: AllowedCharsTextField!
     @IBOutlet weak var pumpConcentrationLabel: UILabel!
-    
     @IBOutlet weak var graphHeight: NSLayoutConstraint!
     @IBOutlet weak var block1Height: NSLayoutConstraint!
     @IBOutlet weak var block2Height: NSLayoutConstraint!
@@ -51,13 +60,34 @@ class View_PeriodicFlow: UIViewController {
     @IBOutlet weak var dosePerClickField: UITextField!
     
         
+    @IBAction func doseFieldSelected(_ sender: AllowedCharsTextField)
+    {
+        textHolder = doseField.text!
+        perform(#selector(selectDoseField), with: nil, afterDelay: 0.01)
+    }
+    
+    func selectDoseField() -> Void
+    {
+        doseField.selectAll(nil)
+    }
+    
+    @IBAction func pumpConcentrationSelected(_ sender: AllowedCharsTextField)
+    {
+        textHolder = pumpConcentration.text!
+        perform(#selector(selectPumpConcentration), with: nil, afterDelay: 0.01)
+    }
+    
+    func selectPumpConcentration() -> Void
+    {
+        pumpConcentration.selectAll(nil)
+    }
+    
     
     
     lazy var datePicker: UIDatePicker =
     {
         let picker = UIDatePicker()
         picker.datePickerMode = .time
-        // picker.addTarget(self, action: #selector(datePickerChanged(_:)), for: .editingDidEnd)
         return picker
     }()
     
@@ -69,20 +99,24 @@ class View_PeriodicFlow: UIViewController {
         return formatter
     }()
     
-    // Currently deprecated
-    @objc func datePickerChanged(_ sender: UIDatePicker)
-    {
-        updateUI()
-    }
+
     
-    @IBAction func pumpConcentrationChaned(_ sender: AllowedCharsTextField)
+    @IBAction func pumpConcentrationChanged(_ sender: AllowedCharsTextField)
     {
+        if(pumpConcentration.text == "")
+        {
+            pumpConcentration.text = textHolder
+        }
         updateUI()
     }
     
     @IBAction func doseFieldChanged(_ sender: UITextField)
     {
         var inputText = doseField.text!
+        if (inputText == "")
+        {
+            inputText = textHolder
+        }
         var inputFloat = (inputText as NSString).floatValue
         if(inputFloat > doseSlider.maximumValue)
         {
@@ -113,6 +147,17 @@ class View_PeriodicFlow: UIViewController {
         updateUI()
     }
     
+    func initializeUI()
+    {
+        doseSlider.value = defDose[0]
+        doseSlider.maximumValue = defDoseMax[0]
+        doseField.text = "\(defDose[0])"
+        pumpConcentration.text = "\(defConcentration[0])"
+        accumVol = defAccumVol
+        yScale = defYScale[0]
+        updateUI()
+    }
+    
     func updateUI()
     {
         let inputText = doseField.text!
@@ -127,16 +172,23 @@ class View_PeriodicFlow: UIViewController {
         let durMinute = Float(components.minute!)
         let pumpConText = pumpConcentration.text!
         let pumpConFloat = (pumpConText as NSString).floatValue
-        let bolusGrams = 0.002 * pumpConFloat
+        let bolusGrams = accumVol * pumpConFloat
         let durTotal = (60*durHour) + durMinute
         let pumpClicksNum = inputFloat / bolusGrams
         let pumpRateInClicks = durTotal / pumpClicksNum
-        let dosePerClickFloat = Float(0.002) * pumpConFloat
+        let dosePerClickFloat = Float(accumVol) * pumpConFloat
         dosePerClickField.text = roundValue(inputText: "\(dosePerClickFloat)", roundTo: 2) + " " + unitLabel
-        pumpRateLabel.text = "1 click every " + roundValue(inputText: "\(pumpRateInClicks)", roundTo: 2) + " min"
+        if(pumpRateInClicks == 0)
+        {
+            pumpRateLabel.text = "0 Valve Actuations"
+        }
+        else
+        {
+            pumpRateLabel.text = "1 Valve Actuation every " + roundValue(inputText: "\(pumpRateInClicks)", roundTo: 2) + " min"
+        }
         doseFieldLabel.text = unitLabel
         pumpConcentrationLabel.text = unitLabel + "/ml"
-        generateAndLoadGraph(yMargin: globalYMargin, xMargin: (Float(self.view.bounds.width) - Float(graphImage.bounds.width)) / Float(2), gHeight: Float(graphImage.bounds.height))
+        generateAndLoadGraph()
     }
     
     
@@ -146,19 +198,21 @@ class View_PeriodicFlow: UIViewController {
         {
             mgMode = false
             unitLabel = "mcg"
-            doseSlider.maximumValue = 300
-            doseSlider.value = 100
-            doseField.text = "100.0"
-            yScale = Float(1.5)
+            doseSlider.maximumValue = defDoseMax[1]
+            doseSlider.value = defDose[1]
+            doseField.text = "\(defDose[1])"
+            pumpConcentration.text = "\(defConcentration[1])"
+            yScale = defYScale[1]
         }
         else
         {
             mgMode = true
             unitLabel = "mg"
-            doseSlider.maximumValue = 5
-            doseSlider.value = 2.5
-            doseField.text = "2.5"
-            yScale = Float(0.03)
+            doseSlider.maximumValue = defDoseMax[0]
+            doseSlider.value = defDose[0]
+            doseField.text = "\(defDose[0])"
+            yScale = defYScale[0]
+            pumpConcentration.text = "\(defConcentration[0])"
         }
         updateUI()
     }
@@ -169,7 +223,7 @@ class View_PeriodicFlow: UIViewController {
         let pickerValue = scalePicker.selectedSegmentIndex
         if(pickerValue == 0)
         {
-            generateAndLoadGraph(yMargin: globalYMargin, xMargin: (Float(self.view.bounds.width) - Float(graphImage.bounds.width)) / Float(2), gHeight: Float(graphImage.bounds.height))
+            generateAndLoadGraph()
             UIView.animate(withDuration: 0.5, animations: {
                 self.labelStack6.alpha = 0.0
                 self.labelStack24.alpha = 1.0
@@ -178,7 +232,7 @@ class View_PeriodicFlow: UIViewController {
         }
         else if (pickerValue == 1)
         {
-            generateAndLoadGraph(yMargin: globalYMargin, xMargin: (Float(self.view.bounds.width) - Float(graphImage.bounds.width)) / Float(2), gHeight: Float(graphImage.bounds.height))
+            generateAndLoadGraph()
             UIView.animate(withDuration: 0.5, animations: {
                 self.labelStack6.alpha = 1.0
                 self.labelStack24.alpha = 0.0
@@ -187,7 +241,7 @@ class View_PeriodicFlow: UIViewController {
         }
         else if (pickerValue == 2)
         {
-            generateAndLoadGraph(yMargin: globalYMargin, xMargin: (Float(self.view.bounds.width) - Float(graphImage.bounds.width)) / Float(2), gHeight: Float(graphImage.bounds.height))
+            generateAndLoadGraph()
             UIView.animate(withDuration: 0.5, animations: {
                 self.labelStack6.alpha = 0.0
                 self.labelStack24.alpha = 0.0
@@ -196,16 +250,6 @@ class View_PeriodicFlow: UIViewController {
         }
     }
     
-    
-    
-    
-    
-    
-    
-    override func viewDidAppear(_ animated: Bool)
-    {
-        
-    }
     
     
     @IBAction func doseSliderChanged(_ sender: UISlider)
@@ -218,7 +262,6 @@ class View_PeriodicFlow: UIViewController {
             var doseValue = "\(doseSlider.value)"
             doseValue = roundValue(inputText: doseValue, roundTo: 1)
             doseField.text = doseValue
-            yScale = Float(1.5)
         }
         else
         {
@@ -227,7 +270,6 @@ class View_PeriodicFlow: UIViewController {
             let inputFloat = (inputPrefix as NSString).floatValue
             doseSlider.value = inputFloat
             doseField.text = inputPrefix
-            yScale = Float(0.03)
         }
         updateUI()
     }
@@ -315,18 +357,22 @@ class View_PeriodicFlow: UIViewController {
     }
     
     
-    func generateAndLoadGraph(yMargin: Float, xMargin: Float, gHeight: Float)
+    func generateAndLoadGraph()
     {
         //remove old shape layer if any is present
         self.shapeLayer?.removeFromSuperlayer()
+        let graphX = Float(graphImage.frame.origin.x)
+        let graphY = Float(graphImage.frame.origin.y)
+        let graphWidth = Float(graphImage.bounds.width)
+        let graphHeight = Float(graphImage.bounds.height)
+        
         
         //create path for graph to draw
         //assign base constants
         let path = UIBezierPath()
-        let gWidth = Float(Float(self.view.bounds.width) - (xMargin*2))
-        let xShift = Float(((startHour + (startMinute/Float(60))) / 24))*gWidth
+        let xShift = Float(((startHour + (startMinute/Float(60))) / 24))*graphWidth
         let bolNum = Float(intervalStepper.value)
-        let cycWidth = gWidth / bolNum
+        let cycWidth = graphWidth / bolNum
         
         var xCoord = Float(0)
         var yCoord = Float(0)
@@ -339,9 +385,9 @@ class View_PeriodicFlow: UIViewController {
         let pumpConText = pumpConcentration.text!
         let pumpConFloat = (pumpConText as NSString).floatValue
         let flowRate = bolusRate / pumpConFloat
-        let bolHeight = (flowRate / yScale) * gHeight
+        let bolHeight = (flowRate / yScale) * graphHeight
         
-        let bolWidth = (durTotal / (60*24)) * gWidth
+        let bolWidth = (durTotal / (60*24)) * graphWidth
         let basWidth = cycWidth - bolWidth
         
         //ok to use cartesian coordinates, will be shifted when assigning points to path
@@ -359,12 +405,12 @@ class View_PeriodicFlow: UIViewController {
             cSet = [xCoord, yCoord]
             coordArray.append(cSet)
             xCoord += bolWidth
-            if (xCoord > gWidth)
+            if (xCoord > graphWidth)
             {
-                cSet = [gWidth, yCoord]
+                cSet = [graphWidth, yCoord]
                 coordArray.append(cSet)
                 zeroIndex = coordArray.count
-                xCoord = xCoord - gWidth
+                xCoord = xCoord - graphWidth
                 cSet = [0, yCoord]
                 coordArray.append(cSet)
                 cSet = [xCoord, yCoord]
@@ -380,12 +426,12 @@ class View_PeriodicFlow: UIViewController {
             cSet = [xCoord, yCoord]
             coordArray.append(cSet)
             xCoord += basWidth
-            if (xCoord > gWidth)
+            if (xCoord > graphWidth)
             {
-                cSet = [gWidth, yCoord]
+                cSet = [graphWidth, yCoord]
                 coordArray.append(cSet)
                 zeroIndex = coordArray.count
-                xCoord = xCoord - gWidth
+                xCoord = xCoord - graphWidth
                 cSet = [0, yCoord]
                 coordArray.append(cSet)
                 cSet = [xCoord, yCoord]
@@ -435,17 +481,17 @@ class View_PeriodicFlow: UIViewController {
         
         //add points to path
         c = 1
-        path.move(to: CGPoint(x: Int(coordArray[0][0] + xMargin), y: Int(gHeight + yMargin - coordArray[0][1])))
+        path.move(to: CGPoint(x: Int(coordArray[0][0] + graphX), y: Int(graphHeight + graphY - coordArray[0][1])))
         while(c < coordArray.count)
         {
-            if(coordArray[c][0] <= gWidth)
+            if(coordArray[c][0] <= graphWidth)
             {
-                path.addLine(to: CGPoint(x: Int(coordArray[c][0] + xMargin), y: Int(gHeight + yMargin - coordArray[c][1])))
+                path.addLine(to: CGPoint(x: Int(coordArray[c][0] + graphX), y: Int(graphHeight + graphY - coordArray[c][1])))
                 c += 1
             }
             else
             {
-                path.addLine(to: CGPoint(x: Int(gWidth + xMargin), y: Int(gHeight + yMargin - coordArray[c][1])))
+                path.addLine(to: CGPoint(x: Int(graphWidth + graphX), y: Int(graphHeight + graphY - coordArray[c][1])))
                 c = coordArray.count
             }
         }
@@ -484,6 +530,35 @@ class View_PeriodicFlow: UIViewController {
     {
         super.viewWillAppear(animated)
         AppDelegate.AppUtility.lockOrientation(UIInterfaceOrientationMask.all)
+    }
+    
+    override func viewDidLoad()
+    {
+        super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(View_PeriodicFlow.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(View_PeriodicFlow.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        startTimeField.inputView = datePicker
+        NKInputView.with(doseField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
+        NKInputView.with(pumpConcentration, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
+        
+        let toolBar = UIToolbar().ToolbarPicker(mySelect: #selector(View_PeriodicFlow.dismissPicker))
+        startTimeField.inputAccessoryView = toolBar
+        
+        let borderColor = UIColor.lightGray.cgColor
+        durationPicker.layer.borderColor = borderColor
+        durationPicker.layer.borderWidth = 2.0
+        durationPicker.layer.cornerRadius = 5
+        durationPicker.setValue(UIColor.white, forKeyPath: "textColor")
+        graphStyle.layer.cornerRadius = 10
+        graphStyle.layer.borderColor = borderColor
+        graphStyle.layer.borderWidth = 2
+        displayStyle.layer.cornerRadius = 10
+        displayStyle.layer.borderColor = borderColor
+        displayStyle.layer.borderWidth = 2
+        controlStyle.layer.cornerRadius = 10
+        controlStyle.layer.borderColor = borderColor
+        controlStyle.layer.borderWidth = 2
+        
         let date = Date()
         let calendar = Calendar.current
         startHour = Float(calendar.component(.hour, from: date))
@@ -506,33 +581,7 @@ class View_PeriodicFlow: UIViewController {
             minuteSpacer = "0"
         }
         startTimeField.text = "\(Int(currentHourVar))" + ":" + minuteSpacer + "\(Int(startMinute))" + " " + timeLabel
-        updateUI()
-    }
-    
-    override func viewDidLoad()
-    {
-        super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(View_PeriodicFlow.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(View_PeriodicFlow.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-        startTimeField.inputView = datePicker
-        
-        let toolBar = UIToolbar().ToolbarPicker(mySelect: #selector(View_PeriodicFlow.dismissPicker))
-        startTimeField.inputAccessoryView = toolBar
-        
-        let borderColor = UIColor.lightGray.cgColor
-        durationPicker.layer.borderColor = borderColor
-        durationPicker.layer.borderWidth = 2.0
-        durationPicker.layer.cornerRadius = 5
-        durationPicker.setValue(UIColor.white, forKeyPath: "textColor")
-        graphStyle.layer.cornerRadius = 10
-        graphStyle.layer.borderColor = borderColor
-        graphStyle.layer.borderWidth = 2
-        displayStyle.layer.cornerRadius = 10
-        displayStyle.layer.borderColor = borderColor
-        displayStyle.layer.borderWidth = 2
-        controlStyle.layer.cornerRadius = 10
-        controlStyle.layer.borderColor = borderColor
-        controlStyle.layer.borderWidth = 2
+        initializeUI()
     }
     
     func dismissPicker()
