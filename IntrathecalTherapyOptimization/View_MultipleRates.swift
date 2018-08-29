@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import NumericKeyboard
 
 class View_MultipleRates: UIViewController {
 
