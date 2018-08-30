@@ -41,7 +41,7 @@ class View_ConstantFlow: UIViewController {
     @IBOutlet weak var scalePicker: UISegmentedControl!
     @IBOutlet weak var graphStyle: UIView!
     @IBOutlet weak var graphHeight: NSLayoutConstraint!
-    
+    @IBOutlet weak var unitSwitch: UISwitch!
     
     @IBAction func unitSwitchChanged(_ sender: UISwitch)
     {
@@ -88,13 +88,31 @@ class View_ConstantFlow: UIViewController {
         updateUI()
     }
     
+    func disableInputs(activeControl: String) -> Void
+    {
+        if(activeControl != "doseInputField"){ doseInputField.isUserInteractionEnabled = false }
+        if(activeControl != "doseSlider"){ doseSlider.isUserInteractionEnabled = false }
+        if(activeControl != "pumpConcentration"){ pumpConcentration.isUserInteractionEnabled = false }
+        if(activeControl != "unitSwitch"){ unitSwitch.isUserInteractionEnabled = false }
+        if(activeControl != "scalePicker"){ scalePicker.isUserInteractionEnabled = false }
+    }
+    
+    func activateInputs() -> Void
+    {
+        doseInputField.isUserInteractionEnabled = true
+        doseSlider.isUserInteractionEnabled = true
+        pumpConcentration.isUserInteractionEnabled = true
+        unitSwitch.isUserInteractionEnabled = true
+        scalePicker.isUserInteractionEnabled = true
+    }
+    
     @IBAction func pumpConcentrationSelected(_ sender: AllowedCharsTextField)
     {
         textHolder = pumpConcentration.text!
-        perform(#selector(selectPumpConcentration), with: nil, afterDelay: 0.01)
+        perform(#selector(pumpConcentrationSelectedDelay), with: nil, afterDelay: 0.01)
     }
     
-    func selectPumpConcentration() -> Void
+    func pumpConcentrationSelectedDelay() -> Void
     {
         pumpConcentration.selectAll(nil)
     }

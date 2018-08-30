@@ -1424,6 +1424,7 @@
                         <outlet property="pumpConcentrationLabel" destination="Vtr-8s-SMK" id="wfP-6H-bD0"/>
                         <outlet property="pumpRateTextField" destination="1vt-aH-neW" id="ajy-7s-Kjt"/>
                         <outlet property="scalePicker" destination="0th-9a-4AR" id="GZn-xD-EoB"/>
+                        <outlet property="unitSwitch" destination="IWU-H6-R3e" id="YIo-yo-j0w"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ell-xq-uqC" userLabel="First Responder" sceneMemberID="firstResponder"/>
