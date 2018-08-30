@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1615FED72111FB4F00FB990C /* View_ConstantFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1615FED62111FB4F00FB990C /* View_ConstantFlow.swift */; };
 		1615FED92112046000FB990C /* View_MultipleRates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1615FED82112046000FB990C /* View_MultipleRates.swift */; };
+		162247352138A36A0097D7E6 /* downArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 162247342138A36A0097D7E6 /* downArrow.png */; };
 		1624162E2111148A00A96EEF /* View_PeriodicFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1624162D2111148A00A96EEF /* View_PeriodicFlow.swift */; };
 		162579D1211E142700B1CC40 /* Flowonix_WHITE.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 162579D0211E142700B1CC40 /* Flowonix_WHITE.JPG */; };
 		162579D5211E19C000B1CC40 /* Flowonix_Light.png in Resources */ = {isa = PBXBuildFile; fileRef = 162579D4211E19C000B1CC40 /* Flowonix_Light.png */; };
@@ -18,7 +19,6 @@
 		162579DD211E292E00B1CC40 /* View_HomePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162579DC211E292E00B1CC40 /* View_HomePage.swift */; };
 		163DE9A1212DDD2D00E8EFF6 /* ToolbarPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163DE9A0212DDD2D00E8EFF6 /* ToolbarPicker.swift */; };
 		163DE9A3212DFBA600E8EFF6 /* View_CompareFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163DE9A2212DFBA600E8EFF6 /* View_CompareFlow.swift */; };
-		1646C4CE21139038006BA75E /* returnArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1646C4CC21139038006BA75E /* returnArrow.png */; };
 		1646C4CF21139038006BA75E /* aspectGraph.png in Resources */ = {isa = PBXBuildFile; fileRef = 1646C4CD21139038006BA75E /* aspectGraph.png */; };
 		165696E22114EB1A00E54421 /* upArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 165696E12114EB1A00E54421 /* upArrow.png */; };
 		165696E42114F0D300E54421 /* warningIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 165696E32114F0D300E54421 /* warningIcon.png */; };
@@ -52,6 +52,7 @@
 /* Begin PBXFileReference section */
 		1615FED62111FB4F00FB990C /* View_ConstantFlow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View_ConstantFlow.swift; sourceTree = "<group>"; };
 		1615FED82112046000FB990C /* View_MultipleRates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View_MultipleRates.swift; sourceTree = "<group>"; };
+		162247342138A36A0097D7E6 /* downArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = downArrow.png; sourceTree = "<group>"; };
 		1624162D2111148A00A96EEF /* View_PeriodicFlow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View_PeriodicFlow.swift; sourceTree = "<group>"; };
 		162579D0211E142700B1CC40 /* Flowonix_WHITE.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Flowonix_WHITE.JPG; sourceTree = "<group>"; };
 		162579D4211E19C000B1CC40 /* Flowonix_Light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Flowonix_Light.png; sourceTree = "<group>"; };
@@ -61,7 +62,6 @@
 		162579DC211E292E00B1CC40 /* View_HomePage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View_HomePage.swift; sourceTree = "<group>"; };
 		163DE9A0212DDD2D00E8EFF6 /* ToolbarPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolbarPicker.swift; sourceTree = "<group>"; };
 		163DE9A2212DFBA600E8EFF6 /* View_CompareFlow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View_CompareFlow.swift; sourceTree = "<group>"; };
-		1646C4CC21139038006BA75E /* returnArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = returnArrow.png; sourceTree = "<group>"; };
 		1646C4CD21139038006BA75E /* aspectGraph.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = aspectGraph.png; sourceTree = "<group>"; };
 		165696E12114EB1A00E54421 /* upArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = upArrow.png; sourceTree = "<group>"; };
 		165696E32114F0D300E54421 /* warningIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = warningIcon.png; sourceTree = "<group>"; };
@@ -127,6 +127,7 @@
 		16FB4CA2210F612F0039FC37 /* IntrathecalTherapyOptimization */ = {
 			isa = PBXGroup;
 			children = (
+				162247342138A36A0097D7E6 /* downArrow.png */,
 				16B4357B2136275900866809 /* NumericKeyboard.xib */,
 				16B435772136273F00866809 /* NKKeyboardButton.swift */,
 				16B435782136273F00866809 /* NKInputView.swift */,
@@ -139,7 +140,6 @@
 				162579D0211E142700B1CC40 /* Flowonix_WHITE.JPG */,
 				165696E32114F0D300E54421 /* warningIcon.png */,
 				165696E12114EB1A00E54421 /* upArrow.png */,
-				1646C4CC21139038006BA75E /* returnArrow.png */,
 				1646C4CD21139038006BA75E /* aspectGraph.png */,
 				16FB4CA3210F612F0039FC37 /* AppDelegate.swift */,
 				16FB4CA5210F612F0039FC37 /* ViewController.swift */,
@@ -264,9 +264,9 @@
 				1646C4CF21139038006BA75E /* aspectGraph.png in Resources */,
 				165696E42114F0D300E54421 /* warningIcon.png in Resources */,
 				16F5F2F4212B6D3A00B10E99 /* EntryPageBackground.png in Resources */,
+				162247352138A36A0097D7E6 /* downArrow.png in Resources */,
 				16B4357C2136275900866809 /* NumericKeyboard.xib in Resources */,
 				16FB4CAE210F612F0039FC37 /* LaunchScreen.storyboard in Resources */,
-				1646C4CE21139038006BA75E /* returnArrow.png in Resources */,
 				16FB4CAB210F612F0039FC37 /* Assets.xcassets in Resources */,
 				165696E22114EB1A00E54421 /* upArrow.png in Resources */,
 				16B4357E2136278400866809 /* NumericKeyboard.xcassets in Resources */,

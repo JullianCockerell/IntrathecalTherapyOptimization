@@ -68,6 +68,34 @@ class View_PeriodicFlow: UIViewController {
 
     @IBOutlet weak var dosePerClickField: UITextField!
     
+    func disableInputs(activeControl: String) -> Void
+    {
+        if(activeControl != "doseField"){ doseField.isUserInteractionEnabled = false }
+        if(activeControl != "startTimeField"){ startTimeField.isUserInteractionEnabled = false }
+        if(activeControl != "pumpConcentration"){ pumpConcentration.isUserInteractionEnabled = false }
+        scalePicker.isUserInteractionEnabled = false
+        unitPicker.isUserInteractionEnabled = false
+        durationPicker.isUserInteractionEnabled = false
+        doseSlider.isUserInteractionEnabled = false
+        intervalStepper.isUserInteractionEnabled = false
+    }
+    
+    func activateInputs() -> Void
+    {
+        doseField.isUserInteractionEnabled = true
+        doseSlider.isUserInteractionEnabled = true
+        pumpConcentration.isUserInteractionEnabled = true
+        unitPicker.isUserInteractionEnabled = true
+        scalePicker.isUserInteractionEnabled = true
+        startTimeField.isUserInteractionEnabled = true
+        durationPicker.isUserInteractionEnabled = true
+        doseSlider.isUserInteractionEnabled = true
+        intervalStepper.isUserInteractionEnabled = true
+    }
+    @IBAction func startTimeFieldSelected(_ sender: UITextField)
+    {
+        disableInputs(activeControl: "startTimeField")
+    }
         
     @IBAction func doseFieldSelected(_ sender: AllowedCharsTextField)
     {
@@ -78,6 +106,7 @@ class View_PeriodicFlow: UIViewController {
     func selectDoseField() -> Void
     {
         doseField.selectAll(nil)
+        disableInputs(activeControl: "doseField")
     }
     
     @IBAction func pumpConcentrationSelected(_ sender: AllowedCharsTextField)
@@ -89,6 +118,7 @@ class View_PeriodicFlow: UIViewController {
     func selectPumpConcentration() -> Void
     {
         pumpConcentration.selectAll(nil)
+        disableInputs(activeControl: "pumpConcentration")
     }
     
     
@@ -112,6 +142,7 @@ class View_PeriodicFlow: UIViewController {
     
     @IBAction func pumpConcentrationChaned(_ sender: AllowedCharsTextField)
     {
+        activateInputs()
         if(pumpConcentration.text == "")
         {
             pumpConcentration.text = textHolder
@@ -121,6 +152,7 @@ class View_PeriodicFlow: UIViewController {
     
     @IBAction func doseFieldChanged(_ sender: UITextField)
     {
+        activateInputs()
         var inputText = doseField.text!
         if (inputText == "")
         {
@@ -200,7 +232,6 @@ class View_PeriodicFlow: UIViewController {
         pumpConcentrationLabel.text = unitLabel + "/ml"
         generateAndLoadGraph()
     }
-    
     
     @IBAction func unitPickerChanged(_ sender: UISwitch)
     {
@@ -416,8 +447,6 @@ class View_PeriodicFlow: UIViewController {
         let durMinute = Float(components.minute!)
         let durTotal = (60*durHour) + durMinute
         
-        let bolusRate = doseSlider.value / durTotal
-        let maxBolusRate = doseSlider.maximumValue / 10
         let pumpConText = pumpConcentration.text!
         let pumpConFloat = (pumpConText as NSString).floatValue
         // let flowRate = bolusRate / pumpConFloat
@@ -581,9 +610,6 @@ class View_PeriodicFlow: UIViewController {
         
         let bolusRate = doseSlider.value / durTotal
         let maxBolusRate = doseSlider.maximumValue / 10
-        let pumpConText = pumpConcentration.text!
-        let pumpConFloat = (pumpConText as NSString).floatValue
-        // let flowRate = bolusRate / pumpConFloat
         let bolHeight = (bolusRate / maxBolusRate) * graphHeight
         
         let bolWidth = (durTotal / (60*24)) * graphWidth
@@ -644,8 +670,6 @@ class View_PeriodicFlow: UIViewController {
             }
             c += 1
         }
-        
-        
         
         //if shift is needed, array is shifted
         if(zeroIndex > 0)
@@ -787,6 +811,7 @@ class View_PeriodicFlow: UIViewController {
     
     func dismissPicker()
     {
+        activateInputs()
         view.endEditing(true)
         let components = Calendar.current.dateComponents([.hour, .minute], from: datePicker.date)
         startHour = Float(components.hour!)

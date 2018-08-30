@@ -18,6 +18,8 @@ class View_ConstantFlow: UIViewController {
     var accumVol = Float(0.0025)
     var textHolder = "Not Set"
     var attributingText = false
+    var totalDailyBoluses = 0
+    var pumpVolume = Float(0)
     
     // Defaults: Dose, Concentration, Accumulator Volume, Maximum Dose
     // index 0 for mg, index 1 for mcg
@@ -25,7 +27,10 @@ class View_ConstantFlow: UIViewController {
     let defDose = [Float(1.0), Float(40.0)]
     let defConcentration = [Float(8.0), Float(350.0)]
     let defDoseMax = [Float(5), Float(300)]
+    let defPumpVolume = Float(20)
+    
 
+    // Main View
     @IBOutlet weak var graphImage: UIImageView!
     @IBOutlet weak var doseSlider: UISlider!
     @IBOutlet weak var doseSliderLabel: UILabel!
@@ -42,7 +47,89 @@ class View_ConstantFlow: UIViewController {
     @IBOutlet weak var graphStyle: UIView!
     @IBOutlet weak var graphHeight: NSLayoutConstraint!
     @IBOutlet weak var unitSwitch: UISwitch!
+    @IBOutlet weak var advancedSettingsConstraint: NSLayoutConstraint!
+    @IBOutlet weak var advancedSettingsOpenButton: UIButton!
     
+    // Advanced Settings View
+    @IBOutlet weak var accumulatorVolumeField: UITextField!
+    @IBOutlet weak var pumpVolumeField: UITextField!
+    @IBOutlet weak var daysUntilRefillField: UITextField!
+    @IBOutlet weak var advancedSettingsCloseButton: UIButton!
+    
+    
+    //****************************************************************//
+
+    @IBAction func accumulatorVolumeFieldSelected(_ sender: AllowedCharsTextField)
+    {
+        textHolder = pumpConcentration.text!
+        perform(#selector(accumulatorVolumeFieldSelectedDelay), with: nil, afterDelay: 0.01)
+    }
+    
+    func accumulatorVolumeFieldSelectedDelay() -> Void
+    {
+        accumulatorVolumeField.selectAll(nil)
+        disableInputs(activeControl: "accumulatorVolumeField")
+        accumulatorVolumeField.isUserInteractionEnabled = true
+    }
+    
+    
+    @IBAction func accumulatorVolumeFieldChanged(_ sender: AllowedCharsTextField)
+    {
+        activateInputs()
+        var inputText = accumulatorVolumeField.text!
+        if (inputText == "")
+        {
+            inputText = textHolder
+        }
+        let inputPrefix = roundValue(inputText: inputText, roundTo: 5)
+        accumulatorVolumeField.text = inputPrefix
+        accumVol = (inputPrefix as NSString).floatValue
+        updateUI()
+    }
+    
+    
+    @IBAction func pumpVolumeFieldSelected(_ sender: AllowedCharsTextField)
+    {
+        textHolder = pumpVolumeField.text!
+        perform(#selector(pumpVolumeFieldSelectedDelay), with: nil, afterDelay: 0.01)
+    }
+    
+    func pumpVolumeFieldSelectedDelay() -> Void
+    {
+        pumpVolumeField.selectAll(nil)
+        disableInputs(activeControl: "pumpVolumeField")
+        pumpVolumeField.isUserInteractionEnabled = true
+    }
+    
+    
+    @IBAction func pumpVolumeFieldChanged(_ sender: AllowedCharsTextField)
+    {
+        pumpVolume = (pumpVolumeField.text! as NSString).floatValue
+        updateUI()
+    }
+
+    
+    @IBAction func advancedSettingsOpen(_ sender: UIButton)
+    {
+        advancedSettingsConstraint.constant = 0
+        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations:
+        {
+                self.view.layoutIfNeeded()
+
+        })
+    }
+    
+    @IBAction func advancedSettingsClose(_ sender: UIButton)
+    {
+        advancedSettingsConstraint.constant = 420
+        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations:
+            {
+                self.view.layoutIfNeeded()
+                
+        })
+    }
+    
+
     @IBAction func unitSwitchChanged(_ sender: UISwitch)
     {
         if(mgMode)
@@ -91,10 +178,14 @@ class View_ConstantFlow: UIViewController {
     func disableInputs(activeControl: String) -> Void
     {
         if(activeControl != "doseInputField"){ doseInputField.isUserInteractionEnabled = false }
-        if(activeControl != "doseSlider"){ doseSlider.isUserInteractionEnabled = false }
         if(activeControl != "pumpConcentration"){ pumpConcentration.isUserInteractionEnabled = false }
-        if(activeControl != "unitSwitch"){ unitSwitch.isUserInteractionEnabled = false }
-        if(activeControl != "scalePicker"){ scalePicker.isUserInteractionEnabled = false }
+        if(activeControl != "accumulatorVolumeField"){ accumulatorVolumeField.isUserInteractionEnabled = false }
+        if(activeControl != "pumpVolumeField"){ pumpVolumeField.isUserInteractionEnabled = false }
+        doseSlider.isUserInteractionEnabled = false
+        unitSwitch.isUserInteractionEnabled = false
+        scalePicker.isUserInteractionEnabled = false
+        advancedSettingsOpenButton.isUserInteractionEnabled = false
+        advancedSettingsCloseButton.isUserInteractionEnabled = false
     }
     
     func activateInputs() -> Void
@@ -104,6 +195,10 @@ class View_ConstantFlow: UIViewController {
         pumpConcentration.isUserInteractionEnabled = true
         unitSwitch.isUserInteractionEnabled = true
         scalePicker.isUserInteractionEnabled = true
+        accumulatorVolumeField.isUserInteractionEnabled = true
+        pumpVolumeField.isUserInteractionEnabled = true
+        advancedSettingsOpenButton.isUserInteractionEnabled = true
+        advancedSettingsCloseButton.isUserInteractionEnabled = true
     }
     
     @IBAction func pumpConcentrationSelected(_ sender: AllowedCharsTextField)
@@ -115,21 +210,17 @@ class View_ConstantFlow: UIViewController {
     func pumpConcentrationSelectedDelay() -> Void
     {
         pumpConcentration.selectAll(nil)
+        disableInputs(activeControl: "pumpConcentration")
+        pumpConcentration.isUserInteractionEnabled = true
     }
     
     @IBAction func pumpConcentrationChanged(_ sender: AllowedCharsTextField)
     {
+        activateInputs()
         var inputText = pumpConcentration.text!
         if (inputText == "")
         {
-            if (mgMode)
-            {
-                inputText = "\(defConcentration[0])"
-            }
-            else
-            {
-                inputText = "\(defConcentration[1])"
-            }
+            inputText = textHolder
         }
         let inputPrefix = roundValue(inputText: inputText, roundTo: 2)
         pumpConcentration.text = inputPrefix
@@ -140,17 +231,19 @@ class View_ConstantFlow: UIViewController {
     @IBAction func doseInputFieldSelected(_ sender: AllowedCharsTextField)
     {
         textHolder = doseInputField.text!
-        perform(#selector(selectDoseInputField), with: nil, afterDelay: 0.01)
+        perform(#selector(doseInputFieldSelectedDelay), with: nil, afterDelay: 0.01)
     }
     
-    func selectDoseInputField() -> Void
+    func doseInputFieldSelectedDelay() -> Void
     {
         doseInputField.selectAll(nil)
+        disableInputs(activeControl: "doseInputField")
+        doseInputField.isUserInteractionEnabled = true
     }
     
     @IBAction func doseInputFieldChanged(_ sender: AllowedCharsTextField)
     {
-        
+        activateInputs()
         var inputText = doseInputField.text!
         if (inputText == "")
         {
@@ -218,8 +311,7 @@ class View_ConstantFlow: UIViewController {
                 self.labelStack30.alpha = 1.0
             })
         }
-        
-        
+    
         
     }
     
@@ -232,6 +324,9 @@ class View_ConstantFlow: UIViewController {
         doseInputField.text = "\(defDose[0])"
         pumpConcentration.text = "\(defConcentration[0])"
         accumVol = defAccumVol
+        accumulatorVolumeField.text = "\(defAccumVol)"
+        pumpVolume = defPumpVolume
+        pumpVolumeField.text = "\(defPumpVolume)"
         updateUI()
     }
     
@@ -264,6 +359,10 @@ class View_ConstantFlow: UIViewController {
         let pumpConRound = roundValue(inputText: pumpConText!, roundTo: 2)
         pumpConcentration.text = pumpConRound
         generateAndLoadGraph()
+        
+        let volPerDay = doseSlider.value / pumpConFloat
+        let daysUntilRefill = pumpVolume / volPerDay
+        daysUntilRefillField.text = "\(daysUntilRefill)"
     }
     
     func roundValue(inputText: String, roundTo: Int) -> String
@@ -298,6 +397,7 @@ class View_ConstantFlow: UIViewController {
     override func viewWillAppear(_ animated: Bool)
     {
         AppDelegate.AppUtility.lockOrientation(UIInterfaceOrientationMask.all)
+    
     }
     
     override func viewWillDisappear(_ animated: Bool)
@@ -312,12 +412,17 @@ class View_ConstantFlow: UIViewController {
         
         NKInputView.with(doseInputField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
         NKInputView.with(pumpConcentration, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
+        NKInputView.with(accumulatorVolumeField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
+        NKInputView.with(pumpVolumeField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
         
         NotificationCenter.default.addObserver(self, selector: #selector(View_ConstantFlow.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(View_ConstantFlow.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         self.borderImage.layer.borderColor = UIColor.lightGray.cgColor
         self.borderImage.layer.borderWidth = 2
         self.borderImage.layer.cornerRadius = 10
+        self.advancedSettingsOpenButton.layer.borderColor = UIColor.lightGray.cgColor
+        self.advancedSettingsOpenButton.layer.borderWidth = 2
+        self.advancedSettingsOpenButton.layer.cornerRadius = 10
         self.graphStyle.layer.borderWidth = 2
         self.graphStyle.layer.cornerRadius = 10
         self.graphStyle.layer.borderColor = UIColor.lightGray.cgColor
@@ -368,9 +473,10 @@ class View_ConstantFlow: UIViewController {
         let totalDose = doseSlider.value
         let pumpCon = pumpConcentration.text!
         let pumpConFloat = (pumpCon as NSString).floatValue
-        var bolNum = ((totalDose / pumpConFloat) / defAccumVol)
+        var bolNum = Int(((totalDose / pumpConFloat) / accumVol))
+        totalDailyBoluses = bolNum
         let bolHeight = 0.3 * graphHeight
-        let bolSpacing = graphWidth / bolNum
+        let bolSpacing = graphWidth / Float(bolNum)
         bolNum += 1
         
         if(totalDose == 0)
@@ -387,7 +493,7 @@ class View_ConstantFlow: UIViewController {
             coordArray.append(cSet)
             
             //points are calculated and added to array
-            while (c < Int(bolNum))
+            while (c < bolNum)
             {
                 yCoord += bolHeight
                 cSet = [xCoord, yCoord]

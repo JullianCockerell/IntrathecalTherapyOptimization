@@ -31,30 +31,30 @@ class View_HomePage: UIViewController {
         if(buttonPressed)
         {
             self.squareBottom.constant = 0
-            UIView.animate(withDuration: 0.5, animations:
-            {
-                self.view.layoutIfNeeded()
-                self.button1.layer.shadowOpacity = 1.0
-                self.button2.alpha = 1.0
-                self.button3.alpha = 1.0
-                self.flowOptions.alpha = 0.0
-                self.upButton.alpha = 0.0
+            UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations:
+                {
+                    self.view.layoutIfNeeded()
+                    self.button1.layer.shadowOpacity = 1.0
+                    self.button2.alpha = 1.0
+                    self.button3.alpha = 1.0
+                    self.flowOptions.alpha = 0.0
+                    self.upButton.alpha = 0.0
             })
             buttonPressed = false
         }
         else
         {
             self.squareBottom.constant = 620
-            UIView.animate(withDuration: 0.5, animations:
-            {
-                self.view.layoutIfNeeded()
-                self.button1.layer.shadowOpacity = 0.0
-                self.squareBackground.layer.shadowOffset = CGSize(width: 0.0, height: 6.0)
-                self.squareBackground.layer.shadowOpacity = 1.0
-                self.button2.alpha = 0.0
-                self.button3.alpha = 0.0
-                self.flowOptions.alpha = 1.0
-                self.upButton.alpha = 1.0
+            UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations:
+                {
+                    self.view.layoutIfNeeded()
+                    self.button1.layer.shadowOpacity = 0.0
+                    self.squareBackground.layer.shadowOffset = CGSize(width: 0.0, height: 6.0)
+                    self.squareBackground.layer.shadowOpacity = 1.0
+                    self.button2.alpha = 0.0
+                    self.button3.alpha = 0.0
+                    self.flowOptions.alpha = 1.0
+                    self.upButton.alpha = 1.0
             })
             buttonPressed = true
         }
@@ -65,7 +65,7 @@ class View_HomePage: UIViewController {
     @IBAction func upButtonPressed(_ sender: UIButton)
     {
         self.squareBottom.constant = 0
-        UIView.animate(withDuration: 0.3, animations: {
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn, animations: {
             self.view.layoutIfNeeded()
             self.button1.layer.shadowOpacity = 1.0
             self.button2.alpha = 1.0

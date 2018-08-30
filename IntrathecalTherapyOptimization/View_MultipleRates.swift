@@ -52,7 +52,6 @@ class View_MultipleRates: UIViewController {
     @IBOutlet weak var doseInput3: AllowedCharsTextField!
     @IBOutlet weak var doseInput4: AllowedCharsTextField!
     @IBOutlet weak var totalDoseField: UITextField!
-
     @IBOutlet weak var concentrationField: AllowedCharsTextField!
     @IBOutlet weak var concentrationFieldLabel: UILabel!
     @IBOutlet weak var doseLabel1: UILabel!
@@ -63,19 +62,55 @@ class View_MultipleRates: UIViewController {
     @IBOutlet weak var graphBorder: UIView!
     @IBOutlet weak var graphBorder2: UIView!
     @IBOutlet weak var miscBorder: UIView!
-    
     @IBOutlet weak var controlBorderHeight: NSLayoutConstraint!
     @IBOutlet weak var miscStackTopDistance: NSLayoutConstraint!
-    
     @IBOutlet weak var yScale1: UILabel!
     @IBOutlet weak var yScale2: UILabel!
     @IBOutlet weak var yScale3: UILabel!
     @IBOutlet weak var yScale4: UILabel!
     @IBOutlet weak var yScale5: UILabel!
-    
     @IBOutlet weak var topGraph: UIImageView!
     @IBOutlet weak var bottomGraph: UIImageView!
-
+    @IBOutlet weak var unitSwitch: UISwitch!
+    
+    func disableInputs(activeControl: String) -> Void
+    {
+        periodStepper.isUserInteractionEnabled = false
+        doseSlider1.isUserInteractionEnabled = false
+        doseSlider2.isUserInteractionEnabled = false
+        doseSlider3.isUserInteractionEnabled = false
+        doseSlider4.isUserInteractionEnabled = false
+        startPicker1.isUserInteractionEnabled = false
+        startPicker2.isUserInteractionEnabled = false
+        startPicker3.isUserInteractionEnabled = false
+        startPicker4.isUserInteractionEnabled = false
+        unitSwitch.isUserInteractionEnabled = false
+        if(activeControl != "doseInput1"){ doseInput1.isUserInteractionEnabled = false }
+        if(activeControl != "doseInput2"){ doseInput2.isUserInteractionEnabled = false }
+        if(activeControl != "doseInput3"){ doseInput3.isUserInteractionEnabled = false }
+        if(activeControl != "doseInput4"){ doseInput4.isUserInteractionEnabled = false }
+        if(activeControl != "concentrationField"){ concentrationField.isUserInteractionEnabled = false }
+    }
+    
+    func activateInputs() -> Void
+    {
+        periodStepper.isUserInteractionEnabled = true
+        doseSlider1.isUserInteractionEnabled = true
+        doseSlider2.isUserInteractionEnabled = true
+        doseSlider3.isUserInteractionEnabled = true
+        doseSlider4.isUserInteractionEnabled = true
+        startPicker1.isUserInteractionEnabled = true
+        startPicker2.isUserInteractionEnabled = true
+        startPicker3.isUserInteractionEnabled = true
+        startPicker4.isUserInteractionEnabled = true
+        unitSwitch.isUserInteractionEnabled = true
+        doseInput1.isUserInteractionEnabled = true
+        doseInput2.isUserInteractionEnabled = true
+        doseInput3.isUserInteractionEnabled = true
+        doseInput4.isUserInteractionEnabled = true
+        concentrationField.isUserInteractionEnabled = true
+    }
+    
     
     @IBAction func doseInput1Selected(_ sender: AllowedCharsTextField)
     {
@@ -86,6 +121,7 @@ class View_MultipleRates: UIViewController {
     func selectDoseInput1() -> Void
     {
         doseInput1.selectAll(nil)
+        disableInputs(activeControl: "doseInput1")
     }
     
     @IBAction func doseInput2Selected(_ sender: AllowedCharsTextField)
@@ -97,6 +133,7 @@ class View_MultipleRates: UIViewController {
     func selectDoseInput2() -> Void
     {
         doseInput2.selectAll(nil)
+        disableInputs(activeControl: "doseInput2")
     }
     
     @IBAction func doseInput3Selected(_ sender: AllowedCharsTextField)
@@ -108,6 +145,7 @@ class View_MultipleRates: UIViewController {
     func selectDoseInput3() -> Void
     {
         doseInput3.selectAll(nil)
+        disableInputs(activeControl: "doseInput3")
     }
     
     @IBAction func doseInput4Selected(_ sender: AllowedCharsTextField)
@@ -119,6 +157,7 @@ class View_MultipleRates: UIViewController {
     func selectDoseInput4() -> Void
     {
         doseInput4.selectAll(nil)
+        disableInputs(activeControl: "doseInput4")
     }
     
     @IBAction func concentrationFieldSelected(_ sender: AllowedCharsTextField)
@@ -130,13 +169,14 @@ class View_MultipleRates: UIViewController {
     func selectConcentrationField() -> Void
     {
         concentrationField.selectAll(nil)
+        disableInputs(activeControl: "concentrationField")
     }
-    
     
     
     
     @IBAction func doseInput1Changed(_ sender: AllowedCharsTextField)
     {
+        activateInputs()
         var inputText = doseInput1.text!
         if (inputText == "")
         {
@@ -174,6 +214,7 @@ class View_MultipleRates: UIViewController {
     
     @IBAction func doseInput2Changed(_ sender: AllowedCharsTextField)
     {
+        activateInputs()
         var inputText = doseInput2.text!
         if (inputText == "")
         {
@@ -212,6 +253,7 @@ class View_MultipleRates: UIViewController {
 
     @IBAction func doseInput3Changed(_ sender: AllowedCharsTextField)
     {
+        activateInputs()
         var inputText = doseInput3.text!
         if (inputText == "")
         {
@@ -249,6 +291,7 @@ class View_MultipleRates: UIViewController {
     
     @IBAction func doseInput4Changed(_ sender: AllowedCharsTextField)
     {
+        activateInputs()
         var inputText = doseInput4.text!
         if (inputText == "")
         {
@@ -588,10 +631,12 @@ class View_MultipleRates: UIViewController {
     
     @IBAction func concentrationFieldChanged(_ sender: AllowedCharsTextField)
     {
+        activateInputs()
         if (concentrationField.text == "")
         {
             concentrationField.text = textHolder
         }
+        updateUI()
     }
     
     
