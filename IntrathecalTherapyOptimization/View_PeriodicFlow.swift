@@ -54,6 +54,7 @@ class View_PeriodicFlow: UIViewController {
     @IBOutlet weak var block2Height: NSLayoutConstraint!
     @IBOutlet weak var scalePickerHeight: NSLayoutConstraint!
     @IBOutlet weak var block3Height: NSLayoutConstraint!
+    @IBOutlet weak var dosePerClickField: UITextField!
     
     @IBOutlet weak var yScale1: UILabel!
     @IBOutlet weak var yScale2: UILabel!
@@ -65,8 +66,18 @@ class View_PeriodicFlow: UIViewController {
     @IBOutlet weak var yScale8: UILabel!
     @IBOutlet weak var yScale9: UILabel!
     @IBOutlet weak var yScale10: UILabel!
+    
+    // Advanced Settings
+    
+    @IBOutlet weak var advancedSettingsOpenButton: UIButton!
+    @IBOutlet weak var accumulatorVolumeField: AllowedCharsTextField!
+    @IBOutlet weak var bolusNumField: UITextField!
+    @IBOutlet weak var pumpVolumeField: AllowedCharsTextField!
+    @IBOutlet weak var bolusDoseField: UITextField!
+    @IBOutlet weak var daysUntilRefillField: AllowedCharsTextField!
+    @IBOutlet weak var advancedSettingsCloseButton: UIButton!
 
-    @IBOutlet weak var dosePerClickField: UITextField!
+    
     
     func disableInputs(activeControl: String) -> Void
     {

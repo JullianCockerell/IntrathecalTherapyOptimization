@@ -44,6 +44,10 @@ class View_MatchMyTrial: UIViewController
     @IBOutlet weak var controlBorder: UIView!
     @IBOutlet weak var displayBorder: UIView!
     
+    // Advanced Settings
+    
+    
+    
     @IBAction func trialDoseFieldSelected(_ sender: AllowedCharsTextField)
     {
         textHolder = trialDoseField.text!
