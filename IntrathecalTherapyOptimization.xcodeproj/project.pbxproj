@@ -23,6 +23,7 @@
 		165696E22114EB1A00E54421 /* upArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 165696E12114EB1A00E54421 /* upArrow.png */; };
 		165696E42114F0D300E54421 /* warningIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 165696E32114F0D300E54421 /* warningIcon.png */; };
 		168945232128C89B00190D6B /* FlowLogoWhite.png in Resources */ = {isa = PBXBuildFile; fileRef = 168945222128C89B00190D6B /* FlowLogoWhite.png */; };
+		16899B2321405C1700BB9A5F /* View_MatchMyTrial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16899B2221405C1700BB9A5F /* View_MatchMyTrial.swift */; };
 		16B435792136273F00866809 /* NKKeyboardButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B435772136273F00866809 /* NKKeyboardButton.swift */; };
 		16B4357A2136273F00866809 /* NKInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B435782136273F00866809 /* NKInputView.swift */; };
 		16B4357C2136275900866809 /* NumericKeyboard.xib in Resources */ = {isa = PBXBuildFile; fileRef = 16B4357B2136275900866809 /* NumericKeyboard.xib */; };
@@ -66,6 +67,7 @@
 		165696E12114EB1A00E54421 /* upArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = upArrow.png; sourceTree = "<group>"; };
 		165696E32114F0D300E54421 /* warningIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = warningIcon.png; sourceTree = "<group>"; };
 		168945222128C89B00190D6B /* FlowLogoWhite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FlowLogoWhite.png; sourceTree = "<group>"; };
+		16899B2221405C1700BB9A5F /* View_MatchMyTrial.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View_MatchMyTrial.swift; sourceTree = "<group>"; };
 		16974D342130942C0018988E /* NumericKeyboard.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NumericKeyboard.framework; path = "../../Library/Developer/Xcode/DerivedData/IntrathecalTherapyOptimization-aqzpzddbgabeoqgpjfhwlbuefyas/Build/Products/Debug-iphonesimulator/NumericKeyboard/NumericKeyboard.framework"; sourceTree = "<group>"; };
 		16B435772136273F00866809 /* NKKeyboardButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NKKeyboardButton.swift; sourceTree = "<group>"; };
 		16B435782136273F00866809 /* NKInputView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NKInputView.swift; sourceTree = "<group>"; };
@@ -157,6 +159,7 @@
 				16D794A921235DCD0016EB56 /* AllowedCharsTextField.swift */,
 				163DE9A0212DDD2D00E8EFF6 /* ToolbarPicker.swift */,
 				163DE9A2212DFBA600E8EFF6 /* View_CompareFlow.swift */,
+				16899B2221405C1700BB9A5F /* View_MatchMyTrial.swift */,
 			);
 			path = IntrathecalTherapyOptimization;
 			sourceTree = "<group>";
@@ -301,6 +304,7 @@
 				16FB4CA4210F612F0039FC37 /* AppDelegate.swift in Sources */,
 				1615FED92112046000FB990C /* View_MultipleRates.swift in Sources */,
 				16D794AA21235DCD0016EB56 /* AllowedCharsTextField.swift in Sources */,
+				16899B2321405C1700BB9A5F /* View_MatchMyTrial.swift in Sources */,
 				16B4357A2136273F00866809 /* NKInputView.swift in Sources */,
 				16B435792136273F00866809 /* NKKeyboardButton.swift in Sources */,
 				163DE9A3212DFBA600E8EFF6 /* View_CompareFlow.swift in Sources */,

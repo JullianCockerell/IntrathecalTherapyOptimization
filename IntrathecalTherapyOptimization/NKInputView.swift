@@ -203,10 +203,6 @@ open class NKInputView: UIView, UIInputViewAudioFeedback
     
     // Load the view from xib
     
-    let podBundle = Bundle(for: NKInputView.self)
-    let bundleURL = podBundle.url(forResource: "NumericKeyboard", withExtension: "bundle")
-    // let bundle = Bundle(url: bundleURL!)!
-    let nibName = "NumericKeyboard"
     let nib = Bundle.main.loadNibNamed("NumericKeyboard", owner: self, options: nil)?.first as? NKInputView
    // let instance = nib.instantiate(withOwner: self, options: nil).first as! NKInputView
     
