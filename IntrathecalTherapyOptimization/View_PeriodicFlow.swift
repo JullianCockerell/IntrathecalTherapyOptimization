@@ -27,14 +27,16 @@ class View_PeriodicFlow: UIViewController {
     var yScale = Float(0.03)
     var accumVol = Float(0.0025)
     var textHolder = ""
+    var pumpVolume = Float(20)
     
-    // Defaults: Dose, Concentration, Accumulator Volume, Maximum Dose, Y Scale
+    // Defaults: Dose, Concentration, Accumulator Volume, Maximum Dose, Y Scale, Pump Volume
     // index 0 for mg, index 1 for mcg
     let defAccumVol = Float(0.0025)
     let defDose = [Float(2.5), Float(50.0)]
     let defConcentration = [Float(20.0), Float(350.0)]
     let defDoseMax = [Float(5), Float(100)]
     let defYScale = [Float(0.03), Float(1.5)]
+    let defPumpVolume = Float(20)
 
     @IBOutlet weak var scalePicker: UISegmentedControl!
     @IBOutlet weak var doseField: AllowedCharsTextField!
@@ -68,7 +70,6 @@ class View_PeriodicFlow: UIViewController {
     @IBOutlet weak var yScale10: UILabel!
     
     // Advanced Settings
-    
     @IBOutlet weak var advancedSettingsOpenButton: UIButton!
     @IBOutlet weak var accumulatorVolumeField: AllowedCharsTextField!
     @IBOutlet weak var bolusNumField: UITextField!
@@ -76,19 +77,136 @@ class View_PeriodicFlow: UIViewController {
     @IBOutlet weak var bolusDoseField: UITextField!
     @IBOutlet weak var daysUntilRefillField: AllowedCharsTextField!
     @IBOutlet weak var advancedSettingsCloseButton: UIButton!
+    @IBOutlet weak var bolusDoseLabel: UILabel!
+    @IBOutlet weak var advancedSettingsConstraint: NSLayoutConstraint!
 
+    @IBAction func accumulatorVolumeFieldSelected(_ sender: AllowedCharsTextField)
+    {
+        textHolder = accumulatorVolumeField.text!
+        perform(#selector(accumulatorVolumeFieldSelectedDelayed), with: nil, afterDelay: 0.01)
+    }
     
+    func accumulatorVolumeFieldSelectedDelayed() -> Void
+    {
+        accumulatorVolumeField.selectAll(nil)
+        disableInputs(activeControl: "accumulatorVolumeField")
+    }
+    
+    @IBAction func accumulatorVolumeFieldChanged(_ sender: AllowedCharsTextField)
+    {
+        activateInputs()
+        if(accumulatorVolumeField.text == "")
+        {
+            accumulatorVolumeField.text = textHolder
+        }
+        let accumulatorVolumeText = accumulatorVolumeField.text!
+        accumVol = (accumulatorVolumeText as NSString).floatValue
+        updateUI()
+    }
+    
+    @IBAction func bolusNumFieldSelected(_ sender: UITextField)
+    {
+        textHolder = bolusNumField.text!
+        perform(#selector(bolusNumFieldSelectedDelayed), with: nil, afterDelay: 0.01)
+    }
+    
+    func bolusNumFieldSelectedDelayed() -> Void
+    {
+        bolusNumField.selectAll(nil)
+        disableInputs(activeControl: "bolusNumField")
+    }
+    
+    @IBAction func bolusNumFieldChanged(_ sender: UITextField)
+    {
+        activateInputs()
+        if(bolusNumField.text == "")
+        {
+            bolusNumField.text = textHolder
+        }
+        updateUI()
+    }
+    
+    @IBAction func pumpVolumeFieldSelected(_ sender: AllowedCharsTextField)
+    {
+        textHolder = pumpVolumeField.text!
+        perform(#selector(pumpVolumeFieldSelectedDelayed), with: nil, afterDelay: 0.01)
+    }
+    
+    func pumpVolumeFieldSelectedDelayed() -> Void
+    {
+        pumpVolumeField.selectAll(nil)
+        disableInputs(activeControl: "pumpVolumeField")
+    }
+    
+    @IBAction func pumpVolumeFieldChanged(_ sender: AllowedCharsTextField)
+    {
+        activateInputs()
+        if(pumpVolumeField.text == "")
+        {
+            pumpVolumeField.text = textHolder
+        }
+        let pumpVolumeText = pumpVolumeField.text!
+        pumpVolume = (pumpVolumeText as NSString).floatValue
+        updateUI()
+    }
+    
+    @IBAction func bolusDoseFieldSelected(_ sender: UITextField)
+    {
+        textHolder = bolusDoseField.text!
+        perform(#selector(bolusDoseFieldSelectedDelayed), with: nil, afterDelay: 0.01)
+    }
+    
+    func bolusDoseFieldSelectedDelayed() -> Void
+    {
+        bolusDoseField.selectAll(nil)
+        disableInputs(activeControl: "bolusDoseField")
+    }
+    
+    @IBAction func bolusDoseFieldChanged(_ sender: UITextField)
+    {
+        activateInputs()
+        if(bolusDoseField.text == "")
+        {
+            bolusDoseField.text = textHolder
+        }
+        updateUI()
+    }
+    
+    
+    @IBAction func advancedSettingsClose(_ sender: UIButton)
+    {
+        advancedSettingsConstraint.constant = 420
+        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations:
+            {
+                self.view.layoutIfNeeded()
+        })
+    }
+    
+    @IBAction func advancedSettingsOpen(_ sender: UIButton)
+    {
+        advancedSettingsConstraint.constant = 0
+        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations:
+        {
+            self.view.layoutIfNeeded()
+        })
+    }
     
     func disableInputs(activeControl: String) -> Void
     {
         if(activeControl != "doseField"){ doseField.isUserInteractionEnabled = false }
         if(activeControl != "startTimeField"){ startTimeField.isUserInteractionEnabled = false }
         if(activeControl != "pumpConcentration"){ pumpConcentration.isUserInteractionEnabled = false }
+        if(activeControl != "accumulatorVolumeField"){ accumulatorVolumeField.isUserInteractionEnabled = false }
+        if(activeControl != "bolusNumField"){ bolusNumField.isUserInteractionEnabled = false }
+        if(activeControl != "pumpVolumeField"){ pumpVolumeField.isUserInteractionEnabled = false }
+        if(activeControl != "bolusDoseField"){ bolusDoseField.isUserInteractionEnabled = false }
         scalePicker.isUserInteractionEnabled = false
         unitPicker.isUserInteractionEnabled = false
         durationPicker.isUserInteractionEnabled = false
         doseSlider.isUserInteractionEnabled = false
         intervalStepper.isUserInteractionEnabled = false
+        advancedSettingsOpenButton.isUserInteractionEnabled = false
+        advancedSettingsCloseButton.isUserInteractionEnabled = false
     }
     
     func activateInputs() -> Void
@@ -102,7 +220,14 @@ class View_PeriodicFlow: UIViewController {
         durationPicker.isUserInteractionEnabled = true
         doseSlider.isUserInteractionEnabled = true
         intervalStepper.isUserInteractionEnabled = true
+        advancedSettingsCloseButton.isUserInteractionEnabled = true
+        advancedSettingsOpenButton.isUserInteractionEnabled = true
+        accumulatorVolumeField.isUserInteractionEnabled = true
+        bolusNumField.isUserInteractionEnabled = true
+        pumpVolumeField.isUserInteractionEnabled = true
+        bolusDoseField.isUserInteractionEnabled = true
     }
+    
     @IBAction func startTimeFieldSelected(_ sender: UITextField)
     {
         disableInputs(activeControl: "startTimeField")
@@ -207,7 +332,7 @@ class View_PeriodicFlow: UIViewController {
         pumpConcentration.text = "\(defConcentration[0])"
         accumVol = defAccumVol
         yScale = defYScale[0]
-        setYScaleLabels()
+        // setYScaleLabels()
         updateUI()
     }
     
@@ -241,8 +366,17 @@ class View_PeriodicFlow: UIViewController {
         }
         doseFieldLabel.text = unitLabel
         pumpConcentrationLabel.text = unitLabel + "/ml"
+        let bolusDoseText = bolusDoseField.text!
+        let bolusNumText = bolusNumField.text!
+        let bolusDoseFloat = (bolusDoseText as NSString).floatValue
+        let bolusNumFloat = (bolusNumText as NSString).floatValue
+        let totalDoseWithPTC = (((bolusDoseFloat * bolusNumFloat) + totalDose) / pumpConFloat)   //in mL's
+        daysUntilRefillField.text = "\(pumpVolume / totalDoseWithPTC)" + " days"
+        pumpVolumeField.text = "\(pumpVolume)"
+        accumulatorVolumeField.text = "\(accumVol)"
         generateAndLoadGraph()
     }
+    
     
     @IBAction func unitPickerChanged(_ sender: UISwitch)
     {
@@ -266,13 +400,13 @@ class View_PeriodicFlow: UIViewController {
             yScale = defYScale[0]
             pumpConcentration.text = "\(defConcentration[0])"
         }
-        setYScaleLabels()
+        // setYScaleLabels()
         updateUI()
     }
     
-    func setYScaleLabels() -> Void
+    /*func setYScaleLabels() -> Void
     {
-        let maxRate = doseSlider.maximumValue / 10
+        let maxRate = Float(0.005)
         let maxRateInterval = (maxRate / 10)
         var roundNumber = 2
         if(mgMode)
@@ -293,7 +427,7 @@ class View_PeriodicFlow: UIViewController {
         yScale8.text = roundValue(inputText: "\(maxRateInterval * 8)", roundTo: roundNumber)
         yScale9.text = roundValue(inputText: "\(maxRateInterval * 9)", roundTo: roundNumber)
         yScale10.text = roundValue(inputText: "\(maxRateInterval * 10)", roundTo: roundNumber)
-    }
+    }*/
     
     
     @IBAction func scalePickerChanged(_ sender: UISegmentedControl)
@@ -462,7 +596,7 @@ class View_PeriodicFlow: UIViewController {
         let pumpConFloat = (pumpConText as NSString).floatValue
         // let flowRate = bolusRate / pumpConFloat
         // let bolHeight = (bolusRate / maxBolusRate) * graphHeight
-        let bolHeight = 0.5 * graphHeight
+        let bolHeight = (accumVol / 0.005) * graphHeight
         let bolWidth = (durTotal / (60*24)) * graphWidth
         let basWidth = cycWidth - bolWidth
         
@@ -776,9 +910,15 @@ class View_PeriodicFlow: UIViewController {
         startTimeField.inputView = datePicker
         NKInputView.with(doseField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
         NKInputView.with(pumpConcentration, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
+        NKInputView.with(accumulatorVolumeField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
+        NKInputView.with(pumpVolumeField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
+        NKInputView.with(bolusNumField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
+        NKInputView.with(bolusDoseField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
+        
         
         let toolBar = UIToolbar().ToolbarPicker(mySelect: #selector(View_PeriodicFlow.dismissPicker))
         startTimeField.inputAccessoryView = toolBar
+        
         
         let borderColor = UIColor.lightGray.cgColor
         durationPicker.layer.borderColor = borderColor
