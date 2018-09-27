@@ -19,6 +19,7 @@ class View_ConstantFlow: UIViewController {
     var attributingText = false
     var totalDailyBoluses = 0
     var pumpVolume = Float(0)
+    var yLabelMax = Float(0.07)
     
     // Defaults: Dose, Concentration, Accumulator Volume, Maximum Dose, Pump Volume
     // index 0 for mg, index 1 for mcg
@@ -53,6 +54,7 @@ class View_ConstantFlow: UIViewController {
     @IBOutlet weak var exitButton: UIButton!
     
     // Advanced Settings View
+    @IBOutlet weak var advancedSettingsView: UIView!
     @IBOutlet weak var accumulatorVolumeField: UITextField!
     @IBOutlet weak var pumpVolumeField: UITextField!
     @IBOutlet weak var daysUntilRefillField: UITextField!
@@ -60,6 +62,16 @@ class View_ConstantFlow: UIViewController {
     @IBOutlet weak var bolusNumField: UITextField!
     @IBOutlet weak var bolusDoseField: UITextField!
     @IBOutlet weak var bolusDoseFieldLabel: UILabel!
+    
+    //Y-Axis Labels
+    @IBOutlet weak var yLabel1: UILabel!
+    @IBOutlet weak var yLabel2: UILabel!
+    @IBOutlet weak var yLabel3: UILabel!
+    @IBOutlet weak var yLabel4: UILabel!
+    @IBOutlet weak var yLabel5: UILabel!
+    @IBOutlet weak var yLabel6: UILabel!
+    @IBOutlet weak var yLabel7: UILabel!
+    
     
     //****************************************************************//
 
@@ -98,10 +110,6 @@ class View_ConstantFlow: UIViewController {
         activateInputs()
         updateUI()
     }
-
-    
-    
-    
     
     @IBAction func accumulatorVolumeFieldSelected(_ sender: AllowedCharsTextField)
     {
@@ -154,7 +162,7 @@ class View_ConstantFlow: UIViewController {
     
     @IBAction func advancedSettingsOpen(_ sender: UIButton)
     {
-        advancedSettingsConstraint.constant = 0
+        advancedSettingsConstraint.constant = 20
         UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations:
         {
                 self.view.layoutIfNeeded()
@@ -164,7 +172,7 @@ class View_ConstantFlow: UIViewController {
     
     @IBAction func advancedSettingsClose(_ sender: UIButton)
     {
-        advancedSettingsConstraint.constant = 420
+        advancedSettingsConstraint.constant = 440
         UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations:
             {
                 self.view.layoutIfNeeded()
@@ -185,6 +193,14 @@ class View_ConstantFlow: UIViewController {
             doseInputField.text = "\(defDose[1])"
             bolusNumField.text = "0"
             bolusDoseField.text = "0.0"
+            yLabel1.text = "1.0"
+            yLabel2.text = "2.0"
+            yLabel3.text = "3.0"
+            yLabel4.text = "4.0"
+            yLabel5.text = "5.0"
+            yLabel6.text = "6.0"
+            yLabel7.text = "7.0"
+            yLabelMax = Float(7)
         }
         else if(!mgMode)
         {
@@ -196,6 +212,14 @@ class View_ConstantFlow: UIViewController {
             doseInputField.text = "\(defDose[0])"
             bolusNumField.text = "0"
             bolusDoseField.text = "0.0"
+            yLabel1.text = "0.01"
+            yLabel2.text = "0.02"
+            yLabel3.text = "0.03"
+            yLabel4.text = "0.04"
+            yLabel5.text = "0.05"
+            yLabel6.text = "0.06"
+            yLabel7.text = "0.07"
+            yLabelMax = Float(0.07)
         }
         updateUI()
     }
@@ -484,10 +508,13 @@ class View_ConstantFlow: UIViewController {
         self.outputBorder.layer.cornerRadius = 10
         self.advancedSettingsOpenButton.layer.borderColor = UIColor.lightGray.cgColor
         self.advancedSettingsOpenButton.layer.borderWidth = 2
-        self.advancedSettingsOpenButton.layer.cornerRadius = 10
+        self.advancedSettingsOpenButton.layer.cornerRadius = 5
         self.graphStyle.layer.borderWidth = 2
         self.graphStyle.layer.cornerRadius = 10
         self.graphStyle.layer.borderColor = UIColor.lightGray.cgColor
+        self.advancedSettingsView.layer.borderWidth = 2
+        self.advancedSettingsView.layer.cornerRadius = 10
+        self.advancedSettingsView.layer.borderColor = UIColor.lightGray.cgColor
         
         initializeUI()
     }
@@ -528,7 +555,6 @@ class View_ConstantFlow: UIViewController {
         let graphHeight = Float(graphImage.bounds.height)
         
         //create path for graph to draw
-        //assign base constants
         let path = UIBezierPath()
         var xCoord = Float(0)
         var yCoord = Float(0)
@@ -537,7 +563,7 @@ class View_ConstantFlow: UIViewController {
         let pumpConFloat = (pumpCon as NSString).floatValue
         var bolNum = Int(((totalDose / pumpConFloat) / accumVol))
         totalDailyBoluses = bolNum
-        let bolHeight = (accumVol / 0.007) * graphHeight
+        let bolHeight = ((accumVol * pumpConFloat) / yLabelMax) * graphHeight
         let bolSpacing = graphWidth / Float(bolNum)
         bolNum += 1
         

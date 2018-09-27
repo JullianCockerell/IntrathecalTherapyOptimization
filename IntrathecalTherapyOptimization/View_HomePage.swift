@@ -21,13 +21,50 @@ class View_HomePage: UIViewController {
     
     @IBOutlet weak var squareBottom: NSLayoutConstraint!
     @IBOutlet weak var upButton: UIButton!
-
+    @IBOutlet weak var showOverviewButton: UIButton!
+    @IBOutlet weak var overviewConstraint: NSLayoutConstraint!
+    @IBOutlet weak var overviewDisplay: UIWebView!
+    @IBOutlet weak var closeOverviewDisplay: UIButton!
+    
     var buttonPressed = false
     let globalRadius = CGFloat(10)
 
     @IBOutlet weak var flowOptions: UIStackView!
     
-    @IBAction func button1Pressed(_ sender: UIButton) {
+    @IBAction func displayOverview(_ sender: Any)
+    {
+        if(self.overviewConstraint.constant != 25)
+        {
+                self.overviewConstraint.constant = 25
+        }
+        else
+        {
+            self.overviewConstraint.constant = (self.overviewDisplay.layer.bounds.height * -1) - 15
+        }
+        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations:
+        {
+                self.view.layoutIfNeeded()
+        })
+    }
+    
+    @IBAction func closeOverviewDisplay(_ sender: UIButton)
+    {
+        if(self.overviewConstraint.constant != 25)
+        {
+            self.overviewConstraint.constant = 25
+        }
+        else
+        {
+            self.overviewConstraint.constant = (self.overviewDisplay.layer.bounds.height * -1) - 15
+        }
+        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations:
+            {
+                self.view.layoutIfNeeded()
+        })
+    }
+    
+    @IBAction func button1Pressed(_ sender: UIButton)
+    {
         if(buttonPressed)
         {
             self.squareBottom.constant = 0
@@ -78,8 +115,9 @@ class View_HomePage: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        let pdfLoc = NSURL(fileURLWithPath:Bundle.main.path(forResource: "Pump", ofType:"pdf")!)
+        let request = NSURLRequest(url: pdfLoc as URL);
+        self.overviewDisplay.loadRequest(request as URLRequest);
     }
 
     override func didReceiveMemoryWarning() {
@@ -107,6 +145,8 @@ class View_HomePage: UIViewController {
         button2.layer.cornerRadius = globalRadius
         button3.layer.cornerRadius = globalRadius
         subButton1.layer.cornerRadius = globalRadius
+        showOverviewButton.layer.cornerRadius = globalRadius
+        overviewDisplay.layer.cornerRadius = globalRadius
         subButton1.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.25).cgColor
         subButton1.layer.shadowOffset = CGSize(width: 0.0, height: 4.0)
         subButton1.layer.shadowOpacity = 1.0

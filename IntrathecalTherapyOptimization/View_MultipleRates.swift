@@ -16,8 +16,10 @@ class View_MultipleRates: UIViewController {
     var yScale = Float(7.0)
     var accumVol = Float(0.0025)
     var textHolder = ""
+    var pumpVolume = Float(20)
+    var maxYScaleb = Float(10)
     
-    // Defaults: Dose, Concentration, Accumulator Volume, Maximum Dose, Y Scale
+    // Defaults: Dose, Concentration, Accumulator Volume, Maximum Dose, Y Scale, Pump Volume
     // index 0 for mg, index 1 for mcg
     let defAccumVol = Float(0.0025)
     let defDoseMg = [Float(0.5), Float(1.0), Float(1.5), Float(2.0)]
@@ -25,6 +27,7 @@ class View_MultipleRates: UIViewController {
     let defConcentration = [Float(20.0), Float(350.0)]
     let defDoseMax = [Float(5), Float(100)]
     let defYScale = [Float(7.0), Float(300.0)]
+    let defPumpVolume = Float(20)
     
     
     @IBOutlet weak var periodStepper: UIStepper!
@@ -73,6 +76,151 @@ class View_MultipleRates: UIViewController {
     @IBOutlet weak var bottomGraph: UIImageView!
     @IBOutlet weak var unitSwitch: UISwitch!
     
+    // Advanced Settings
+    @IBOutlet weak var advancedSettingsView: UIView!
+    @IBOutlet weak var advancedSettingsOpenButton: UIButton!
+    @IBOutlet weak var advancedSettingsCloseButton: UIButton!
+    @IBOutlet weak var accumulatorVolumeField: AllowedCharsTextField!
+    @IBOutlet weak var bolusNumField: UITextField!
+    @IBOutlet weak var pumpVolumeField: AllowedCharsTextField!
+    @IBOutlet weak var bolusDoseField: UITextField!
+    @IBOutlet weak var daysUntilRefillField: AllowedCharsTextField!
+    @IBOutlet weak var bolusDoseLabel: UILabel!
+    @IBOutlet weak var advancedSettingsConstraint: NSLayoutConstraint!
+    
+    //Y-Axis Labels
+    //Bottom
+    @IBOutlet weak var yScaleb1: UILabel!
+    @IBOutlet weak var yScaleb2: UILabel!
+    @IBOutlet weak var yScaleb3: UILabel!
+    @IBOutlet weak var yScaleb4: UILabel!
+    @IBOutlet weak var yScaleb5: UILabel!
+    //Top
+    @IBOutlet weak var yScalet1: UILabel!
+    @IBOutlet weak var yScalet2: UILabel!
+    @IBOutlet weak var yScalet3: UILabel!
+    @IBOutlet weak var yScalet4: UILabel!
+    @IBOutlet weak var yScalet5: UILabel!
+    
+    
+    
+    
+    
+    
+    @IBAction func advancedSettingsClose(_ sender: UIButton)
+    {
+        advancedSettingsConstraint.constant = 540
+        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations:
+        {
+            self.view.layoutIfNeeded()
+        })
+    }
+    
+    @IBAction func advancedSettingsOpen(_ sender: UIButton)
+    {
+        advancedSettingsConstraint.constant = 20
+        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations:
+        {
+            self.view.layoutIfNeeded()
+        })
+    }
+    
+    @IBAction func accumulatorVolumeFieldSelected(_ sender: AllowedCharsTextField)
+    {
+        textHolder = accumulatorVolumeField.text!
+        perform(#selector(accumulatorVolumeFieldSelectedDelayed), with: nil, afterDelay: 0.01)
+    }
+    
+    func accumulatorVolumeFieldSelectedDelayed() -> Void
+    {
+        accumulatorVolumeField.selectAll(nil)
+        disableInputs(activeControl: "accumulatorVolumeField")
+    }
+    
+    @IBAction func accumulatorVolumeFieldChanged(_ sender: AllowedCharsTextField)
+    {
+        activateInputs()
+        if(accumulatorVolumeField.text == "")
+        {
+            accumulatorVolumeField.text = textHolder
+        }
+        let accumulatorVolumeText = accumulatorVolumeField.text!
+        accumVol = (accumulatorVolumeText as NSString).floatValue
+        updateUI()
+    }
+    
+    @IBAction func bolusNumFieldSelected(_ sender: UITextField)
+    {
+        textHolder = bolusNumField.text!
+        perform(#selector(bolusNumFieldSelectedDelayed), with: nil, afterDelay: 0.01)
+    }
+    
+    func bolusNumFieldSelectedDelayed() -> Void
+    {
+        bolusNumField.selectAll(nil)
+        disableInputs(activeControl: "bolusNumField")
+    }
+    
+    @IBAction func bolusNumFieldChanged(_ sender: UITextField)
+    {
+        activateInputs()
+        if(bolusNumField.text == "")
+        {
+            bolusNumField.text = textHolder
+        }
+        updateUI()
+    }
+    
+    @IBAction func pumpVolumeFieldSelected(_ sender: AllowedCharsTextField)
+    {
+        textHolder = pumpVolumeField.text!
+        perform(#selector(pumpVolumeFieldSelectedDelayed), with: nil, afterDelay: 0.01)
+    }
+    
+    func pumpVolumeFieldSelectedDelayed() -> Void
+    {
+        pumpVolumeField.selectAll(nil)
+        disableInputs(activeControl: "pumpVolumeField")
+    }
+    
+    @IBAction func pumpVolumeFieldChanged(_ sender: AllowedCharsTextField)
+    {
+        activateInputs()
+        if(pumpVolumeField.text == "")
+        {
+            pumpVolumeField.text = textHolder
+        }
+        let pumpVolumeText = pumpVolumeField.text!
+        pumpVolume = (pumpVolumeText as NSString).floatValue
+        updateUI()
+    }
+    
+    @IBAction func bolusDoseFieldSelected(_ sender: UITextField)
+    {
+        textHolder = bolusDoseField.text!
+        perform(#selector(bolusDoseFieldSelectedDelayed), with: nil, afterDelay: 0.01)
+    }
+    
+    func bolusDoseFieldSelectedDelayed() -> Void
+    {
+        bolusDoseField.selectAll(nil)
+        disableInputs(activeControl: "bolusDoseField")
+    }
+    
+    @IBAction func bolusDoseFieldChanged(_ sender: UITextField)
+    {
+        activateInputs()
+        if(bolusDoseField.text == "")
+        {
+            bolusDoseField.text = textHolder
+        }
+        updateUI()
+    }
+    
+
+    
+    
+    
     func disableInputs(activeControl: String) -> Void
     {
         periodStepper.isUserInteractionEnabled = false
@@ -85,6 +233,12 @@ class View_MultipleRates: UIViewController {
         startPicker3.isUserInteractionEnabled = false
         startPicker4.isUserInteractionEnabled = false
         unitSwitch.isUserInteractionEnabled = false
+        advancedSettingsOpenButton.isUserInteractionEnabled = false
+        advancedSettingsCloseButton.isUserInteractionEnabled = false
+        if(activeControl != "accumulatorVolumeField"){ accumulatorVolumeField.isUserInteractionEnabled = false }
+        if(activeControl != "bolusNumField"){ bolusNumField.isUserInteractionEnabled = false }
+        if(activeControl != "bolusDoseField"){ bolusDoseField.isUserInteractionEnabled = false }
+        if(activeControl != "pumpVolumeField"){ pumpVolumeField.isUserInteractionEnabled = false }
         if(activeControl != "doseInput1"){ doseInput1.isUserInteractionEnabled = false }
         if(activeControl != "doseInput2"){ doseInput2.isUserInteractionEnabled = false }
         if(activeControl != "doseInput3"){ doseInput3.isUserInteractionEnabled = false }
@@ -109,6 +263,12 @@ class View_MultipleRates: UIViewController {
         doseInput3.isUserInteractionEnabled = true
         doseInput4.isUserInteractionEnabled = true
         concentrationField.isUserInteractionEnabled = true
+        advancedSettingsCloseButton.isUserInteractionEnabled = true
+        advancedSettingsOpenButton.isUserInteractionEnabled = true
+        accumulatorVolumeField.isUserInteractionEnabled = true
+        pumpVolumeField.isUserInteractionEnabled = true
+        bolusNumField.isUserInteractionEnabled = true
+        bolusDoseField.isUserInteractionEnabled = true
     }
     
     
@@ -473,6 +633,18 @@ class View_MultipleRates: UIViewController {
             doseSlider4.maximumValue = defDoseMax[1]
             doseSlider4.value = defDoseMcg[3]
             doseInput4.text = "\(defDoseMcg[3])"
+            yScaleb1.text = "0.5"
+            yScaleb2.text = "1.0"
+            yScaleb3.text = "1.5"
+            yScaleb4.text = "2.0"
+            yScaleb5.text = "2.5"
+            yScalet1.text = "20.0"
+            yScalet2.text = "40.0"
+            yScalet3.text = "60.0"
+            yScalet4.text = "80.0"
+            yScalet5.text = "100.0"
+            
+            maxYScaleb = Float(2.5)
         }
         else if(!mgMode)
         {
@@ -492,8 +664,19 @@ class View_MultipleRates: UIViewController {
             doseSlider4.maximumValue = defDoseMax[0]
             doseSlider4.value = defDoseMg[3]
             doseInput4.text = "\(defDoseMg[3])"
+            yScaleb1.text = "0.02"
+            yScaleb2.text = "0.04"
+            yScaleb3.text = "0.06"
+            yScaleb4.text = "0.08"
+            yScaleb5.text = "0.1"
+            yScalet1.text = "1.0"
+            yScalet2.text = "2.0"
+            yScalet3.text = "3.0"
+            yScalet4.text = "4.0"
+            yScalet5.text = "5.0"
+            
+            maxYScaleb = Float(0.1)
         }
-        setYScaleLabels()
         updateUI()
     }
     
@@ -651,10 +834,18 @@ class View_MultipleRates: UIViewController {
         NKInputView.with(doseInput3, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
         NKInputView.with(doseInput4, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
         NKInputView.with(concentrationField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
+        NKInputView.with(pumpVolumeField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
+        NKInputView.with(accumulatorVolumeField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
+        NKInputView.with(bolusNumField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
+        NKInputView.with(bolusDoseField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
         
         miscStackTopDistance.constant = 30
         controlStack3.alpha = 0.0
         controlStack4.alpha = 0.0
+        
+        self.advancedSettingsView.layer.borderWidth = 2
+        self.advancedSettingsView.layer.cornerRadius = 10
+        self.advancedSettingsView.layer.borderColor = UIColor.lightGray.cgColor
         
         self.graphBorder.layer.borderWidth = 2
         self.graphBorder.layer.cornerRadius = 10
@@ -685,6 +876,9 @@ class View_MultipleRates: UIViewController {
         self.startPicker4.layer.borderWidth = 2.0
         self.startPicker4.layer.cornerRadius = 5
         self.startPicker4.setValue(UIColor.white, forKeyPath: "textColor")
+        self.advancedSettingsOpenButton.layer.borderColor = UIColor.lightGray.cgColor
+        self.advancedSettingsOpenButton.layer.borderWidth = 2
+        self.advancedSettingsOpenButton.layer.cornerRadius = 5
         initializeUI()
     }
     
@@ -763,7 +957,7 @@ class View_MultipleRates: UIViewController {
         concentrationField.text = "\(defConcentration[0])"
         accumVol = defAccumVol
         yScale = defYScale[0]
-        setYScaleLabels()
+        maxYScaleb = 0.1
         updateUI()
     }
     
@@ -829,6 +1023,15 @@ class View_MultipleRates: UIViewController {
             totalDose += doseSlider4.value
         }
         totalDoseField.text = "\(totalDose)" + " " + unitLabel
+        let bolusDoseText = bolusDoseField.text!
+        let bolusNumText = bolusNumField.text!
+        let bolusDoseFloat = (bolusDoseText as NSString).floatValue
+        let bolusNumFloat = (bolusNumText as NSString).floatValue
+        let totalDoseWithPTC = (((bolusDoseFloat * bolusNumFloat) + totalDose) / pumpConFloat)   //in mL's
+        daysUntilRefillField.text = "\(pumpVolume / totalDoseWithPTC)" + " days"
+        pumpVolumeField.text = "\(pumpVolume)"
+        accumulatorVolumeField.text = "\(accumVol)"
+        bolusDoseLabel.text = unitLabel
         generateAndLoadGraph()
         generateAndLoadGraph2()
     }
@@ -884,7 +1087,7 @@ class View_MultipleRates: UIViewController {
         return minuteArray
     }
     
-    func generateAndLoadGraph()
+    func generateAndLoadGraph() // graphs in terms of dose (mg/mcg)
     {
         //remove old shape layer if any is present
         self.shapeLayer?.removeFromSuperlayer()
@@ -1034,7 +1237,7 @@ class View_MultipleRates: UIViewController {
         self.shapeLayer = shapeLayer
     }
     
-    func generateAndLoadGraph2()
+    func generateAndLoadGraph2() // graphs in terms of Valve Actuations (mg/mcg)
     {
         //remove old shape layer if any is present
         self.shapeLayer2?.removeFromSuperlayer()
@@ -1068,6 +1271,9 @@ class View_MultipleRates: UIViewController {
         var date2 = startPicker1.date
         var sliderVal = doseSlider1.value
         var bolusNumber = 0
+        let pumpConText = concentrationField.text!
+        let pumpConFloat = (pumpConText as NSString).floatValue
+        let bolHeight = ((accumVol * pumpConFloat) / maxYScaleb) * graphHeight
         
         while(c < stepperState)
         {
@@ -1131,10 +1337,10 @@ class View_MultipleRates: UIViewController {
             {
                 while(bolusNumber < Int(bolPerPeriod))
                 {
-                    yCoord += (0.5 * graphHeight)
+                    yCoord += bolHeight
                     cSet = [xCoord, yCoord]
                     coordArray.append(cSet)
-                    yCoord -= (0.5 * graphHeight)
+                    yCoord -= bolHeight
                     cSet = [xCoord, yCoord]
                     coordArray.append(cSet)
                     xCoord += distBetweenBol

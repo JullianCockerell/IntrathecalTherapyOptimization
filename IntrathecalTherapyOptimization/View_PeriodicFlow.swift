@@ -16,7 +16,7 @@ class View_PeriodicFlow: UIViewController {
     @IBOutlet weak var intervalStepperLabel: UILabel!
     @IBOutlet weak var durationPicker: UIDatePicker!
     @IBOutlet weak var graphImage: UIImageView!
-    @IBOutlet weak var pumpRateLabel: UITextField!
+    @IBOutlet weak var pumpRateLabel: UITextView!
     @IBOutlet weak var totalDoseLabel: UITextField!
     @IBOutlet weak var warningImage: UIImageView!
     weak var shapeLayer: CAShapeLayer?
@@ -28,12 +28,14 @@ class View_PeriodicFlow: UIViewController {
     var accumVol = Float(0.0025)
     var textHolder = ""
     var pumpVolume = Float(20)
+    var yScaleMax = Float(0.07)
+    var prevStepperVal = 1
     
     // Defaults: Dose, Concentration, Accumulator Volume, Maximum Dose, Y Scale, Pump Volume
     // index 0 for mg, index 1 for mcg
     let defAccumVol = Float(0.0025)
     let defDose = [Float(2.5), Float(50.0)]
-    let defConcentration = [Float(20.0), Float(350.0)]
+    let defConcentration = [Float(8.0), Float(300.0)]
     let defDoseMax = [Float(5), Float(100)]
     let defYScale = [Float(0.03), Float(1.5)]
     let defPumpVolume = Float(20)
@@ -65,11 +67,9 @@ class View_PeriodicFlow: UIViewController {
     @IBOutlet weak var yScale5: UILabel!
     @IBOutlet weak var yScale6: UILabel!
     @IBOutlet weak var yScale7: UILabel!
-    @IBOutlet weak var yScale8: UILabel!
-    @IBOutlet weak var yScale9: UILabel!
-    @IBOutlet weak var yScale10: UILabel!
     
     // Advanced Settings
+    @IBOutlet weak var advancedSettingsView: UIView!
     @IBOutlet weak var advancedSettingsOpenButton: UIButton!
     @IBOutlet weak var accumulatorVolumeField: AllowedCharsTextField!
     @IBOutlet weak var bolusNumField: UITextField!
@@ -80,6 +80,16 @@ class View_PeriodicFlow: UIViewController {
     @IBOutlet weak var bolusDoseLabel: UILabel!
     @IBOutlet weak var advancedSettingsConstraint: NSLayoutConstraint!
 
+    // Y-Axis Labels
+    @IBOutlet weak var yScale6_1: UILabel!
+    @IBOutlet weak var yScale6_2: UILabel!
+    @IBOutlet weak var yScale6_3: UILabel!
+    @IBOutlet weak var yScale6_4: UILabel!
+    @IBOutlet weak var yScale30_1: UILabel!
+    @IBOutlet weak var yScale30_2: UILabel!
+    
+    
+    
     @IBAction func accumulatorVolumeFieldSelected(_ sender: AllowedCharsTextField)
     {
         textHolder = accumulatorVolumeField.text!
@@ -175,16 +185,16 @@ class View_PeriodicFlow: UIViewController {
     
     @IBAction func advancedSettingsClose(_ sender: UIButton)
     {
-        advancedSettingsConstraint.constant = 420
+        advancedSettingsConstraint.constant = 510
         UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations:
-            {
-                self.view.layoutIfNeeded()
+        {
+            self.view.layoutIfNeeded()
         })
     }
     
     @IBAction func advancedSettingsOpen(_ sender: UIButton)
     {
-        advancedSettingsConstraint.constant = 0
+        advancedSettingsConstraint.constant = 20
         UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations:
         {
             self.view.layoutIfNeeded()
@@ -257,8 +267,6 @@ class View_PeriodicFlow: UIViewController {
         disableInputs(activeControl: "pumpConcentration")
     }
     
-    
-    
     lazy var datePicker: UIDatePicker =
     {
         let picker = UIDatePicker()
@@ -273,8 +281,6 @@ class View_PeriodicFlow: UIViewController {
         formatter.timeStyle = .short
         return formatter
     }()
-    
-
     
     @IBAction func pumpConcentrationChaned(_ sender: AllowedCharsTextField)
     {
@@ -356,15 +362,16 @@ class View_PeriodicFlow: UIViewController {
         let pumpRateInClicks = durTotal / pumpClicksNum
         let dosePerClickFloat = Float(accumVol) * pumpConFloat
         dosePerClickField.text = roundValue(inputText: "\(dosePerClickFloat)", roundTo: 4) + " " + unitLabel
-        if(pumpRateInClicks == 0)
+        if(pumpClicksNum == 0)
         {
             pumpRateLabel.text = "0 Valve Actuations"
         }
         else
         {
-            pumpRateLabel.text = "1 V.A. every " + roundValue(inputText: "\(pumpRateInClicks)", roundTo: 2) + " min"
+            pumpRateLabel.text = "1 Valve Actuation every " + roundValue(inputText: "\(pumpRateInClicks)", roundTo: 2) + " min"
         }
         doseFieldLabel.text = unitLabel
+        bolusDoseLabel.text = unitLabel
         pumpConcentrationLabel.text = unitLabel + "/ml"
         let bolusDoseText = bolusDoseField.text!
         let bolusNumText = bolusNumField.text!
@@ -377,7 +384,6 @@ class View_PeriodicFlow: UIViewController {
         generateAndLoadGraph()
     }
     
-    
     @IBAction func unitPickerChanged(_ sender: UISwitch)
     {
         if(mgMode)
@@ -389,6 +395,15 @@ class View_PeriodicFlow: UIViewController {
             doseField.text = "\(defDose[1])"
             pumpConcentration.text = "\(defConcentration[1])"
             yScale = defYScale[1]
+            
+            yScale1.text = "1.0"
+            yScale2.text = "2.0"
+            yScale3.text = "3.0"
+            yScale4.text = "4.0"
+            yScale5.text = "5.0"
+            yScale6.text = "6.0"
+            yScale7.text = "7.0"
+            yScaleMax = Float(7)
         }
         else
         {
@@ -399,8 +414,16 @@ class View_PeriodicFlow: UIViewController {
             doseField.text = "\(defDose[0])"
             yScale = defYScale[0]
             pumpConcentration.text = "\(defConcentration[0])"
+            
+            yScale1.text = "0.01"
+            yScale2.text = "0.02"
+            yScale3.text = "0.03"
+            yScale4.text = "0.04"
+            yScale5.text = "0.05"
+            yScale6.text = "0.06"
+            yScale7.text = "0.07"
+            yScaleMax = Float(0.07)
         }
-        // setYScaleLabels()
         updateUI()
     }
     
@@ -462,8 +485,6 @@ class View_PeriodicFlow: UIViewController {
         }
     }
     
-    
-    
     @IBAction func doseSliderChanged(_ sender: UISlider)
     {
         if(!mgMode)
@@ -486,7 +507,6 @@ class View_PeriodicFlow: UIViewController {
         updateUI()
     }
     
-    
     @IBAction func durationPickerChanged(_ sender: UIDatePicker)
     {
         if(isValid())
@@ -499,11 +519,24 @@ class View_PeriodicFlow: UIViewController {
         }
     }
     
-    
-    
     @IBAction func intervalStepperChanged(_ sender: UIStepper)
     {
-        let cVal = Int(sender.value)
+        var cVal = Int(sender.value)
+        if(cVal == 7 && prevStepperVal == 6) { cVal = 8 }
+        if(cVal == 7 && prevStepperVal == 8) { cVal = 6 }
+        if(cVal == 11 && prevStepperVal == 10) { cVal = 12 }
+        if(cVal == 11 && prevStepperVal == 12){ cVal = 10 }
+        if(cVal == 13) { cVal = 15 }
+        if(cVal == 14) { cVal = 12 }
+        if(cVal == 17 && prevStepperVal == 16) { cVal = 18 }
+        if(cVal == 17 && prevStepperVal == 18) { cVal = 16 }
+        if(cVal == 19 && prevStepperVal == 18) { cVal = 20 }
+        if(cVal == 19 && prevStepperVal == 20) { cVal = 18 }
+        if(cVal == 21) { cVal = 24 }
+        if(cVal == 23) { cVal = 20 }
+        
+        
+        intervalStepper.value = Double(cVal)
         if (cVal == 1)
         {
             intervalStepperLabel.text = "\(cVal)" + " Period"
@@ -516,9 +549,9 @@ class View_PeriodicFlow: UIViewController {
         {
             updateUI()
         }
+        prevStepperVal = cVal
     }
     
-
     func isValid() -> Bool
     {
         let components = Calendar.current.dateComponents([.hour, .minute], from: durationPicker.date)
@@ -560,14 +593,11 @@ class View_PeriodicFlow: UIViewController {
         })
     }
 
-
-    
     override func viewWillDisappear(_ animated: Bool)
     {
         super.viewWillDisappear(animated)
         AppDelegate.AppUtility.lockOrientation(UIInterfaceOrientationMask.portrait)
     }
-    
     
     func generateAndLoadGraph()
     {
@@ -577,11 +607,15 @@ class View_PeriodicFlow: UIViewController {
         let graphY = Float(graphImage.frame.origin.y)
         let graphWidth = Float(graphImage.bounds.width)
         let graphHeight = Float(graphImage.bounds.height)
+        let scaling = scalePicker.selectedSegmentIndex
         
         //create path for graph to draw
-        //assign base constants
         let path = UIBezierPath()
-        let xShift = Float(((startHour + (startMinute/Float(60))) / 24))*graphWidth
+        var xShift = Float(0)
+        if(scaling == 0)
+        {
+            xShift = Float(((startHour + (startMinute/Float(60))) / 24)) * graphWidth
+        }
         let bolNum = Float(intervalStepper.value)
         let cycWidth = graphWidth / bolNum
         
@@ -596,7 +630,7 @@ class View_PeriodicFlow: UIViewController {
         let pumpConFloat = (pumpConText as NSString).floatValue
         // let flowRate = bolusRate / pumpConFloat
         // let bolHeight = (bolusRate / maxBolusRate) * graphHeight
-        let bolHeight = (accumVol / 0.005) * graphHeight
+        let bolHeight = ((accumVol * pumpConFloat) / yScaleMax) * graphHeight
         let bolWidth = (durTotal / (60*24)) * graphWidth
         let basWidth = cycWidth - bolWidth
         
@@ -673,7 +707,6 @@ class View_PeriodicFlow: UIViewController {
         }
         
         //scaling is applied if zoom feature is in use
-        let scaling = scalePicker.selectedSegmentIndex
         if(scaling == 0)
         {
             //do nothing
@@ -686,6 +719,51 @@ class View_PeriodicFlow: UIViewController {
                 coordArray[c][0] = coordArray[c][0] * 4
                 c += 1
             }
+            var nextHour = startHour
+            var nextMin = startMinute
+            var minSpacer = ""
+            var timeLabel = "AM"
+            if(nextHour > 12)
+            {
+                timeLabel = "PM"
+                nextHour = nextHour - 12
+            }
+            if(nextMin < 10){minSpacer = "0"}
+            yScale6_1.text = "\(Int(nextHour))" + ":" + minSpacer + "\(Int(nextMin))" + timeLabel
+            var c2 = 0
+            while(c2 < 3)
+            {
+                minSpacer = ""
+                nextMin += 30
+                if(nextMin > 59)
+                {
+                    nextHour += 1
+                    nextMin -= 60
+                }
+                nextHour += 1
+                if(nextHour > 12)
+                {
+                    if(timeLabel == "PM"){timeLabel = "AM"}
+                    else if(timeLabel == "AM"){timeLabel = "PM"}
+                    nextHour -= 12
+                }
+                if(c2 == 0)
+                {
+                    if(nextMin < 10){minSpacer = "0"}
+                    yScale6_2.text = "\(Int(nextHour))" + ":" + minSpacer + "\(Int(nextMin))" + timeLabel
+                }
+                if(c2 == 1)
+                {
+                    if(startMinute < 10){minSpacer = "0"}
+                    yScale6_3.text = "\(Int(nextHour))" + ":" + minSpacer + "\(Int(nextMin))" + timeLabel
+                }
+                if(c2 == 2)
+                {
+                    if(startMinute < 10){minSpacer = "0"}
+                    yScale6_4.text = "\(Int(nextHour))" + ":" + minSpacer + "\(Int(nextMin))" + timeLabel
+                }
+                c2 += 1
+            }
         }
         else if(scaling == 2)
         {
@@ -695,6 +773,34 @@ class View_PeriodicFlow: UIViewController {
                 coordArray[c][0] = coordArray[c][0] * 48
                 c += 1
             }
+            var nextHour = startHour
+            var nextMin = startMinute
+            var minSpacer = ""
+            var timeLabel = "AM"
+            if(nextHour > 12)
+            {
+                timeLabel = "PM"
+                nextHour = nextHour - 12
+            }
+            if(nextMin < 10){minSpacer = "0"}
+            yScale30_1.text = "\(Int(nextHour))" + ":" + minSpacer + "\(Int(nextMin))" + timeLabel
+            
+            nextMin += 15
+            minSpacer = ""
+            if(nextMin > 59)
+            {
+                nextHour += 1
+                nextMin -= 60
+            }
+            if(nextHour > 12)
+            {
+                if(timeLabel == "PM"){timeLabel = "AM"}
+                else if(timeLabel == "AM"){timeLabel = "PM"}
+                nextHour -= 12
+            }
+            if(nextMin < 10){minSpacer = "0"}
+            yScale30_2.text = "\(Int(nextHour))" + ":" + minSpacer + "\(Int(nextMin))" + timeLabel
+
         }
         
         //add points to path
@@ -729,7 +835,7 @@ class View_PeriodicFlow: UIViewController {
         self.shapeLayer = shapeLayer
     }
     
-    func generateAndLoadGraph2()
+    func generateAndLoadGraph2()    //deprecated
     {
         //remove old shape layer if any is present
         self.shapeLayer?.removeFromSuperlayer()
@@ -919,8 +1025,13 @@ class View_PeriodicFlow: UIViewController {
         let toolBar = UIToolbar().ToolbarPicker(mySelect: #selector(View_PeriodicFlow.dismissPicker))
         startTimeField.inputAccessoryView = toolBar
         
-        
+        pumpRateLabel.centerVertically()
+        self.pumpRateLabel.layer.borderColor = UIColor.lightGray.cgColor
+        self.pumpRateLabel.layer.cornerRadius = 5
         let borderColor = UIColor.lightGray.cgColor
+        self.advancedSettingsView.layer.borderWidth = 2
+        self.advancedSettingsView.layer.cornerRadius = 10
+        self.advancedSettingsView.layer.borderColor = UIColor.lightGray.cgColor
         durationPicker.layer.borderColor = borderColor
         durationPicker.layer.borderWidth = 2.0
         durationPicker.layer.cornerRadius = 5
@@ -934,6 +1045,9 @@ class View_PeriodicFlow: UIViewController {
         controlStyle.layer.cornerRadius = 10
         controlStyle.layer.borderColor = borderColor
         controlStyle.layer.borderWidth = 2
+        self.advancedSettingsOpenButton.layer.borderColor = UIColor.lightGray.cgColor
+        self.advancedSettingsOpenButton.layer.borderWidth = 2
+        self.advancedSettingsOpenButton.layer.cornerRadius = 5
         
         let date = Date()
         let calendar = Calendar.current
@@ -995,7 +1109,16 @@ class View_PeriodicFlow: UIViewController {
         }
     }
     
+}
+
+extension UITextView {
     
-
-
+    func centerVertically() {
+        let fittingSize = CGSize(width: bounds.width, height: CGFloat.greatestFiniteMagnitude)
+        let size = sizeThatFits(fittingSize)
+        let topOffset = (bounds.size.height - size.height * zoomScale) / 2
+        let positiveTopOffset = max(1, topOffset)
+        contentOffset.y = -positiveTopOffset
+    }
+    
 }
