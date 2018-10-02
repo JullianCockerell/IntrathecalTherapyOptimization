@@ -72,6 +72,13 @@ class View_ConstantFlow: UIViewController {
     @IBOutlet weak var yLabel6: UILabel!
     @IBOutlet weak var yLabel7: UILabel!
     
+    //Time Labels
+    @IBOutlet weak var label24_1: UILabel!
+    @IBOutlet weak var label24_2: UILabel!
+    @IBOutlet weak var label24_3: UILabel!
+    @IBOutlet weak var label24_4: UILabel!
+    
+    
     
     //****************************************************************//
 
@@ -515,6 +522,22 @@ class View_ConstantFlow: UIViewController {
         self.advancedSettingsView.layer.borderWidth = 2
         self.advancedSettingsView.layer.cornerRadius = 10
         self.advancedSettingsView.layer.borderColor = UIColor.lightGray.cgColor
+        
+        
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 1
+        paragraphStyle.lineHeightMultiple = 0.3
+        let attrString = NSMutableAttributedString(string: "12\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label24_1.attributedText = attrString
+        
+        let paragraphStyle2 = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 2.0
+        let attrString2 = NSMutableAttributedString(string: "8\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle2, range:NSMakeRange(0, attrString2.length))
+        label24_2.attributedText = attrString2
+        
         
         initializeUI()
     }

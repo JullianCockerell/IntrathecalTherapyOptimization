@@ -1237,6 +1237,7 @@ class View_MultipleRates: UIViewController {
         self.shapeLayer = shapeLayer
     }
     
+    
     func generateAndLoadGraph2() // graphs in terms of Valve Actuations (mg/mcg)
     {
         //remove old shape layer if any is present
