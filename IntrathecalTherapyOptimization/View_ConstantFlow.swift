@@ -524,21 +524,26 @@ class View_ConstantFlow: UIViewController {
         self.advancedSettingsView.layer.borderColor = UIColor.lightGray.cgColor
         
         
-        
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = 1
-        paragraphStyle.lineHeightMultiple = 0.3
+        paragraphStyle.lineHeightMultiple = 0.7
+        
         let attrString = NSMutableAttributedString(string: "12\nAM")
         attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
         label24_1.attributedText = attrString
         
-        let paragraphStyle2 = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 2.0
-        let attrString2 = NSMutableAttributedString(string: "8\nAM")
-        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle2, range:NSMakeRange(0, attrString2.length))
+        let attrString2 = NSMutableAttributedString(string: "6\nAM")
+        attrString2.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString2.length))
         label24_2.attributedText = attrString2
         
+        let attrString3 = NSMutableAttributedString(string: "12\nPM")
+        attrString3.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString3.length))
+        label24_3.attributedText = attrString3
         
+        let attrString4 = NSMutableAttributedString(string: "6\nPM")
+        attrString4.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString4.length))
+        label24_4.attributedText = attrString4
+    
         initializeUI()
     }
     
