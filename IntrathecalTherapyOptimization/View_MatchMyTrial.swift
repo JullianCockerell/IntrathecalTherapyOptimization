@@ -46,6 +46,20 @@ class View_MatchMyTrial: UIViewController
     @IBOutlet weak var controlBorder: UIView!
     @IBOutlet weak var displayBorder: UIView!
     
+    //Time Labels
+    @IBOutlet weak var label24_1: UILabel!
+    @IBOutlet weak var label24_2: UILabel!
+    @IBOutlet weak var label24_3: UILabel!
+    @IBOutlet weak var label24_4: UILabel!
+    @IBOutlet weak var label6_1: UILabel!
+    @IBOutlet weak var label6_2: UILabel!
+    @IBOutlet weak var label6_3: UILabel!
+    @IBOutlet weak var label6_4: UILabel!
+    @IBOutlet weak var label30_1: UILabel!
+    @IBOutlet weak var label30_2: UILabel!
+
+    
+    
     // Advanced Settings
     @IBOutlet weak var advancedSettingsView: UIView!
     @IBOutlet weak var advancedSettingsOpenButton: UIButton!
@@ -298,8 +312,6 @@ class View_MatchMyTrial: UIViewController
         advancedSettingsCloseButton.isUserInteractionEnabled = true
         accumulatorVolumeField.isUserInteractionEnabled = true
         pumpVolumeField.isUserInteractionEnabled = true
-        bolusDoseField.isUserInteractionEnabled = true
-        ptcBolusNumField.isUserInteractionEnabled = true
     }
     
     func disableInputs(activeControl: String) -> Void
@@ -308,8 +320,6 @@ class View_MatchMyTrial: UIViewController
         if(activeControl != "reliefDuration"){ reliefDuration.isUserInteractionEnabled = false }
         if(activeControl != "accumulatorVolumeField"){ accumulatorVolumeField.isUserInteractionEnabled = false }
         if(activeControl != "pumpVolumeField"){ pumpVolumeField.isUserInteractionEnabled = false }
-        if(activeControl != "ptcBolusNumField"){ ptcBolusNumField.isUserInteractionEnabled = false }
-        if(activeControl != "bolusDoseField"){ bolusDoseField.isUserInteractionEnabled = false }
         scalePicker.isUserInteractionEnabled = false
         unitSwitch.isUserInteractionEnabled = false
         matchTrialButton.isUserInteractionEnabled = false
@@ -370,6 +380,51 @@ class View_MatchMyTrial: UIViewController
         self.advancedSettingsView.layer.borderWidth = 2
         self.advancedSettingsView.layer.cornerRadius = 10
         self.advancedSettingsView.layer.borderColor = UIColor.lightGray.cgColor
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 1
+        paragraphStyle.lineHeightMultiple = 0.7
+        
+        var attrString = NSMutableAttributedString(string: "12\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label24_1.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "6\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label24_2.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "12\nPM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label24_3.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "6\nPM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label24_4.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "12\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label6_1.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "1:30\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label6_2.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "3\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label6_3.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "4:30\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label6_4.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "12\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label30_1.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "12:15\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label30_2.attributedText = attrString
+
         
         let toolBar = UIToolbar().ToolbarPicker(mySelect: #selector(View_PeriodicFlow.dismissPicker))
         reliefDuration.inputAccessoryView = toolBar

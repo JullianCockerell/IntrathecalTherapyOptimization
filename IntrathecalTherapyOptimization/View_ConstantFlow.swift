@@ -24,8 +24,8 @@ class View_ConstantFlow: UIViewController {
     // Defaults: Dose, Concentration, Accumulator Volume, Maximum Dose, Pump Volume
     // index 0 for mg, index 1 for mcg
     let defAccumVol = Float(0.0025)
-    let defDose = [Float(1.0), Float(40.0)]
-    let defConcentration = [Float(8.0), Float(350.0)]
+    let defDose = [Float(0.5), Float(40.0)]
+    let defConcentration = [Float(10.0), Float(350.0)]
     let defDoseMax = [Float(5), Float(300)]
     let defPumpVolume = Float(20)
     
@@ -52,6 +52,9 @@ class View_ConstantFlow: UIViewController {
     @IBOutlet weak var advancedSettingsOpenButton: UIButton!
     @IBOutlet weak var outputBorder: UIView!
     @IBOutlet weak var exitButton: UIButton!
+    @IBOutlet weak var yAxisUnitLabel: UILabel!
+    
+    
     
     // Advanced Settings View
     @IBOutlet weak var advancedSettingsView: UIView!
@@ -77,6 +80,20 @@ class View_ConstantFlow: UIViewController {
     @IBOutlet weak var label24_2: UILabel!
     @IBOutlet weak var label24_3: UILabel!
     @IBOutlet weak var label24_4: UILabel!
+    
+    @IBOutlet weak var label6_1: UILabel!
+    @IBOutlet weak var label6_2: UILabel!
+    @IBOutlet weak var label6_3: UILabel!
+    @IBOutlet weak var label6_4: UILabel!
+    
+    @IBOutlet weak var label30_1: UILabel!
+    @IBOutlet weak var label30_2: UILabel!
+    @IBOutlet weak var label30_3: UILabel!
+    @IBOutlet weak var label30_4: UILabel!
+    
+    //Time Inputs
+    
+    
     
     
     
@@ -208,6 +225,7 @@ class View_ConstantFlow: UIViewController {
             yLabel6.text = "6.0"
             yLabel7.text = "7.0"
             yLabelMax = Float(7)
+            yAxisUnitLabel.text = "Dose (" + unitLabel + ")"
         }
         else if(!mgMode)
         {
@@ -227,6 +245,7 @@ class View_ConstantFlow: UIViewController {
             yLabel6.text = "0.06"
             yLabel7.text = "0.07"
             yLabelMax = Float(0.07)
+            yAxisUnitLabel.text = "Dose (" + unitLabel + ")"
         }
         updateUI()
     }
@@ -349,14 +368,14 @@ class View_ConstantFlow: UIViewController {
         if(!mgMode)
         {
             var inputInt = Int(inputFloat)
-            inputInt = inputInt - (inputInt % 5)
+            //inputInt = inputInt - (inputInt % 5)
             doseSlider.value = Float(inputInt)
             let doseInputText = "\(doseSlider.value)"
-            doseInputField.text = roundValue(inputText: doseInputText, roundTo: 2)
+            doseInputField.text = roundValue(inputText: doseInputText, roundTo: 4)
         }
         else
         {
-            let inputPrefix = roundValue(inputText: inputText, roundTo: 1)
+            let inputPrefix = roundValue(inputText: inputText, roundTo: 4)
             doseInputField.text = inputPrefix
             doseSlider.value = inputFloat
         }
@@ -418,7 +437,7 @@ class View_ConstantFlow: UIViewController {
     {
         let inputText = doseInputField.text!
         let inputFloat = (inputText as NSString).floatValue
-        let inputPrefix = roundValue(inputText: inputText, roundTo: 1)
+        let inputPrefix = roundValue(inputText: inputText, roundTo: 4)
         doseSlider.value = inputFloat
         let totalDose = doseSlider.value
         let pumpCon = pumpConcentration.text!
@@ -436,7 +455,7 @@ class View_ConstantFlow: UIViewController {
         var dosePerClickVal = String(pumpConFloat * accumVol)
         dosePerClickVal = roundValue(inputText: dosePerClickVal, roundTo: 2)
         dosePerClick.text = dosePerClickVal + " " + unitLabel
-        doseSliderLabel.text = unitLabel
+        doseSliderLabel.text = unitLabel + "/day"
         doseInputField.text = inputPrefix
         pumpConcentrationLabel.text = unitLabel + "/ml"
         bolusDoseFieldLabel.text = unitLabel
@@ -528,21 +547,47 @@ class View_ConstantFlow: UIViewController {
         paragraphStyle.lineSpacing = 1
         paragraphStyle.lineHeightMultiple = 0.7
         
-        let attrString = NSMutableAttributedString(string: "12\nAM")
+        var attrString = NSMutableAttributedString(string: "12\nAM")
         attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
         label24_1.attributedText = attrString
         
-        let attrString2 = NSMutableAttributedString(string: "6\nAM")
-        attrString2.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString2.length))
-        label24_2.attributedText = attrString2
+        attrString = NSMutableAttributedString(string: "6\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label24_2.attributedText = attrString
         
-        let attrString3 = NSMutableAttributedString(string: "12\nPM")
-        attrString3.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString3.length))
-        label24_3.attributedText = attrString3
+        attrString = NSMutableAttributedString(string: "12\nPM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label24_3.attributedText = attrString
         
-        let attrString4 = NSMutableAttributedString(string: "6\nPM")
-        attrString4.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString4.length))
-        label24_4.attributedText = attrString4
+        attrString = NSMutableAttributedString(string: "6\nPM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label24_4.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "12\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label6_1.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "1:30\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label6_2.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "3\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label6_3.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "4:30\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label6_4.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "12\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label30_1.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "12:15\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label30_3.attributedText = attrString
+        
+
     
         initializeUI()
     }

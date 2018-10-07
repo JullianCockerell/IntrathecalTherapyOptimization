@@ -80,13 +80,19 @@ class View_PeriodicFlow: UIViewController {
     @IBOutlet weak var bolusDoseLabel: UILabel!
     @IBOutlet weak var advancedSettingsConstraint: NSLayoutConstraint!
 
-    // Y-Axis Labels
+    // Time Labels
     @IBOutlet weak var yScale6_1: UILabel!
     @IBOutlet weak var yScale6_2: UILabel!
     @IBOutlet weak var yScale6_3: UILabel!
     @IBOutlet weak var yScale6_4: UILabel!
     @IBOutlet weak var yScale30_1: UILabel!
     @IBOutlet weak var yScale30_2: UILabel!
+    
+    @IBOutlet weak var label24_1: UILabel!
+    @IBOutlet weak var label24_2: UILabel!
+    @IBOutlet weak var label24_3: UILabel!
+    @IBOutlet weak var label24_4: UILabel!
+    
     
     
     
@@ -316,14 +322,14 @@ class View_PeriodicFlow: UIViewController {
         if(!mgMode)
         {
             var inputInt = Int(inputFloat)
-            inputInt = inputInt - (inputInt % 5)
+            //inputInt = inputInt - (inputInt % 5)
             doseSlider.value = Float(inputInt)
             let doseInputText = "\(doseSlider.value)"
-            doseField.text = roundValue(inputText: doseInputText, roundTo: 2)
+            doseField.text = roundValue(inputText: doseInputText, roundTo: 4)
         }
         else
         {
-            let inputPrefix = roundValue(inputText: inputText, roundTo: 1)
+            let inputPrefix = roundValue(inputText: inputText, roundTo: 4)
             doseField.text = inputPrefix
             doseSlider.value = inputFloat
         }
@@ -346,7 +352,7 @@ class View_PeriodicFlow: UIViewController {
     {
         let inputText = doseField.text!
         let inputFloat = (inputText as NSString).floatValue
-        let inputPrefix = roundValue(inputText: inputText, roundTo: 1)
+        let inputPrefix = roundValue(inputText: inputText, roundTo: 4)
         doseSlider.value = inputFloat
         doseField.text = inputPrefix
         let totalDose = doseSlider.value * Float(intervalStepper.value)
@@ -370,7 +376,7 @@ class View_PeriodicFlow: UIViewController {
         {
             pumpRateLabel.text = "1 Valve Actuation every " + roundValue(inputText: "\(pumpRateInClicks)", roundTo: 2) + " min"
         }
-        doseFieldLabel.text = unitLabel
+        doseFieldLabel.text = unitLabel + "/bolus"
         bolusDoseLabel.text = unitLabel
         pumpConcentrationLabel.text = unitLabel + "/ml"
         let bolusDoseText = bolusDoseField.text!
@@ -1013,7 +1019,7 @@ class View_PeriodicFlow: UIViewController {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(View_PeriodicFlow.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(View_PeriodicFlow.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-        startTimeField.inputView = datePicker
+        
         NKInputView.with(doseField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
         NKInputView.with(pumpConcentration, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
         NKInputView.with(accumulatorVolumeField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
@@ -1021,7 +1027,7 @@ class View_PeriodicFlow: UIViewController {
         NKInputView.with(bolusNumField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
         NKInputView.with(bolusDoseField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
         
-        
+        startTimeField.inputView = datePicker
         let toolBar = UIToolbar().ToolbarPicker(mySelect: #selector(View_PeriodicFlow.dismissPicker))
         startTimeField.inputAccessoryView = toolBar
         
@@ -1071,6 +1077,52 @@ class View_PeriodicFlow: UIViewController {
             minuteSpacer = "0"
         }
         startTimeField.text = "\(Int(currentHourVar))" + ":" + minuteSpacer + "\(Int(startMinute))" + " " + timeLabel
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 1
+        paragraphStyle.lineHeightMultiple = 0.7
+        
+        var attrString = NSMutableAttributedString(string: "12\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label24_1.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "6\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label24_2.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "12\nPM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label24_3.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "6\nPM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label24_4.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "12\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        yScale6_1.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "1:30\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        yScale6_2.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "3\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        yScale6_3.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "4:30\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        yScale6_4.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "12\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        yScale30_1.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "12:15\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        yScale30_2.attributedText = attrString
+
+        
         initializeUI()
     }
     

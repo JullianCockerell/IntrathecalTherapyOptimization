@@ -29,6 +29,15 @@ class View_MultipleRates: UIViewController {
     let defYScale = [Float(7.0), Float(300.0)]
     let defPumpVolume = Float(20)
     
+    var hour1 = Float(0)
+    var hour2 = Float(0)
+    var hour3 = Float(0)
+    var hour4 = Float(0)
+    var minute1 = Float(0)
+    var minute2 = Float(0)
+    var minute3 = Float(0)
+    var minute4 = Float(0)
+    
     
     @IBOutlet weak var periodStepper: UIStepper!
     @IBOutlet weak var periodStepperLabel: UILabel!
@@ -36,10 +45,6 @@ class View_MultipleRates: UIViewController {
     @IBOutlet weak var doseSlider2: UISlider!
     @IBOutlet weak var doseSlider3: UISlider!
     @IBOutlet weak var doseSlider4: UISlider!
-    @IBOutlet weak var startPicker1: UIDatePicker!
-    @IBOutlet weak var startPicker4: UIDatePicker!
-    @IBOutlet weak var startPicker3: UIDatePicker!
-    @IBOutlet weak var startPicker2: UIDatePicker!
     @IBOutlet weak var graphImage: UIImageView!
     @IBOutlet weak var warningImage: UIImageView!
     @IBOutlet weak var controlStack1: UIStackView!
@@ -102,6 +107,26 @@ class View_MultipleRates: UIViewController {
     @IBOutlet weak var yScalet4: UILabel!
     @IBOutlet weak var yScalet5: UILabel!
     
+    //Time Labels
+    @IBOutlet weak var label24_1: UILabel!
+    @IBOutlet weak var label24_2: UILabel!
+    @IBOutlet weak var label24_3: UILabel!
+    @IBOutlet weak var label24_4: UILabel!
+    @IBOutlet weak var label6_1: UILabel!
+    @IBOutlet weak var label6_2: UILabel!
+    @IBOutlet weak var label6_3: UILabel!
+    @IBOutlet weak var label6_4: UILabel!
+    @IBOutlet weak var label30_1: UILabel!
+    @IBOutlet weak var label30_2: UILabel!
+
+    @IBOutlet weak var yAxisTopLabel: UILabel!
+    @IBOutlet weak var yAxisBottomLabel: UILabel!
+    
+    //Time Inputs
+    @IBOutlet weak var timeInput1: UITextField!
+    @IBOutlet weak var timeInput2: UITextField!
+    @IBOutlet weak var timeInput3: UITextField!
+    @IBOutlet weak var timeInput4: UITextField!
     
     
     
@@ -217,7 +242,49 @@ class View_MultipleRates: UIViewController {
         updateUI()
     }
     
-
+    func dismissPicker1()
+    {
+        activateInputs()
+        view.endEditing(true)
+        let components = Calendar.current.dateComponents([.hour, .minute], from: datePicker.date)
+        hour1 = Float(components.hour!)
+        minute1 = Float(components.minute!)
+        timeInput1.text = dateFormatter.string(from: datePicker.date)
+        updateUI()
+    }
+    
+    func dismissPicker2()
+    {
+        activateInputs()
+        view.endEditing(true)
+        let components = Calendar.current.dateComponents([.hour, .minute], from: datePicker.date)
+        hour2 = Float(components.hour!)
+        minute2 = Float(components.minute!)
+        timeInput2.text = dateFormatter.string(from: datePicker.date)
+        updateUI()
+    }
+    
+    func dismissPicker3()
+    {
+        activateInputs()
+        view.endEditing(true)
+        let components = Calendar.current.dateComponents([.hour, .minute], from: datePicker.date)
+        hour3 = Float(components.hour!)
+        minute3 = Float(components.minute!)
+        timeInput3.text = dateFormatter.string(from: datePicker.date)
+        updateUI()
+    }
+    
+    func dismissPicker4()
+    {
+        activateInputs()
+        view.endEditing(true)
+        let components = Calendar.current.dateComponents([.hour, .minute], from: datePicker.date)
+        hour4 = Float(components.hour!)
+        minute4 = Float(components.minute!)
+        timeInput4.text = dateFormatter.string(from: datePicker.date)
+        updateUI()
+    }
     
     
     
@@ -228,10 +295,10 @@ class View_MultipleRates: UIViewController {
         doseSlider2.isUserInteractionEnabled = false
         doseSlider3.isUserInteractionEnabled = false
         doseSlider4.isUserInteractionEnabled = false
-        startPicker1.isUserInteractionEnabled = false
-        startPicker2.isUserInteractionEnabled = false
-        startPicker3.isUserInteractionEnabled = false
-        startPicker4.isUserInteractionEnabled = false
+        timeInput1.isUserInteractionEnabled = false
+        timeInput2.isUserInteractionEnabled = false
+        timeInput3.isUserInteractionEnabled = false
+        timeInput4.isUserInteractionEnabled = false
         unitSwitch.isUserInteractionEnabled = false
         advancedSettingsOpenButton.isUserInteractionEnabled = false
         advancedSettingsCloseButton.isUserInteractionEnabled = false
@@ -253,10 +320,10 @@ class View_MultipleRates: UIViewController {
         doseSlider2.isUserInteractionEnabled = true
         doseSlider3.isUserInteractionEnabled = true
         doseSlider4.isUserInteractionEnabled = true
-        startPicker1.isUserInteractionEnabled = true
-        startPicker2.isUserInteractionEnabled = true
-        startPicker3.isUserInteractionEnabled = true
-        startPicker4.isUserInteractionEnabled = true
+        timeInput1.isUserInteractionEnabled = true
+        timeInput2.isUserInteractionEnabled = true
+        timeInput3.isUserInteractionEnabled = true
+        timeInput4.isUserInteractionEnabled = true
         unitSwitch.isUserInteractionEnabled = true
         doseInput1.isUserInteractionEnabled = true
         doseInput2.isUserInteractionEnabled = true
@@ -358,14 +425,14 @@ class View_MultipleRates: UIViewController {
         if(!mgMode)
         {
             var inputInt = Int(inputFloat)
-            inputInt = inputInt - (inputInt % 5)
+            //inputInt = inputInt - (inputInt % 5)
             doseSlider1.value = Float(inputInt)
             let doseInputText = "\(doseSlider1.value)"
-            doseInput1.text = roundValue(inputText: doseInputText, roundTo: 2)
+            doseInput1.text = roundValue(inputText: doseInputText, roundTo: 4)
         }
         else
         {
-            let inputPrefix = roundValue(inputText: inputText, roundTo: 1)
+            let inputPrefix = roundValue(inputText: inputText, roundTo: 4)
             doseInput1.text = inputPrefix
             doseSlider1.value = inputFloat
         }
@@ -397,14 +464,14 @@ class View_MultipleRates: UIViewController {
         if(!mgMode)
         {
             var inputInt = Int(inputFloat)
-            inputInt = inputInt - (inputInt % 5)
+            //inputInt = inputInt - (inputInt % 5)
             doseSlider2.value = Float(inputInt)
             let doseInputText = "\(doseSlider2.value)"
-            doseInput2.text = roundValue(inputText: doseInputText, roundTo: 2)
+            doseInput2.text = roundValue(inputText: doseInputText, roundTo: 4)
         }
         else
         {
-            let inputPrefix = roundValue(inputText: inputText, roundTo: 1)
+            let inputPrefix = roundValue(inputText: inputText, roundTo: 4)
             doseInput2.text = inputPrefix
             doseSlider2.value = inputFloat
         }
@@ -435,14 +502,14 @@ class View_MultipleRates: UIViewController {
         if(!mgMode)
         {
             var inputInt = Int(inputFloat)
-            inputInt = inputInt - (inputInt % 5)
+            //inputInt = inputInt - (inputInt % 5)
             doseSlider3.value = Float(inputInt)
             let doseInputText = "\(doseSlider3.value)"
-            doseInput3.text = roundValue(inputText: doseInputText, roundTo: 2)
+            doseInput3.text = roundValue(inputText: doseInputText, roundTo: 4)
         }
         else
         {
-            let inputPrefix = roundValue(inputText: inputText, roundTo: 1)
+            let inputPrefix = roundValue(inputText: inputText, roundTo: 4)
             doseInput3.text = inputPrefix
             doseSlider3.value = inputFloat
         }
@@ -473,14 +540,14 @@ class View_MultipleRates: UIViewController {
         if(!mgMode)
         {
             var inputInt = Int(inputFloat)
-            inputInt = inputInt - (inputInt % 5)
+            //inputInt = inputInt - (inputInt % 5)
             doseSlider4.value = Float(inputInt)
             let doseInputText = "\(doseSlider4.value)"
-            doseInput4.text = roundValue(inputText: doseInputText, roundTo: 2)
+            doseInput4.text = roundValue(inputText: doseInputText, roundTo: 4)
         }
         else
         {
-            let inputPrefix = roundValue(inputText: inputText, roundTo: 1)
+            let inputPrefix = roundValue(inputText: inputText, roundTo: 4)
             doseInput4.text = inputPrefix
             doseSlider4.value = inputFloat
         }
@@ -643,7 +710,8 @@ class View_MultipleRates: UIViewController {
             yScalet3.text = "60.0"
             yScalet4.text = "80.0"
             yScalet5.text = "100.0"
-            
+            yAxisTopLabel.text = "  Period Dose (mcg)"
+            yAxisBottomLabel.text = "  Dose (mcg)"
             maxYScaleb = Float(2.5)
         }
         else if(!mgMode)
@@ -674,7 +742,8 @@ class View_MultipleRates: UIViewController {
             yScalet3.text = "3.0"
             yScalet4.text = "4.0"
             yScalet5.text = "5.0"
-            
+            yAxisTopLabel.text = "  Period Dose (mg)"
+            yAxisBottomLabel.text = "  Dose (mg)"
             maxYScaleb = Float(0.1)
         }
         updateUI()
@@ -717,10 +786,8 @@ class View_MultipleRates: UIViewController {
             controlStack2.isUserInteractionEnabled = true
             controlStack3.isUserInteractionEnabled = false
             controlStack4.isUserInteractionEnabled = false
-            dateVar = formatter.date(from: "00:00")
-            startPicker1.setDate(dateVar!, animated: true)
-            dateVar = formatter.date(from: "12:00")
-            startPicker2.setDate(dateVar!, animated: true)
+            timeInput1.text = "00:00"
+            timeInput2.text = "12:00"
             self.controlBorderHeight.constant = 180
             UIView.animate(withDuration: 0.5, animations:
             {
@@ -735,12 +802,9 @@ class View_MultipleRates: UIViewController {
             controlStack2.isUserInteractionEnabled = true
             controlStack3.isUserInteractionEnabled = true
             controlStack4.isUserInteractionEnabled = false
-            dateVar = formatter.date(from: "00:00")
-            startPicker1.setDate(dateVar!, animated: true)
-            dateVar = formatter.date(from: "08:00")
-            startPicker2.setDate(dateVar!, animated: true)
-            dateVar = formatter.date(from: "16:00")
-            startPicker3.setDate(dateVar!, animated: true)
+            timeInput1.text = "00:00"
+            timeInput2.text = "8:00"
+            timeInput3.text = "16:00"
             self.controlBorderHeight.constant = 269
             UIView.animate(withDuration: 0.6, animations:
             {
@@ -755,14 +819,10 @@ class View_MultipleRates: UIViewController {
             controlStack2.isUserInteractionEnabled = true
             controlStack3.isUserInteractionEnabled = true
             controlStack4.isUserInteractionEnabled = true
-            dateVar = formatter.date(from: "00:00")
-            startPicker1.setDate(dateVar!, animated: true)
-            dateVar = formatter.date(from: "06:00")
-            startPicker2.setDate(dateVar!, animated: true)
-            dateVar = formatter.date(from: "12:00")
-            startPicker3.setDate(dateVar!, animated: true)
-            dateVar = formatter.date(from: "18:00")
-            startPicker4.setDate(dateVar!, animated: true)
+            timeInput1.text = "00:00"
+            timeInput2.text = "6:00"
+            timeInput3.text = "12:00"
+            timeInput4.text = "18:00"
             self.controlBorderHeight.constant = 358
             UIView.animate(withDuration: 0.5, animations:
             {
@@ -781,15 +841,15 @@ class View_MultipleRates: UIViewController {
         let stepperState = Int(periodStepper.value)
         if(stepperState == 2)
         {
-            durTotal = calculateXDistance(startTime: startPicker1.date, endTime: startPicker2.date, gWidth: 100.00) + calculateXDistance(startTime: startPicker2.date, endTime: startPicker1.date, gWidth: 100.00)
+            durTotal = calculateXDistance(startTime: timeInput1.text!, endTime: timeInput2.text!, gWidth: 100.00) + calculateXDistance(startTime: timeInput2.text!, endTime: timeInput1.text!, gWidth: 100.00)
         }
         else if (stepperState == 3)
         {
-            durTotal = calculateXDistance(startTime: startPicker1.date, endTime: startPicker2.date, gWidth: 100.00) + calculateXDistance(startTime: startPicker2.date, endTime: startPicker3.date, gWidth: 100.00) + calculateXDistance(startTime: startPicker3.date, endTime: startPicker1.date, gWidth: 100.00)
+            durTotal = calculateXDistance(startTime: timeInput1.text!, endTime: timeInput2.text!, gWidth: 100.00) + calculateXDistance(startTime: timeInput2.text!, endTime: timeInput3.text!, gWidth: 100.00) + calculateXDistance(startTime: timeInput3.text!, endTime: timeInput1.text!, gWidth: 100.00)
         }
         else if (stepperState == 4)
         {
-            durTotal = calculateXDistance(startTime: startPicker1.date, endTime: startPicker2.date, gWidth: 100.00) + calculateXDistance(startTime: startPicker2.date, endTime: startPicker3.date, gWidth: 100.00) + calculateXDistance(startTime: startPicker3.date, endTime: startPicker4.date, gWidth: 100.00) + calculateXDistance(startTime: startPicker4.date, endTime: startPicker1.date, gWidth: 100.00)
+            durTotal = calculateXDistance(startTime: timeInput1.text!, endTime: timeInput2.text!, gWidth: 100.00) + calculateXDistance(startTime: timeInput2.text!, endTime: timeInput3.text!, gWidth: 100.00) + calculateXDistance(startTime: timeInput3.text!, endTime: timeInput4.text!, gWidth: 100.00) + calculateXDistance(startTime: timeInput4.text!, endTime: timeInput1.text!, gWidth: 100.00)
         }
         if(durTotal > 100.00)
         {
@@ -822,6 +882,22 @@ class View_MultipleRates: UIViewController {
         updateUI()
     }
     
+    lazy var datePicker: UIDatePicker =
+        {
+            let picker = UIDatePicker()
+            picker.datePickerMode = .time
+            return picker
+    }()
+    
+    lazy var dateFormatter: DateFormatter =
+        {
+            let formatter = DateFormatter()
+            formatter.dateStyle = .none
+            formatter.timeStyle = .short
+            formatter.dateFormat = "H:mm"
+            return formatter
+    }()
+    
     
     override func viewDidLoad()
     {
@@ -838,6 +914,22 @@ class View_MultipleRates: UIViewController {
         NKInputView.with(accumulatorVolumeField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
         NKInputView.with(bolusNumField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
         NKInputView.with(bolusDoseField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
+        
+        timeInput1.inputView = datePicker
+        let toolBar1 = UIToolbar().ToolbarPicker(mySelect: #selector(View_MultipleRates.dismissPicker1))
+        timeInput1.inputAccessoryView = toolBar1
+        
+        timeInput2.inputView = datePicker
+        let toolBar2 = UIToolbar().ToolbarPicker(mySelect: #selector(View_MultipleRates.dismissPicker2))
+        timeInput2.inputAccessoryView = toolBar2
+        
+        timeInput3.inputView = datePicker
+        let toolBar3 = UIToolbar().ToolbarPicker(mySelect: #selector(View_MultipleRates.dismissPicker3))
+        timeInput3.inputAccessoryView = toolBar3
+        
+        timeInput4.inputView = datePicker
+        let toolBar4 = UIToolbar().ToolbarPicker(mySelect: #selector(View_MultipleRates.dismissPicker4))
+        timeInput4.inputAccessoryView = toolBar4
         
         miscStackTopDistance.constant = 30
         controlStack3.alpha = 0.0
@@ -860,25 +952,55 @@ class View_MultipleRates: UIViewController {
         self.miscBorder.layer.cornerRadius = 10
         self.miscBorder.layer.borderColor = UIColor.lightGray.cgColor
         
-        self.startPicker1.layer.borderColor = UIColor.lightGray.cgColor
-        self.startPicker1.layer.borderWidth = 2.0
-        self.startPicker1.layer.cornerRadius = 5
-        self.startPicker1.setValue(UIColor.white, forKeyPath: "textColor")
-        self.startPicker2.layer.borderColor = UIColor.lightGray.cgColor
-        self.startPicker2.layer.borderWidth = 2.0
-        self.startPicker2.layer.cornerRadius = 5
-        self.startPicker2.setValue(UIColor.white, forKeyPath: "textColor")
-        self.startPicker3.layer.borderColor = UIColor.lightGray.cgColor
-        self.startPicker3.layer.borderWidth = 2.0
-        self.startPicker3.layer.cornerRadius = 5
-        self.startPicker3.setValue(UIColor.white, forKeyPath: "textColor")
-        self.startPicker4.layer.borderColor = UIColor.lightGray.cgColor
-        self.startPicker4.layer.borderWidth = 2.0
-        self.startPicker4.layer.cornerRadius = 5
-        self.startPicker4.setValue(UIColor.white, forKeyPath: "textColor")
         self.advancedSettingsOpenButton.layer.borderColor = UIColor.lightGray.cgColor
         self.advancedSettingsOpenButton.layer.borderWidth = 2
         self.advancedSettingsOpenButton.layer.cornerRadius = 5
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 1
+        paragraphStyle.lineHeightMultiple = 0.7
+        
+        var attrString = NSMutableAttributedString(string: "12\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label24_1.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "6\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label24_2.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "12\nPM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label24_3.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "6\nPM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label24_4.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "12\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label6_1.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "1:30\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label6_2.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "3\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label6_3.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "4:30\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label6_4.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "12\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label30_1.attributedText = attrString
+        
+        attrString = NSMutableAttributedString(string: "12:15\nAM")
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        label30_2.attributedText = attrString
+
+        
         initializeUI()
     }
     
@@ -964,7 +1086,7 @@ class View_MultipleRates: UIViewController {
     func updateUI() -> Void
     {
         var totalDose = doseSlider1.value + doseSlider2.value
-        concentrationFieldLabel.text = unitLabel
+        concentrationFieldLabel.text = unitLabel + "/ml"
         doseLabel1.text = unitLabel
         doseLabel2.text = unitLabel
         doseLabel3.text = unitLabel
@@ -1039,21 +1161,17 @@ class View_MultipleRates: UIViewController {
     func calcMinuteArray(stepperState: Int) -> [Int]
     {
         var minuteArray = [Int]()
-        let component1 = Calendar.current.dateComponents([.hour, .minute], from: startPicker1.date)
-        let time1 = Int((Float(component1.hour!) * 60) + Float(component1.minute!))
-        let component2 = Calendar.current.dateComponents([.hour, .minute], from: startPicker2.date)
-        let time2 = Int((Float(component2.hour!) * 60) + Float(component2.minute!))
+        let time1 = Int((hour1 * 60) + minute1)
+        let time2 = Int((hour2 * 60) + minute2)
         var time3 = 0
         var time4 = 0
         if(stepperState > 2)
         {
-            let component3 = Calendar.current.dateComponents([.hour, .minute], from: startPicker3.date)
-            time3 = Int((Float(component3.hour!) * 60) + Float(component3.minute!))
+            time3 = Int((hour3 * 60) + minute3)
         }
         if(stepperState > 3)
         {
-            let component4 = Calendar.current.dateComponents([.hour, .minute], from: startPicker4.date)
-            time4 = Int((Float(component4.hour!) * 60) + Float(component4.minute!))
+            time4 = Int((hour4 * 60) + minute4)
         }
         var timeElapsed = time2 - time1
         if(timeElapsed < 0){timeElapsed += (24*60)}
@@ -1112,37 +1230,36 @@ class View_MultipleRates: UIViewController {
         var zeroIndex = 0
         
         //points are calculated and added to array
-        var components = Calendar.current.dateComponents([.hour, .minute], from: startPicker1.date)
-        xCoord += ((Float(components.hour!) / 24.00) + (Float(components.minute!) / (24.00 * 60.00))) * graphWidth
+        xCoord += ((hour1 / 24.00) + (minute1 / (24.00 * 60.00))) * graphWidth
         let maxYValue = doseSlider1.maximumValue
         yCoord = (doseSlider1.value / maxYValue) * graphHeight
         var cSet: [Int] = [Int(xCoord), Int(yCoord)]
         coordArray.append(cSet)
-        var date1 = startPicker1.date
-        var date2 = startPicker1.date
+        var date1 = timeInput1.text
+        var date2 = timeInput1.text
         var sliderVal = doseSlider1.value
         var prevSliderVal = doseSlider2.value
         while(c < stepperState)
         {
             if(c == 0)
             {
-                date1 = startPicker1.date
-                date2 = startPicker2.date
+                date1 = timeInput1.text
+                date2 = timeInput2.text
             }
             else if(c == 1)
             {
-                date1 = startPicker2.date
-                date2 = startPicker3.date
+                date1 = timeInput2.text
+                date2 = timeInput3.text
             }
             else if(c == 2)
             {
-                date1 = startPicker3.date
-                date2 = startPicker4.date
+                date1 = timeInput3.text
+                date2 = timeInput4.text
             }
             else if(c == 3)
             {
-                date1 = startPicker4.date
-                date2 = startPicker1.date
+                date1 = timeInput4.text
+                date2 = timeInput1.text
             }
             
             if(stepperState - c == 1)
@@ -1151,13 +1268,13 @@ class View_MultipleRates: UIViewController {
                 if(stepperState == 2){ prevSliderVal = doseSlider2.value }
                 if(stepperState == 3){ prevSliderVal = doseSlider3.value }
                 if(stepperState == 4){ prevSliderVal = doseSlider4.value }
-                date2 = startPicker1.date
+                date2 = timeInput1.text
             }
             else if(c == 0){ sliderVal = doseSlider2.value }
             else if(c == 1){ sliderVal = doseSlider3.value }
             else if(c == 2){ sliderVal = doseSlider4.value }
             
-            xCoord += calculateXDistance(startTime: date1, endTime: date2, gWidth: graphWidth)
+            xCoord += calculateXDistance(startTime: date1!, endTime: date2!, gWidth: graphWidth)
             if(xCoord == graphWidth)
             {
                 if(sliderVal < prevSliderVal)
@@ -1263,13 +1380,12 @@ class View_MultipleRates: UIViewController {
         var zeroIndex = 0
         
         //points are calculated and added to array
-        var components = Calendar.current.dateComponents([.hour, .minute], from: startPicker1.date)
-        xCoord += ((Float(components.hour!) / 24.00) + (Float(components.minute!) / (24.00 * 60.00))) * graphWidth
+        xCoord += ((hour1 / 24.00) + (minute1 / (24.00 * 60.00))) * graphWidth
 
         var cSet: [Float] = [xCoord, yCoord]
         coordArray.append(cSet)
-        var date1 = startPicker1.date
-        var date2 = startPicker1.date
+        var date1 = timeInput1.text
+        var date2 = timeInput1.text
         var sliderVal = doseSlider1.value
         var bolusNumber = 0
         let pumpConText = concentrationField.text!
@@ -1280,40 +1396,40 @@ class View_MultipleRates: UIViewController {
         {
             if(c == 0)
             {
-                date1 = startPicker1.date
-                date2 = startPicker2.date
+                date1 = timeInput1.text
+                date2 = timeInput2.text
                 sliderVal = doseSlider1.value
             }
             else if(c == 1)
             {
-                date1 = startPicker2.date
-                date2 = startPicker3.date
+                date1 = timeInput2.text
+                date2 = timeInput3.text
                 sliderVal = doseSlider2.value
             }
             else if(c == 2)
             {
-                date1 = startPicker3.date
-                date2 = startPicker4.date
+                date1 = timeInput3.text
+                date2 = timeInput4.text
                 sliderVal = doseSlider3.value
             }
             else if(c == 3)
             {
-                date1 = startPicker4.date
-                date2 = startPicker1.date
+                date1 = timeInput4.text
+                date2 = timeInput1.text
                 sliderVal = doseSlider4.value
             }
             if(stepperState - c == 1)
             {
-                date2 = startPicker1.date
+                date2 = timeInput1.text
             }
             
             let pumpConFloat = (concentrationField.text! as NSString).floatValue
             let bolPerPeriod = (sliderVal / pumpConFloat) / accumVol
-            let distBetweenBol = (calculateXDistance(startTime: date1, endTime: date2, gWidth: graphWidth)) / bolPerPeriod
+            let distBetweenBol = (calculateXDistance(startTime: date1!, endTime: date2!, gWidth: graphWidth)) / bolPerPeriod
             bolusNumber = 0
             if(bolPerPeriod == 0)
             {
-                xCoord += calculateXDistance(startTime: date1, endTime: date2, gWidth: graphWidth)
+                xCoord += calculateXDistance(startTime: date1!, endTime: date2!, gWidth: graphWidth)
                 if(xCoord > graphWidth)
                 {
                     let xDiff = xCoord - graphWidth
@@ -1403,11 +1519,15 @@ class View_MultipleRates: UIViewController {
     }
     
     //takes two date objects and the width and calculates length of the multi-rate period in cartesian coordinates
-    func calculateXDistance(startTime: Date, endTime: Date, gWidth: Float) -> Float
+    func calculateXDistance(startTime: String, endTime: String, gWidth: Float) -> Float
     {
-        var components = Calendar.current.dateComponents([.hour, .minute], from: startTime)
+        let formatter = DateFormatter()
+        formatter.dateFormat = "H:mm"
+        let startTime2 = formatter.date(from: startTime)
+        let endTime2 = formatter.date(from: endTime)
+        var components = Calendar.current.dateComponents([.hour, .minute], from: startTime2!)
         let sTime = (Float(components.hour!) / 24.00) + (Float(components.minute!) / (24.00 * 60.00))
-        components = Calendar.current.dateComponents([.hour, .minute], from: endTime)
+        components = Calendar.current.dateComponents([.hour, .minute], from: endTime2!)
         let eTime = (Float(components.hour!) / 24.00) + (Float(components.minute!) / (24.00 * 60.00))
         let xDist = ((eTime - sTime) * (gWidth))
         if(xDist < 0){return (gWidth + xDist)}
