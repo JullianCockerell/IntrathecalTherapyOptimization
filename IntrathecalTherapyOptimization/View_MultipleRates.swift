@@ -129,6 +129,37 @@ class View_MultipleRates: UIViewController {
     @IBOutlet weak var timeInput4: UITextField!
     
     
+    @IBAction func timeInput1Selected(_ sender: UITextField)
+    {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "H:mm"
+        let time = formatter.date(from: timeInput1.text!)
+        datePicker.date = time!
+    }
+    
+    @IBAction func timeInput2Selected(_ sender: UITextField)
+    {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "H:mm"
+        let time = formatter.date(from: timeInput2.text!)
+        datePicker.date = time!
+    }
+    
+    @IBAction func timeInput3Selected(_ sender: UITextField)
+    {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "H:mm"
+        let time = formatter.date(from: timeInput3.text!)
+        datePicker.date = time!
+    }
+    
+    @IBAction func timeInput4Selected(_ sender: UITextField)
+    {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "H:mm"
+        let time = formatter.date(from: timeInput4.text!)
+        datePicker.date = time!
+    }
     
     
     
@@ -787,7 +818,11 @@ class View_MultipleRates: UIViewController {
             controlStack3.isUserInteractionEnabled = false
             controlStack4.isUserInteractionEnabled = false
             timeInput1.text = "00:00"
+            hour1 = 0
+            minute1 = 0
             timeInput2.text = "12:00"
+            hour2 = 12
+            minute2 = 0
             self.controlBorderHeight.constant = 180
             UIView.animate(withDuration: 0.5, animations:
             {
@@ -803,8 +838,14 @@ class View_MultipleRates: UIViewController {
             controlStack3.isUserInteractionEnabled = true
             controlStack4.isUserInteractionEnabled = false
             timeInput1.text = "00:00"
+            hour1 = 0
+            minute1 = 0
             timeInput2.text = "8:00"
+            hour2 = 8
+            minute2 = 0
             timeInput3.text = "16:00"
+            hour3 = 16
+            minute3 = 0
             self.controlBorderHeight.constant = 269
             UIView.animate(withDuration: 0.6, animations:
             {
@@ -820,9 +861,17 @@ class View_MultipleRates: UIViewController {
             controlStack3.isUserInteractionEnabled = true
             controlStack4.isUserInteractionEnabled = true
             timeInput1.text = "00:00"
+            hour1 = 0
+            minute1 = 0
             timeInput2.text = "6:00"
+            hour2 = 6
+            minute2 = 0
             timeInput3.text = "12:00"
+            hour3 = 12
+            minute3 = 0
             timeInput4.text = "18:00"
+            hour4 = 18
+            minute4 = 0
             self.controlBorderHeight.constant = 358
             UIView.animate(withDuration: 0.5, animations:
             {
@@ -886,6 +935,8 @@ class View_MultipleRates: UIViewController {
         {
             let picker = UIDatePicker()
             picker.datePickerMode = .time
+            picker.locale = NSLocale(localeIdentifier: "en_GB") as Locale
+            picker.minuteInterval = 15
             return picker
     }()
     
@@ -1080,6 +1131,12 @@ class View_MultipleRates: UIViewController {
         accumVol = defAccumVol
         yScale = defYScale[0]
         maxYScaleb = 0.1
+        hour1 = 0
+        minute1 = 0
+        hour2 = 12
+        minute2 = 0
+        timeInput1.text = "00:00"
+        timeInput2.text = "12:00"
         updateUI()
     }
     

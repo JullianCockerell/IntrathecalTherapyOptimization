@@ -613,15 +613,12 @@ class View_PeriodicFlow: UIViewController {
         let graphY = Float(graphImage.frame.origin.y)
         let graphWidth = Float(graphImage.bounds.width)
         let graphHeight = Float(graphImage.bounds.height)
-        let scaling = scalePicker.selectedSegmentIndex
+        var scaling = scalePicker.selectedSegmentIndex
         
         //create path for graph to draw
         let path = UIBezierPath()
         var xShift = Float(0)
-        if(scaling == 0)
-        {
-            xShift = Float(((startHour + (startMinute/Float(60))) / 24)) * graphWidth
-        }
+        
         let bolNum = Float(intervalStepper.value)
         let cycWidth = graphWidth / bolNum
         
@@ -642,6 +639,16 @@ class View_PeriodicFlow: UIViewController {
         
         let bolPerPeriod = (doseSlider.value / pumpConFloat) / accumVol
         let distBetweenBol = ((durTotal / bolPerPeriod) / (24*60)) * graphWidth    //in coordinate points
+        /*if(((durTotal / bolPerPeriod)) < 18)
+        {
+            scaling = 1
+            scalePicker.selectedSegmentIndex = 1
+        }*/
+        if(scaling == 0)
+        {
+            xShift = Float(((startHour + (startMinute/Float(60))) / 24)) * graphWidth
+        }
+        
         
         //ok to use cartesian coordinates, will be shifted when assigning points to path
         var coordArray = [[Float]]()
