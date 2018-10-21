@@ -86,11 +86,8 @@ class View_MultipleRates: UIViewController {
     @IBOutlet weak var advancedSettingsOpenButton: UIButton!
     @IBOutlet weak var advancedSettingsCloseButton: UIButton!
     @IBOutlet weak var accumulatorVolumeField: AllowedCharsTextField!
-    @IBOutlet weak var bolusNumField: UITextField!
     @IBOutlet weak var pumpVolumeField: AllowedCharsTextField!
-    @IBOutlet weak var bolusDoseField: UITextField!
     @IBOutlet weak var daysUntilRefillField: AllowedCharsTextField!
-    @IBOutlet weak var bolusDoseLabel: UILabel!
     @IBOutlet weak var advancedSettingsConstraint: NSLayoutConstraint!
     
     //Y-Axis Labels
@@ -204,28 +201,7 @@ class View_MultipleRates: UIViewController {
         accumVol = (accumulatorVolumeText as NSString).floatValue
         updateUI()
     }
-    
-    @IBAction func bolusNumFieldSelected(_ sender: UITextField)
-    {
-        textHolder = bolusNumField.text!
-        perform(#selector(bolusNumFieldSelectedDelayed), with: nil, afterDelay: 0.01)
-    }
-    
-    func bolusNumFieldSelectedDelayed() -> Void
-    {
-        bolusNumField.selectAll(nil)
-        disableInputs(activeControl: "bolusNumField")
-    }
-    
-    @IBAction func bolusNumFieldChanged(_ sender: UITextField)
-    {
-        activateInputs()
-        if(bolusNumField.text == "")
-        {
-            bolusNumField.text = textHolder
-        }
-        updateUI()
-    }
+
     
     @IBAction func pumpVolumeFieldSelected(_ sender: AllowedCharsTextField)
     {
@@ -251,27 +227,6 @@ class View_MultipleRates: UIViewController {
         updateUI()
     }
     
-    @IBAction func bolusDoseFieldSelected(_ sender: UITextField)
-    {
-        textHolder = bolusDoseField.text!
-        perform(#selector(bolusDoseFieldSelectedDelayed), with: nil, afterDelay: 0.01)
-    }
-    
-    func bolusDoseFieldSelectedDelayed() -> Void
-    {
-        bolusDoseField.selectAll(nil)
-        disableInputs(activeControl: "bolusDoseField")
-    }
-    
-    @IBAction func bolusDoseFieldChanged(_ sender: UITextField)
-    {
-        activateInputs()
-        if(bolusDoseField.text == "")
-        {
-            bolusDoseField.text = textHolder
-        }
-        updateUI()
-    }
     
     func dismissPicker1()
     {
@@ -334,8 +289,7 @@ class View_MultipleRates: UIViewController {
         advancedSettingsOpenButton.isUserInteractionEnabled = false
         advancedSettingsCloseButton.isUserInteractionEnabled = false
         if(activeControl != "accumulatorVolumeField"){ accumulatorVolumeField.isUserInteractionEnabled = false }
-        if(activeControl != "bolusNumField"){ bolusNumField.isUserInteractionEnabled = false }
-        if(activeControl != "bolusDoseField"){ bolusDoseField.isUserInteractionEnabled = false }
+
         if(activeControl != "pumpVolumeField"){ pumpVolumeField.isUserInteractionEnabled = false }
         if(activeControl != "doseInput1"){ doseInput1.isUserInteractionEnabled = false }
         if(activeControl != "doseInput2"){ doseInput2.isUserInteractionEnabled = false }
@@ -365,8 +319,6 @@ class View_MultipleRates: UIViewController {
         advancedSettingsOpenButton.isUserInteractionEnabled = true
         accumulatorVolumeField.isUserInteractionEnabled = true
         pumpVolumeField.isUserInteractionEnabled = true
-        bolusNumField.isUserInteractionEnabled = true
-        bolusDoseField.isUserInteractionEnabled = true
     }
     
     
@@ -823,7 +775,7 @@ class View_MultipleRates: UIViewController {
             timeInput2.text = "12:00"
             hour2 = 12
             minute2 = 0
-            self.controlBorderHeight.constant = 180
+            self.controlBorderHeight.constant = 135
             UIView.animate(withDuration: 0.5, animations:
             {
                 self.view.layoutIfNeeded()
@@ -846,7 +798,7 @@ class View_MultipleRates: UIViewController {
             timeInput3.text = "16:00"
             hour3 = 16
             minute3 = 0
-            self.controlBorderHeight.constant = 269
+            self.controlBorderHeight.constant = 205
             UIView.animate(withDuration: 0.6, animations:
             {
                 self.view.layoutIfNeeded()
@@ -872,7 +824,7 @@ class View_MultipleRates: UIViewController {
             timeInput4.text = "18:00"
             hour4 = 18
             minute4 = 0
-            self.controlBorderHeight.constant = 358
+            self.controlBorderHeight.constant = 275
             UIView.animate(withDuration: 0.5, animations:
             {
                 self.view.layoutIfNeeded()
@@ -963,8 +915,6 @@ class View_MultipleRates: UIViewController {
         NKInputView.with(concentrationField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
         NKInputView.with(pumpVolumeField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
         NKInputView.with(accumulatorVolumeField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
-        NKInputView.with(bolusNumField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
-        NKInputView.with(bolusDoseField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
         
         timeInput1.inputView = datePicker
         let toolBar1 = UIToolbar().ToolbarPicker(mySelect: #selector(View_MultipleRates.dismissPicker1))
@@ -1202,15 +1152,11 @@ class View_MultipleRates: UIViewController {
             totalDose += doseSlider4.value
         }
         totalDoseField.text = "\(totalDose)" + " " + unitLabel
-        let bolusDoseText = bolusDoseField.text!
-        let bolusNumText = bolusNumField.text!
-        let bolusDoseFloat = (bolusDoseText as NSString).floatValue
-        let bolusNumFloat = (bolusNumText as NSString).floatValue
-        let totalDoseWithPTC = (((bolusDoseFloat * bolusNumFloat) + totalDose) / pumpConFloat)   //in mL's
-        daysUntilRefillField.text = "\(pumpVolume / totalDoseWithPTC)" + " days"
+        let totalDoseWithPTC = (totalDose / pumpConFloat)   //in mL's
+        let daysUntilRefill = Int(pumpVolume / totalDoseWithPTC)
+        daysUntilRefillField.text = "\(daysUntilRefill)" + " days"
         pumpVolumeField.text = "\(pumpVolume)"
         accumulatorVolumeField.text = "\(accumVol)"
-        bolusDoseLabel.text = unitLabel
         generateAndLoadGraph()
         generateAndLoadGraph2()
     }
