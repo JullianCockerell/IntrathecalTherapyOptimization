@@ -50,9 +50,9 @@ class View_ConstantFlow: UIViewController {
     @IBOutlet weak var unitSwitch: UISwitch!
     @IBOutlet weak var advancedSettingsConstraint: NSLayoutConstraint!
     @IBOutlet weak var advancedSettingsOpenButton: UIButton!
-    @IBOutlet weak var outputBorder: UIView!
     @IBOutlet weak var exitButton: UIButton!
     @IBOutlet weak var yAxisUnitLabel: UILabel!
+    @IBOutlet weak var daysUntilRefillBaseField: AllowedCharsTextField!
     
     
     
@@ -190,7 +190,6 @@ class View_ConstantFlow: UIViewController {
         UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations:
         {
                 self.view.layoutIfNeeded()
-
         })
     }
     
@@ -200,7 +199,6 @@ class View_ConstantFlow: UIViewController {
         UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations:
             {
                 self.view.layoutIfNeeded()
-                
         })
     }
     
@@ -468,8 +466,13 @@ class View_ConstantFlow: UIViewController {
         let ptcNumText = bolusDoseField.text!
         let ptcNumFloat = (ptcNumText as NSString).floatValue
         let volPerDay = (doseSlider.value + (ptcNumFloat * ptcVolumeFloat)) / pumpConFloat
+        let volPerDayBase = (doseSlider.value) / pumpConFloat
+        let daysUntilRefillBase = pumpVolume / volPerDayBase
+        
+        daysUntilRefillBaseField.text = "\(Int(daysUntilRefillBase))"
         let daysUntilRefill = pumpVolume / volPerDay
-        daysUntilRefillField.text = "\(daysUntilRefill)"
+        
+        daysUntilRefillField.text = "\(Int(daysUntilRefill))"
     }
     
     func roundValue(inputText: String, roundTo: Int) -> String
@@ -529,9 +532,6 @@ class View_ConstantFlow: UIViewController {
         self.borderImage.layer.borderColor = UIColor.lightGray.cgColor
         self.borderImage.layer.borderWidth = 2
         self.borderImage.layer.cornerRadius = 10
-        self.outputBorder.layer.borderColor = UIColor.lightGray.cgColor
-        self.outputBorder.layer.borderWidth = 2
-        self.outputBorder.layer.cornerRadius = 10
         self.advancedSettingsOpenButton.layer.borderColor = UIColor.lightGray.cgColor
         self.advancedSettingsOpenButton.layer.borderWidth = 2
         self.advancedSettingsOpenButton.layer.cornerRadius = 5
