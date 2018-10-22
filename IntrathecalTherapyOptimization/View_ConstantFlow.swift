@@ -43,7 +43,6 @@ class View_ConstantFlow: UIViewController {
     @IBOutlet weak var labelStack6: UIStackView!
     @IBOutlet weak var borderImage: UIImageView!
     @IBOutlet weak var pumpConcentration: UITextField!
-    @IBOutlet weak var graphYMargin: NSLayoutConstraint!
     @IBOutlet weak var scalePicker: UISegmentedControl!
     @IBOutlet weak var graphStyle: UIView!
     @IBOutlet weak var graphHeight: NSLayoutConstraint!
@@ -53,7 +52,8 @@ class View_ConstantFlow: UIViewController {
     @IBOutlet weak var exitButton: UIButton!
     @IBOutlet weak var yAxisUnitLabel: UILabel!
     @IBOutlet weak var daysUntilRefillBaseField: AllowedCharsTextField!
-    
+    @IBOutlet weak var graphStyle2: UIView!
+    @IBOutlet weak var graphImage2: UIImageView!
     
     
     // Advanced Settings View
@@ -417,6 +417,7 @@ class View_ConstantFlow: UIViewController {
     }
     
     weak var shapeLayer: CAShapeLayer?
+    weak var shapeLayer2: CAShapeLayer?
     
     func initializeUI()
     {
@@ -461,6 +462,7 @@ class View_ConstantFlow: UIViewController {
         let pumpConRound = roundValue(inputText: pumpConText!, roundTo: 2)
         pumpConcentration.text = pumpConRound
         generateAndLoadGraph()
+        generateAndLoadGraph2()
         let ptcVolumeText = bolusNumField.text!
         let ptcVolumeFloat = (ptcVolumeText as NSString).floatValue
         let ptcNumText = bolusDoseField.text!
@@ -468,11 +470,23 @@ class View_ConstantFlow: UIViewController {
         let volPerDay = (doseSlider.value + (ptcNumFloat * ptcVolumeFloat)) / pumpConFloat
         let volPerDayBase = (doseSlider.value) / pumpConFloat
         let daysUntilRefillBase = pumpVolume / volPerDayBase
-        
-        daysUntilRefillBaseField.text = "\(Int(daysUntilRefillBase))"
+        if(volPerDayBase == 0)
+        {
+            daysUntilRefillBaseField.text = "N/A"
+        }
+        else
+        {
+            daysUntilRefillBaseField.text = "\(Int(daysUntilRefillBase))"
+        }
         let daysUntilRefill = pumpVolume / volPerDay
-        
-        daysUntilRefillField.text = "\(Int(daysUntilRefill))"
+        if(volPerDay == 0)
+        {
+            daysUntilRefillField.text = "N/A"
+        }
+        else
+        {
+            daysUntilRefillField.text = "\(Int(daysUntilRefill))"
+        }
     }
     
     func roundValue(inputText: String, roundTo: Int) -> String
@@ -538,6 +552,9 @@ class View_ConstantFlow: UIViewController {
         self.graphStyle.layer.borderWidth = 2
         self.graphStyle.layer.cornerRadius = 10
         self.graphStyle.layer.borderColor = UIColor.lightGray.cgColor
+        self.graphStyle2.layer.borderWidth = 2
+        self.graphStyle2.layer.cornerRadius = 10
+        self.graphStyle2.layer.borderColor = UIColor.lightGray.cgColor
         self.advancedSettingsView.layer.borderWidth = 2
         self.advancedSettingsView.layer.cornerRadius = 10
         self.advancedSettingsView.layer.borderColor = UIColor.lightGray.cgColor
@@ -728,9 +745,117 @@ class View_ConstantFlow: UIViewController {
         
         //save shape layer to viewcontroller
         self.shapeLayer = shapeLayer
-        
     }
 
-
+    func generateAndLoadGraph2()
+    {
+        //remove old shape layer if any is present
+        self.shapeLayer2?.removeFromSuperlayer()
+        let graphX = Float(graphImage2.frame.origin.x)
+        let graphY = Float(graphImage2.frame.origin.y)
+        let graphWidth = Float(graphImage2.bounds.width)
+        let graphHeight = Float(graphImage2.bounds.height)
+        
+        //create path for graph to draw
+        let path = UIBezierPath()
+        var xCoord = Float(0)
+        var yCoord = Float(0)
+        let totalDose = doseSlider.value
+        let pumpCon = pumpConcentration.text!
+        let pumpConFloat = (pumpCon as NSString).floatValue
+        var bolNum = Int(((totalDose / pumpConFloat) / accumVol))
+        totalDailyBoluses = bolNum
+        let bolHeight = (accumVol / Float(0.007)) * graphHeight   //.007 is max currently
+        let bolSpacing = graphWidth / Float(bolNum)
+        bolNum += 1
+        
+        if(totalDose == 0)
+        {
+            path.move(to: CGPoint(x: Int(graphX), y: Int(graphHeight + graphY)))
+            path.addLine(to: CGPoint(x: Int(graphX + graphWidth), y: Int(graphHeight + graphY)))
+        }
+        else
+        {
+            //ok to use cartesian coordinates, will be shifted when assigning points to path
+            var coordArray = [[Float]]()
+            var c = 0
+            var cSet: [Float] = [xCoord, yCoord]
+            coordArray.append(cSet)
+            
+            //points are calculated and added to array
+            while (c < bolNum)
+            {
+                yCoord += bolHeight
+                cSet = [xCoord, yCoord]
+                coordArray.append(cSet)
+                yCoord -= bolHeight
+                cSet = [xCoord, yCoord]
+                coordArray.append(cSet)
+                xCoord += bolSpacing
+                if(xCoord > graphWidth)
+                {
+                    xCoord = graphWidth
+                }
+                cSet = [xCoord, yCoord]
+                coordArray.append(cSet)
+                c += 1
+            }
+            
+            let scaling = scalePicker.selectedSegmentIndex
+            if(scaling == 0)
+            {
+                //do nothing
+            }
+            else if(scaling == 1)
+            {
+                c = 0
+                while(c < coordArray.count)
+                {
+                    coordArray[c][0] = coordArray[c][0] * 4
+                    c += 1
+                }
+            }
+            else if(scaling == 2)
+            {
+                c = 0
+                while(c < coordArray.count)
+                {
+                    coordArray[c][0] = coordArray[c][0] * 48
+                    c += 1
+                }
+            }
+            
+            
+            //add points to path
+            c = 1
+            path.move(to: CGPoint(x: Int(coordArray[0][0]) + Int(graphX), y: Int(graphHeight + graphY) - Int(coordArray[0][1])))
+            while(c < coordArray.count)
+            {
+                if(Float(coordArray[c][0]) < graphWidth)
+                {
+                    path.addLine(to: CGPoint(x: Int(coordArray[c][0]) + Int(graphX), y: Int(graphHeight + graphY) - Int(coordArray[c][1])))
+                    c += 1
+                }
+                else
+                {
+                    path.addLine(to: CGPoint(x: Int(graphWidth) + Int(graphX), y: Int(graphHeight + graphY) - Int(coordArray[c][1])))
+                    c = coordArray.count
+                }
+            }
+        }
+        
+        //create shape layer for that path
+        let shapeLayer2 = CAShapeLayer()
+        shapeLayer2.fillColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0).cgColor
+        shapeLayer2.strokeColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+        shapeLayer2.lineWidth = 3
+        shapeLayer2.path = path.cgPath
+        shapeLayer2.lineCap = kCALineCapRound
+        shapeLayer2.lineJoin = kCALineJoinRound
+        view.layer.addSublayer(shapeLayer2)
+        
+        //save shape layer to viewcontroller
+        self.shapeLayer2 = shapeLayer2
+    }
     
 }

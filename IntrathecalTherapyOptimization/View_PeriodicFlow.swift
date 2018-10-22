@@ -11,7 +11,6 @@ import UIKit
 class View_PeriodicFlow: UIViewController {
 
     @IBOutlet weak var doseSlider: UISlider!
-    @IBOutlet weak var doseSliderLabel: UILabel!
     @IBOutlet weak var intervalStepper: UIStepper!
     @IBOutlet weak var intervalStepperLabel: UILabel!
     @IBOutlet weak var durationPicker: UIDatePicker!
@@ -20,6 +19,7 @@ class View_PeriodicFlow: UIViewController {
     @IBOutlet weak var totalDoseLabel: UITextField!
     @IBOutlet weak var warningImage: UIImageView!
     weak var shapeLayer: CAShapeLayer?
+    weak var shapeLayer2: CAShapeLayer?
     var startMinute = Float(0)
     var startHour = Float(0)
     var mgMode = true
@@ -59,6 +59,9 @@ class View_PeriodicFlow: UIViewController {
     @IBOutlet weak var scalePickerHeight: NSLayoutConstraint!
     @IBOutlet weak var block3Height: NSLayoutConstraint!
     @IBOutlet weak var dosePerClickField: UITextField!
+    @IBOutlet weak var graphImageTop: UIImageView!
+    @IBOutlet weak var graphStyle2: UIView!
+    
     
     @IBOutlet weak var yScale1: UILabel!
     @IBOutlet weak var yScale2: UILabel!
@@ -563,11 +566,320 @@ class View_PeriodicFlow: UIViewController {
     {
         //remove old shape layer if any is present
         self.shapeLayer?.removeFromSuperlayer()
+        self.shapeLayer2?.removeFromSuperlayer()
+        let graphX = Float(graphImageTop.frame.origin.x)
+        let graphY = Float(graphImageTop.frame.origin.y)
+        let graphWidth = Float(graphImageTop.bounds.width)
+        let graphHeight = Float(graphImageTop.bounds.height)
+        
+        let graphX2 = Float(graphImage.frame.origin.x)
+        let graphY2 = Float(graphImage.frame.origin.y)
+        
+        let scaling = scalePicker.selectedSegmentIndex
+        
+        //create path for graph to draw
+        let path = UIBezierPath()
+        let path2 = UIBezierPath()
+        var xShift = Float(0)
+        
+        let bolNum = Float(intervalStepper.value)
+        let cycWidth = graphWidth / bolNum
+        
+        var xCoord = Float(0)
+        var yCoord = Float(0)
+        var yCoord2 = Float(0)
+        let components = Calendar.current.dateComponents([.hour, .minute], from: durationPicker.date)
+        let durHour = Float(components.hour!)
+        let durMinute = Float(components.minute!)
+        let durTotal = (60*durHour) + durMinute
+        
+        let pumpConText = pumpConcentration.text!
+        let pumpConFloat = (pumpConText as NSString).floatValue
+        // let flowRate = bolusRate / pumpConFloat
+        // let bolHeight = (bolusRate / maxBolusRate) * graphHeight
+        let bolHeight = ((accumVol * pumpConFloat) / yScaleMax) * graphHeight
+        let bolWidth = (durTotal / (60*24)) * graphWidth
+        let basWidth = cycWidth - bolWidth
+        
+        let bolPerPeriod = (doseSlider.value / pumpConFloat) / accumVol
+        let distBetweenBol = ((durTotal / bolPerPeriod) / (24*60)) * graphWidth    //in coordinate points
+        /*if(((durTotal / bolPerPeriod)) < 18)
+        {
+            scaling = 1
+            scalePicker.selectedSegmentIndex = 1
+        }*/
+        if(scaling == 0)
+        {
+            xShift = Float(((startHour + (startMinute/Float(60))) / 24)) * graphWidth
+        }
+        
+        
+        //ok to use cartesian coordinates, will be shifted when assigning points to path
+        var coordArray = [[Float]]()
+        var coordArray2 = [[Float]]()
+        var c = 0
+        var bolCounter = 0
+        xCoord += xShift
+        var cSet: [Float] = [xCoord, yCoord]
+        coordArray.append(cSet)
+        cSet = [xCoord, yCoord2]
+        coordArray2.append(cSet)
+        //stores index where beginning of graph is for later swapping
+        var zeroIndex = 0
+        //points are calculated and added to array
+        while (c < Int(bolNum))
+        {
+            bolCounter = 0
+            while(bolCounter < Int(bolPerPeriod))
+            {
+                cSet = [xCoord, yCoord2]
+                coordArray2.append(cSet)
+                yCoord2 += (accumVol / 0.1) * graphHeight
+                yCoord += bolHeight
+                cSet = [xCoord, yCoord]
+                coordArray.append(cSet)
+                cSet = [xCoord, yCoord2]
+                coordArray2.append(cSet)
+                yCoord -= bolHeight
+                cSet = [xCoord, yCoord]
+                coordArray.append(cSet)
+                xCoord += distBetweenBol
+                if (xCoord > graphWidth)
+                {
+                    cSet = [graphWidth, yCoord]
+                    coordArray.append(cSet)
+                    cSet = [graphWidth, yCoord2]
+                    coordArray2.append(cSet)
+                    zeroIndex = coordArray.count
+                    xCoord = xCoord - graphWidth
+                    cSet = [0, yCoord]
+                    coordArray.append(cSet)
+                    cSet = [xCoord, yCoord]
+                    coordArray.append(cSet)
+                    cSet = [0, yCoord2]
+                    coordArray2.append(cSet)
+                    cSet = [xCoord, yCoord2]
+                    coordArray2.append(cSet)
+                }
+                else
+                {
+                    cSet = [xCoord, yCoord]
+                    coordArray.append(cSet)
+                    cSet = [xCoord, yCoord2]
+                    coordArray2.append(cSet)
+                }
+                bolCounter += 1
+            }
+            yCoord2 = 0
+            cSet = [xCoord, yCoord2]
+            coordArray2.append(cSet)
+            xCoord += basWidth
+            if (xCoord > graphWidth)
+            {
+                cSet = [graphWidth, yCoord]
+                coordArray.append(cSet)
+                cSet = [graphWidth, yCoord2]
+                coordArray2.append(cSet)
+                zeroIndex = coordArray.count
+                xCoord = xCoord - graphWidth
+                cSet = [0, yCoord]
+                coordArray.append(cSet)
+                cSet = [xCoord, yCoord]
+                coordArray.append(cSet)
+                cSet = [0, yCoord2]
+                coordArray2.append(cSet)
+                cSet = [xCoord, yCoord2]
+                coordArray2.append(cSet)
+            }
+            else
+            {
+                cSet = [xCoord, yCoord]
+                coordArray.append(cSet)
+                cSet = [xCoord, yCoord2]
+                coordArray2.append(cSet)
+            }
+            c += 1
+        }
+        
+        //if shift is needed, array is shifted
+        if(zeroIndex > 0)
+        {
+            let endArray = Array(coordArray[0..<zeroIndex])
+            let beginArray = Array(coordArray[zeroIndex..<coordArray.count])
+            coordArray = beginArray + endArray
+            let endArray2 = Array(coordArray2[0..<zeroIndex - 1])
+            let beginArray2 = Array(coordArray2[zeroIndex - 1..<coordArray2.count])
+            coordArray2 = beginArray2 + endArray2
+        }
+        
+        //scaling is applied if zoom feature is in use
+        if(scaling == 0)
+        {
+            //do nothing
+        }
+        else if(scaling == 1)
+        {
+            c = 0
+            while(c < coordArray.count)
+            {
+                coordArray[c][0] = coordArray[c][0] * 4
+                coordArray2[c][0] = coordArray2[c][0] * 4
+                c += 1
+            }
+            var nextHour = startHour
+            var nextMin = startMinute
+            var minSpacer = ""
+            var timeLabel = "AM"
+            if(nextHour > 12)
+            {
+                timeLabel = "PM"
+                nextHour = nextHour - 12
+            }
+            if(nextMin < 10){minSpacer = "0"}
+            yScale6_1.text = "\(Int(nextHour))" + ":" + minSpacer + "\(Int(nextMin))" + timeLabel
+            var c2 = 0
+            while(c2 < 3)
+            {
+                minSpacer = ""
+                nextMin += 30
+                if(nextMin > 59)
+                {
+                    nextHour += 1
+                    nextMin -= 60
+                }
+                nextHour += 1
+                if(nextHour > 12)
+                {
+                    if(timeLabel == "PM"){timeLabel = "AM"}
+                    else if(timeLabel == "AM"){timeLabel = "PM"}
+                    nextHour -= 12
+                }
+                if(c2 == 0)
+                {
+                    if(nextMin < 10){minSpacer = "0"}
+                    yScale6_2.text = "\(Int(nextHour))" + ":" + minSpacer + "\(Int(nextMin))" + timeLabel
+                }
+                if(c2 == 1)
+                {
+                    if(startMinute < 10){minSpacer = "0"}
+                    yScale6_3.text = "\(Int(nextHour))" + ":" + minSpacer + "\(Int(nextMin))" + timeLabel
+                }
+                if(c2 == 2)
+                {
+                    if(startMinute < 10){minSpacer = "0"}
+                    yScale6_4.text = "\(Int(nextHour))" + ":" + minSpacer + "\(Int(nextMin))" + timeLabel
+                }
+                c2 += 1
+            }
+        }
+        else if(scaling == 2)
+        {
+            c = 0
+            while(c < coordArray.count)
+            {
+                coordArray[c][0] = coordArray[c][0] * 48
+                coordArray2[c][0] = coordArray2[c][0] * 48
+                c += 1
+            }
+            var nextHour = startHour
+            var nextMin = startMinute
+            var minSpacer = ""
+            var timeLabel = "AM"
+            if(nextHour > 12)
+            {
+                timeLabel = "PM"
+                nextHour = nextHour - 12
+            }
+            if(nextMin < 10){minSpacer = "0"}
+            yScale30_1.text = "\(Int(nextHour))" + ":" + minSpacer + "\(Int(nextMin))" + timeLabel
+            
+            nextMin += 15
+            minSpacer = ""
+            if(nextMin > 59)
+            {
+                nextHour += 1
+                nextMin -= 60
+            }
+            if(nextHour > 12)
+            {
+                if(timeLabel == "PM"){timeLabel = "AM"}
+                else if(timeLabel == "AM"){timeLabel = "PM"}
+                nextHour -= 12
+            }
+            if(nextMin < 10){minSpacer = "0"}
+            yScale30_2.text = "\(Int(nextHour))" + ":" + minSpacer + "\(Int(nextMin))" + timeLabel
+
+        }
+        
+        //add points to path
+        c = 1
+        path.move(to: CGPoint(x: Int(coordArray[0][0] + graphX), y: Int(graphHeight + graphY - coordArray[0][1])))
+        path2.move(to: CGPoint(x: Int(coordArray2[0][0] + graphX2), y: Int(graphHeight + graphY2 - coordArray2[0][1])))
+        
+        while(c < coordArray.count)
+        {
+            if(coordArray[c][0] <= graphWidth)
+            {
+                path.addLine(to: CGPoint(x: Int(coordArray[c][0] + graphX), y: Int(graphHeight + graphY - coordArray[c][1])))
+                c += 1
+            }
+            else
+            {
+                path.addLine(to: CGPoint(x: Int(graphWidth + graphX), y: Int(graphHeight + graphY - coordArray[c][1])))
+                c = coordArray.count
+            }
+        }
+        
+        c = 1
+        while(c < coordArray2.count)
+        {
+            if(coordArray2[c][0] <= graphWidth)
+            {
+                path2.addLine(to: CGPoint(x: Int(coordArray2[c][0] + graphX2), y: Int(graphHeight + graphY2 - coordArray2[c][1])))
+                c += 1
+            }
+            else
+            {
+                path2.addLine(to: CGPoint(x: Int(graphWidth + graphX2), y: Int(graphHeight + graphY2 - coordArray2[c][1])))
+                c = coordArray2.count
+            }
+        }
+        
+        //create shape layer for that path
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.fillColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0).cgColor
+        shapeLayer.strokeColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+        shapeLayer.lineWidth = 3
+        shapeLayer.path = path.cgPath
+        shapeLayer.lineCap = kCALineCapRound
+        shapeLayer.lineJoin = kCALineJoinRound
+        view.layer.addSublayer(shapeLayer)
+        
+        let shapeLayer2 = CAShapeLayer()
+        shapeLayer2.fillColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0).cgColor
+        shapeLayer2.strokeColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+        shapeLayer2.lineWidth = 3
+        shapeLayer2.path = path2.cgPath
+        shapeLayer2.lineCap = kCALineCapRound
+        shapeLayer2.lineJoin = kCALineJoinRound
+        view.layer.addSublayer(shapeLayer2)
+
+        
+        //save shape layer to viewcontroller
+        self.shapeLayer = shapeLayer
+        self.shapeLayer2 = shapeLayer2
+    }
+    
+    
+    func generateAndLoadGraphBottom()
+    {
+        //remove old shape layer if any is present
+        self.shapeLayer?.removeFromSuperlayer()
         let graphX = Float(graphImage.frame.origin.x)
         let graphY = Float(graphImage.frame.origin.y)
         let graphWidth = Float(graphImage.bounds.width)
         let graphHeight = Float(graphImage.bounds.height)
-        var scaling = scalePicker.selectedSegmentIndex
+        let scaling = scalePicker.selectedSegmentIndex
         
         //create path for graph to draw
         let path = UIBezierPath()
@@ -594,10 +906,10 @@ class View_PeriodicFlow: UIViewController {
         let bolPerPeriod = (doseSlider.value / pumpConFloat) / accumVol
         let distBetweenBol = ((durTotal / bolPerPeriod) / (24*60)) * graphWidth    //in coordinate points
         /*if(((durTotal / bolPerPeriod)) < 18)
-        {
-            scaling = 1
-            scalePicker.selectedSegmentIndex = 1
-        }*/
+         {
+         scaling = 1
+         scalePicker.selectedSegmentIndex = 1
+         }*/
         if(scaling == 0)
         {
             xShift = Float(((startHour + (startMinute/Float(60))) / 24)) * graphWidth
@@ -767,7 +1079,7 @@ class View_PeriodicFlow: UIViewController {
             }
             if(nextMin < 10){minSpacer = "0"}
             yScale30_2.text = "\(Int(nextHour))" + ":" + minSpacer + "\(Int(nextMin))" + timeLabel
-
+            
         }
         
         //add points to path
@@ -796,165 +1108,13 @@ class View_PeriodicFlow: UIViewController {
         shapeLayer.lineCap = kCALineCapRound
         shapeLayer.lineJoin = kCALineJoinRound
         view.layer.addSublayer(shapeLayer)
-
+        
         
         //save shape layer to viewcontroller
         self.shapeLayer = shapeLayer
     }
     
-    func generateAndLoadGraph2()    //deprecated
-    {
-        //remove old shape layer if any is present
-        self.shapeLayer?.removeFromSuperlayer()
-        let graphX = Float(graphImage.frame.origin.x)
-        let graphY = Float(graphImage.frame.origin.y)
-        let graphWidth = Float(graphImage.bounds.width)
-        let graphHeight = Float(graphImage.bounds.height)
-        
-        
-        //create path for graph to draw
-        //assign base constants
-        let path = UIBezierPath()
-        let xShift = Float(((startHour + (startMinute/Float(60))) / 24))*graphWidth
-        let bolNum = Float(intervalStepper.value)
-        let cycWidth = graphWidth / bolNum
-        
-        var xCoord = Float(0)
-        var yCoord = Float(0)
-        let components = Calendar.current.dateComponents([.hour, .minute], from: durationPicker.date)
-        let durHour = Float(components.hour!)
-        let durMinute = Float(components.minute!)
-        let durTotal = (60*durHour) + durMinute
-        
-        let bolusRate = doseSlider.value / durTotal
-        let maxBolusRate = doseSlider.maximumValue / 10
-        let bolHeight = (bolusRate / maxBolusRate) * graphHeight
-        
-        let bolWidth = (durTotal / (60*24)) * graphWidth
-        let basWidth = cycWidth - bolWidth
-        
-        //ok to use cartesian coordinates, will be shifted when assigning points to path
-        var coordArray = [[Float]]()
-        var c = 0
-        xCoord += xShift
-        var cSet: [Float] = [xCoord, yCoord]
-        coordArray.append(cSet)
-        //stores index where beginning of graph is for later swapping
-        var zeroIndex = 0
-        //points are calculated and added to array
-        while (c < Int(bolNum))
-        {
-            yCoord = yCoord + bolHeight
-            cSet = [xCoord, yCoord]
-            coordArray.append(cSet)
-            xCoord += bolWidth
-            if (xCoord > graphWidth)
-            {
-                cSet = [graphWidth, yCoord]
-                coordArray.append(cSet)
-                zeroIndex = coordArray.count
-                xCoord = xCoord - graphWidth
-                cSet = [0, yCoord]
-                coordArray.append(cSet)
-                cSet = [xCoord, yCoord]
-                coordArray.append(cSet)
-                
-            }
-            else
-            {
-                cSet = [xCoord, yCoord]
-                coordArray.append(cSet)
-            }
-            yCoord = yCoord - bolHeight
-            cSet = [xCoord, yCoord]
-            coordArray.append(cSet)
-            xCoord += basWidth
-            if (xCoord > graphWidth)
-            {
-                cSet = [graphWidth, yCoord]
-                coordArray.append(cSet)
-                zeroIndex = coordArray.count
-                xCoord = xCoord - graphWidth
-                cSet = [0, yCoord]
-                coordArray.append(cSet)
-                cSet = [xCoord, yCoord]
-                coordArray.append(cSet)
-                
-            }
-            else
-            {
-                cSet = [xCoord, yCoord]
-                coordArray.append(cSet)
-            }
-            c += 1
-        }
-        
-        //if shift is needed, array is shifted
-        if(zeroIndex > 0)
-        {
-            let endArray = Array(coordArray[0..<zeroIndex])
-            let beginArray = Array(coordArray[zeroIndex..<coordArray.count])
-            coordArray = beginArray + endArray
-        }
-        
-        //scaling is applied if zoom feature is in use
-        let scaling = scalePicker.selectedSegmentIndex
-        if(scaling == 0)
-        {
-            //do nothing
-        }
-        else if(scaling == 1)
-        {
-            c = 0
-            while(c < coordArray.count)
-            {
-                coordArray[c][0] = coordArray[c][0] * 4
-                c += 1
-            }
-        }
-        else if(scaling == 2)
-        {
-            c = 0
-            while(c < coordArray.count)
-            {
-                coordArray[c][0] = coordArray[c][0] * 48
-                c += 1
-            }
-        }
-        
-        //add points to path
-        c = 1
-        path.move(to: CGPoint(x: Int(coordArray[0][0] + graphX), y: Int(graphHeight + graphY - coordArray[0][1])))
-        while(c < coordArray.count)
-        {
-            if(coordArray[c][0] <= graphWidth)
-            {
-                path.addLine(to: CGPoint(x: Int(coordArray[c][0] + graphX), y: Int(graphHeight + graphY - coordArray[c][1])))
-                c += 1
-            }
-            else
-            {
-                path.addLine(to: CGPoint(x: Int(graphWidth + graphX), y: Int(graphHeight + graphY - coordArray[c][1])))
-                c = coordArray.count
-            }
-        }
-        
-        //create shape layer for that path
-        let shapeLayer = CAShapeLayer()
-        shapeLayer.fillColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0).cgColor
-        shapeLayer.strokeColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1).cgColor
-        shapeLayer.lineWidth = 3
-        shapeLayer.path = path.cgPath
-        shapeLayer.lineCap = kCALineCapRound
-        shapeLayer.lineJoin = kCALineJoinRound
-        view.layer.addSublayer(shapeLayer)
-        
-        
-        //save shape layer to viewcontroller
-        self.shapeLayer = shapeLayer
-        
-    }
-
+ 
     
     func roundValue(inputText: String, roundTo: Int) -> String
     {
@@ -1004,6 +1164,9 @@ class View_PeriodicFlow: UIViewController {
         graphStyle.layer.cornerRadius = 10
         graphStyle.layer.borderColor = borderColor
         graphStyle.layer.borderWidth = 2
+        graphStyle2.layer.cornerRadius = 10
+        graphStyle2.layer.borderColor = borderColor
+        graphStyle2.layer.borderWidth = 2
         displayStyle.layer.cornerRadius = 10
         displayStyle.layer.borderColor = borderColor
         displayStyle.layer.borderWidth = 2
