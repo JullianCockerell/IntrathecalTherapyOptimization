@@ -21,6 +21,9 @@ class View_MatchMyTrial: UIViewController
     var gBolNum = 0
     var pumpVolume = Float(20)
     var accumVol = Float(0.0025)
+    var concentrationValue = Float(10.00)
+    var updateLock = true
+    var concentrationCatch = false
     
     
     @IBOutlet weak var graphImage: UIImageView!
@@ -46,6 +49,10 @@ class View_MatchMyTrial: UIViewController
     @IBOutlet weak var controlBorder: UIView!
     @IBOutlet weak var displayBorder: UIView!
     
+    @IBOutlet weak var concentrationFieldLabel: UILabel!
+    @IBOutlet weak var concentrationField: UITextField!
+    
+    
     //Time Labels
     @IBOutlet weak var label24_1: UILabel!
     @IBOutlet weak var label24_2: UILabel!
@@ -66,10 +73,7 @@ class View_MatchMyTrial: UIViewController
     @IBOutlet weak var advancedSettingsCloseButton: UIButton!
     @IBOutlet weak var accumulatorVolumeField: AllowedCharsTextField!
     @IBOutlet weak var pumpVolumeField: AllowedCharsTextField!
-    @IBOutlet weak var bolusDoseField: UITextField!
-    @IBOutlet weak var ptcBolusNumField: AllowedCharsTextField!
     @IBOutlet weak var daysUntilRefillField: AllowedCharsTextField!
-    @IBOutlet weak var bolusDoseLabel: UILabel!
     @IBOutlet weak var advancedSettingsConstraint: NSLayoutConstraint!
     
     @IBAction func advancedSettingsOpen(_ sender: UIButton)
@@ -89,6 +93,34 @@ class View_MatchMyTrial: UIViewController
             self.view.layoutIfNeeded()
         })
     }
+    
+    @IBAction func concentrationFieldSelected(_ sender: Any) {
+        textHolder = concentrationField.text!
+        perform(#selector(concentrationFieldSelectedDelayed), with: nil, afterDelay: 0.01)
+    }
+    
+    
+    func concentrationFieldSelectedDelayed() -> Void
+    {
+        concentrationField.selectAll(nil)
+        disableInputs(activeControl: "concentrationField")
+    }
+    
+    @IBAction func concentrationFieldChanged(_ sender: Any) {
+        activateInputs()
+        if(concentrationField.text == "")
+        {
+            concentrationField.text = textHolder
+        }
+        let concentrationFieldText = concentrationField.text!
+        concentrationValue = (concentrationFieldText as NSString).floatValue
+        if(concentrationCatch)
+        {
+            updateUI()
+        }
+    }
+    
+    
     
     @IBAction func accumulatorVolumeFieldSelected(_ sender: AllowedCharsTextField)
     {
@@ -114,27 +146,6 @@ class View_MatchMyTrial: UIViewController
         updateUI()
     }
     
-    @IBAction func ptcBolusNumFieldSelected(_ sender: AllowedCharsTextField)
-    {
-        textHolder = ptcBolusNumField.text!
-        perform(#selector(ptcBolusNumFieldSelectedDelayed), with: nil, afterDelay: 0.01)
-    }
-    
-    func ptcBolusNumFieldSelectedDelayed() -> Void
-    {
-        bolusNumField.selectAll(nil)
-        disableInputs(activeControl: "ptcBolusNumField")
-    }
-    
-    @IBAction func ptcBolusNumFieldChanged(_ sender: AllowedCharsTextField)
-    {
-        activateInputs()
-        if(ptcBolusNumField.text == "")
-        {
-            ptcBolusNumField.text = textHolder
-        }
-        updateUI()
-    }
     
     @IBAction func pumpVolumeFieldSelected(_ sender: AllowedCharsTextField)
     {
@@ -160,27 +171,6 @@ class View_MatchMyTrial: UIViewController
         updateUI()
     }
     
-    @IBAction func bolusDoseFieldSelected(_ sender: UITextField)
-    {
-        textHolder = bolusDoseField.text!
-        perform(#selector(bolusDoseFieldSelectedDelayed), with: nil, afterDelay: 0.01)
-    }
-    
-    func bolusDoseFieldSelectedDelayed() -> Void
-    {
-        bolusDoseField.selectAll(nil)
-        disableInputs(activeControl: "bolusDoseField")
-    }
-    
-    @IBAction func bolusDoseFieldChanged(_ sender: UITextField)
-    {
-        activateInputs()
-        if(bolusDoseField.text == "")
-        {
-            bolusDoseField.text = textHolder
-        }
-        updateUI()
-    }
     
     
     @IBAction func trialDoseFieldSelected(_ sender: AllowedCharsTextField)
@@ -225,6 +215,7 @@ class View_MatchMyTrial: UIViewController
             totalDailyDoseLabel.text = unitLabel
             dosePerBolusLabel.text = unitLabel
             trialDoseLabel.text = unitLabel
+            concentrationFieldLabel.text = unitLabel + "/ml"
         }
         else
         {
@@ -233,11 +224,16 @@ class View_MatchMyTrial: UIViewController
             totalDailyDoseLabel.text = unitLabel
             dosePerBolusLabel.text = unitLabel
             trialDoseLabel.text = unitLabel
+            concentrationFieldLabel.text = unitLabel + "/ml"
         }
     }
     
     @IBAction func matchTrial(_ sender: UIButton)
     {
+        if(!concentrationCatch)
+        {
+            concentrationCatch = true
+        }
         updateUI()
     }
      
@@ -277,26 +273,28 @@ class View_MatchMyTrial: UIViewController
     
     func updateUI() -> Void
     {
-        generateAndLoadGraph()
-        trialDoseLabel.text = unitLabel
-        dosePerBolusLabel.text = unitLabel
-        totalDailyDoseLabel.text = unitLabel
-        bolusNumField.text = "\(gBolNum)"
-        dosePerBolusField.text = trialDoseField.text
-        let bolusIntervalMin = round(Float(1440) / Float(gBolNum))
-        let bolusIntervalMinute = Int(bolusIntervalMin) % 60
-        let bolusIntervalHour = (Int(bolusIntervalMin) - bolusIntervalMinute) / 60
-        bolusIntervalField.text = "\(bolusIntervalHour)" + " hr " + "\(bolusIntervalMinute)" + " min"
-        let trialDoseText = trialDoseField.text!
-        let trialDoseFloat = (trialDoseText as NSString).floatValue
-        let totalDose = Float(gBolNum) * trialDoseFloat
-        totalDailyDoseField.text = "\(totalDose)"
-        let pumpConFloat = Float(8.0)
-        
-        let totalDoseCon = (totalDose / pumpConFloat)   //in mL's
-        daysUntilRefillField.text = "\(pumpVolume / totalDoseCon)" + " days"
-        pumpVolumeField.text = "\(pumpVolume)"
-        accumulatorVolumeField.text = "\(accumVol)"
+        if(updateLock)
+        {
+            generateAndLoadGraph()
+            trialDoseLabel.text = unitLabel
+            dosePerBolusLabel.text = unitLabel
+            totalDailyDoseLabel.text = unitLabel
+            bolusNumField.text = "\(gBolNum)"
+            dosePerBolusField.text = trialDoseField.text
+            let bolusIntervalMin = round(Float(1440) / Float(gBolNum))
+            let bolusIntervalMinute = Int(bolusIntervalMin) % 60
+            let bolusIntervalHour = (Int(bolusIntervalMin) - bolusIntervalMinute) / 60
+            bolusIntervalField.text = "\(bolusIntervalHour)" + " hr " + "\(bolusIntervalMinute)" + " min"
+            let trialDoseText = trialDoseField.text!
+            let trialDoseFloat = (trialDoseText as NSString).floatValue
+            let totalDose = Float(gBolNum) * trialDoseFloat
+            totalDailyDoseField.text = "\(totalDose)"
+            let pumpConFloat = concentrationValue
+            let totalDoseCon = (totalDose / pumpConFloat)   //in mL's
+            daysUntilRefillField.text = "\(pumpVolume / totalDoseCon)" + " days"
+            pumpVolumeField.text = "\(pumpVolume)"
+            accumulatorVolumeField.text = "\(accumVol)"
+        }
     }
 
     func activateInputs() -> Void
@@ -312,6 +310,7 @@ class View_MatchMyTrial: UIViewController
         advancedSettingsCloseButton.isUserInteractionEnabled = true
         accumulatorVolumeField.isUserInteractionEnabled = true
         pumpVolumeField.isUserInteractionEnabled = true
+        concentrationField.isUserInteractionEnabled = true
     }
     
     func disableInputs(activeControl: String) -> Void
@@ -320,6 +319,7 @@ class View_MatchMyTrial: UIViewController
         if(activeControl != "reliefDuration"){ reliefDuration.isUserInteractionEnabled = false }
         if(activeControl != "accumulatorVolumeField"){ accumulatorVolumeField.isUserInteractionEnabled = false }
         if(activeControl != "pumpVolumeField"){ pumpVolumeField.isUserInteractionEnabled = false }
+        if(activeControl != "concentrationField"){ concentrationField.isUserInteractionEnabled = false }
         scalePicker.isUserInteractionEnabled = false
         unitSwitch.isUserInteractionEnabled = false
         matchTrialButton.isUserInteractionEnabled = false
@@ -361,6 +361,7 @@ class View_MatchMyTrial: UIViewController
         NKInputView.with(trialDoseField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
         NKInputView.with(accumulatorVolumeField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
         NKInputView.with(pumpVolumeField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
+        NKInputView.with(concentrationField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
 
         self.graphBorder.layer.borderColor = UIColor.lightGray.cgColor
         self.graphBorder.layer.borderWidth = 2
@@ -463,7 +464,8 @@ class View_MatchMyTrial: UIViewController
     {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             if self.view.frame.origin.y != 0{
-                self.view.frame.origin.y += keyboardSize.height
+                //self.view.frame.origin.y += keyboardSize.height
+                self.view.frame.origin.y = 0
             }
         }
     }
@@ -494,7 +496,7 @@ class View_MatchMyTrial: UIViewController
         
         // let pumpConText = pumpConcentration.text!
         // let pumpConFloat = (pumpConText as NSString).floatValue
-        let pumpConFloat = defPumpCon
+        let pumpConFloat = concentrationValue
         // let flowRate = bolusRate / pumpConFloat
         // let bolHeight = (bolusRate / maxBolusRate) * graphHeight
         let bolHeight = (accumVol / Float(0.007)) * graphHeight
