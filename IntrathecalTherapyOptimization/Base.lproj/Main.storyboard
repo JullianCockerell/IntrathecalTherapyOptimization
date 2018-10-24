@@ -300,6 +300,23 @@
                                     <constraint firstItem="UBI-tr-Bgv" firstAttribute="leading" secondItem="fXS-L3-ACB" secondAttribute="leading" constant="14" id="TgW-12-6yA"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nXl-eM-gyG" userLabel="graphStyle">
+                                <rect key="frame" x="19" y="25" width="730" height="220"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Dose (mg)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Eh-oZ-jq8">
+                                        <rect key="frame" x="10" y="4" width="103" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.23529411759999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="220" id="b6t-9X-iA8"/>
+                                    <constraint firstAttribute="width" constant="730" id="fqy-NM-3Px"/>
+                                </constraints>
+                            </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Periodic Flow" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K1w-5I-Ta1">
                                 <rect key="frame" x="306" y="14" width="156.5" height="70"/>
                                 <constraints>
@@ -1200,23 +1217,6 @@ Actuation</string>
                                     <constraint firstItem="iGK-pV-98u" firstAttribute="top" secondItem="8QU-Lu-5yV" secondAttribute="bottom" constant="50" id="jEk-40-174"/>
                                     <constraint firstItem="8QU-Lu-5yV" firstAttribute="centerX" secondItem="sCO-s6-dro" secondAttribute="centerX" id="rIi-ze-z5L"/>
                                     <constraint firstItem="8QU-Lu-5yV" firstAttribute="top" secondItem="sCO-s6-dro" secondAttribute="top" constant="20" id="sc2-OI-vjG"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nXl-eM-gyG" userLabel="graphStyle">
-                                <rect key="frame" x="19" y="25" width="730" height="220"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Dose (mg)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Eh-oZ-jq8">
-                                        <rect key="frame" x="10" y="4" width="103" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <color key="backgroundColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.23529411759999999" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="220" id="b6t-9X-iA8"/>
-                                    <constraint firstAttribute="width" constant="730" id="fqy-NM-3Px"/>
                                 </constraints>
                             </view>
                         </subviews>
