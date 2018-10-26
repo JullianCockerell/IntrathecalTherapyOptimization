@@ -53,7 +53,6 @@ class View_PeriodicFlow: UIViewController {
     @IBOutlet weak var controlStyle: UIView!
     @IBOutlet weak var pumpConcentration: AllowedCharsTextField!
     @IBOutlet weak var pumpConcentrationLabel: UILabel!
-    @IBOutlet weak var graphHeight: NSLayoutConstraint!
     @IBOutlet weak var block1Height: NSLayoutConstraint!
     @IBOutlet weak var block2Height: NSLayoutConstraint!
     @IBOutlet weak var scalePickerHeight: NSLayoutConstraint!
@@ -534,7 +533,6 @@ class View_PeriodicFlow: UIViewController {
     {
         if( size.width > 1000)
         {
-            graphHeight.constant = 260
             block1Height.constant = 10
             block2Height.constant = 30
             block3Height.constant = 40
@@ -542,7 +540,6 @@ class View_PeriodicFlow: UIViewController {
         }
         else
         {
-            graphHeight.constant = 370
             block1Height.constant = 30
             block2Height.constant = 40
             block3Height.constant = 50
