@@ -8,7 +8,7 @@
 
 import UIKit
 
-class View_ConstantFlow: UIViewController {
+class View_ConstantFlow: UIViewController, UITextFieldDelegate {
 
     
     var unitLabel = "mg"
@@ -90,16 +90,27 @@ class View_ConstantFlow: UIViewController {
     @IBOutlet weak var label30_2: UILabel!
     @IBOutlet weak var label30_3: UILabel!
     @IBOutlet weak var label30_4: UILabel!
-    
-    //Time Inputs
-    
-    
-    
+    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var mainView: UIView!
     
     
     //****************************************************************//
-
-    @IBAction func bolusNumFieldSelected(_ sender: UITextField)
+    func textFieldDidBeginEditing(_ textField: UITextField)
+    {
+        scrollView.setContentOffset(CGPoint(x:0, y:250), animated: true)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool
+    {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        scrollView.setContentOffset(CGPoint(x:0, y:0), animated: true)
+    }
+    
+    /*@IBAction func bolusNumFieldSelected(_ sender: UITextField)
     {
         textHolder = bolusNumField.text!
         perform(#selector(bolusNumFieldSelectedDelay), with: nil, afterDelay: 0.01)
@@ -182,6 +193,7 @@ class View_ConstantFlow: UIViewController {
         activateInputs()
         updateUI()
     }
+ */
 
     
     @IBAction func advancedSettingsOpen(_ sender: UIButton)
@@ -302,6 +314,7 @@ class View_ConstantFlow: UIViewController {
         bolusNumField.isUserInteractionEnabled = true
     }
     
+    /*
     @IBAction func pumpConcentrationSelected(_ sender: AllowedCharsTextField)
     {
         textHolder = pumpConcentration.text!
@@ -380,7 +393,7 @@ class View_ConstantFlow: UIViewController {
     
         updateUI()
         
-    }
+    }*/
     
     @IBAction func scalePickerChanged(_ sender: UISegmentedControl)
     {
@@ -723,7 +736,7 @@ class View_ConstantFlow: UIViewController {
         shapeLayer.path = path.cgPath
         shapeLayer.lineCap = kCALineCapRound
         shapeLayer.lineJoin = kCALineJoinRound
-        view.layer.addSublayer(shapeLayer)
+        mainView.layer.addSublayer(shapeLayer)
         
         
         //save shape layer to viewcontroller
@@ -835,7 +848,7 @@ class View_ConstantFlow: UIViewController {
         shapeLayer2.path = path.cgPath
         shapeLayer2.lineCap = kCALineCapRound
         shapeLayer2.lineJoin = kCALineJoinRound
-        view.layer.addSublayer(shapeLayer2)
+        mainView.layer.addSublayer(shapeLayer2)
         
         //save shape layer to viewcontroller
         self.shapeLayer2 = shapeLayer2

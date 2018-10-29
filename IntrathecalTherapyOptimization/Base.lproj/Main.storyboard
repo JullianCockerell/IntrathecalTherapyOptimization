@@ -570,9 +570,7 @@
                                                                                 </userDefinedRuntimeAttributes>
                                                                                 <connections>
                                                                                     <action selector="pumpVolumeFieldChanged:" destination="63o-cQ-fIx" eventType="editingDidEnd" id="Bgp-MQ-t0m"/>
-                                                                                    <action selector="pumpVolumeFieldChanged:" destination="VnK-zY-1zA" eventType="editingDidEnd" id="g9h-cH-txw"/>
                                                                                     <action selector="pumpVolumeFieldSelected:" destination="63o-cQ-fIx" eventType="editingDidBegin" id="6hx-nS-X0h"/>
-                                                                                    <action selector="pumpVolumeFieldSelected:" destination="VnK-zY-1zA" eventType="editingDidBegin" id="Cvq-R4-vN0"/>
                                                                                 </connections>
                                                                             </textField>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ml" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fXS-2k-bjx">
@@ -1136,8 +1134,6 @@ AM</string>
                                                                                 </userDefinedRuntimeAttributes>
                                                                                 <connections>
                                                                                     <action selector="accumulatorVolumeFieldChanged:" destination="63o-cQ-fIx" eventType="editingDidEnd" id="71F-Ka-LNE"/>
-                                                                                    <action selector="accumulatorVolumeFieldChanged:" destination="VnK-zY-1zA" eventType="editingDidEnd" id="l5o-ov-uNX"/>
-                                                                                    <action selector="accumulatorVolumeFieldSelected:" destination="VnK-zY-1zA" eventType="editingDidBegin" id="8SO-jx-1Cd"/>
                                                                                     <action selector="accumulatorVolumeFieldSelected:" destination="63o-cQ-fIx" eventType="editingDidBegin" id="vjX-ZI-vrY"/>
                                                                                 </connections>
                                                                             </textField>
@@ -1585,8 +1581,7 @@ Actuation</string>
                                                                     <userDefinedRuntimeAttribute type="string" keyPath="allowedChars" value=".0987654321"/>
                                                                 </userDefinedRuntimeAttributes>
                                                                 <connections>
-                                                                    <action selector="doseInputFieldChanged:" destination="VnK-zY-1zA" eventType="editingDidEnd" id="i26-IF-xah"/>
-                                                                    <action selector="doseInputFieldSelected:" destination="VnK-zY-1zA" eventType="editingDidBegin" id="4wZ-Yo-WaD"/>
+                                                                    <outlet property="delegate" destination="VnK-zY-1zA" id="ZFF-q6-ZTQ"/>
                                                                 </connections>
                                                             </textField>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="mg" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fmq-5u-LOH">
@@ -1676,8 +1671,7 @@ Actuation</string>
                                                                     </userDefinedRuntimeAttribute>
                                                                 </userDefinedRuntimeAttributes>
                                                                 <connections>
-                                                                    <action selector="pumpConcentrationChanged:" destination="VnK-zY-1zA" eventType="editingDidEnd" id="zEB-YK-rve"/>
-                                                                    <action selector="pumpConcentrationSelected:" destination="VnK-zY-1zA" eventType="editingDidBegin" id="Utn-Ig-Gec"/>
+                                                                    <outlet property="delegate" destination="VnK-zY-1zA" id="Oag-d3-FOI"/>
                                                                 </connections>
                                                             </textField>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="mg/ml" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vtr-8s-SMK">
@@ -1718,8 +1712,7 @@ Actuation</string>
                                                                             </userDefinedRuntimeAttribute>
                                                                         </userDefinedRuntimeAttributes>
                                                                         <connections>
-                                                                            <action selector="pumpVolumeFieldChanged:" destination="VnK-zY-1zA" eventType="editingDidEnd" id="3DL-1P-a3U"/>
-                                                                            <action selector="pumpVolumeFieldSelected:" destination="VnK-zY-1zA" eventType="editingDidBegin" id="0uU-lq-ZLw"/>
+                                                                            <outlet property="delegate" destination="VnK-zY-1zA" id="hxz-hg-N4Q"/>
                                                                         </connections>
                                                                     </textField>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ml" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="byQ-A7-i78">
@@ -1759,10 +1752,6 @@ Refill</string>
                                                                                 <integer key="value" value="6"/>
                                                                             </userDefinedRuntimeAttribute>
                                                                         </userDefinedRuntimeAttributes>
-                                                                        <connections>
-                                                                            <action selector="pumpVolumeFieldChanged:" destination="VnK-zY-1zA" eventType="editingDidEnd" id="YlY-oG-Qc0"/>
-                                                                            <action selector="pumpVolumeFieldSelected:" destination="VnK-zY-1zA" eventType="editingDidBegin" id="Sww-qd-57S"/>
-                                                                        </connections>
                                                                     </textField>
                                                                 </subviews>
                                                             </stackView>
@@ -2080,8 +2069,7 @@ AM</string>
                                                                                     </userDefinedRuntimeAttribute>
                                                                                 </userDefinedRuntimeAttributes>
                                                                                 <connections>
-                                                                                    <action selector="accumulatorVolumeFieldChanged:" destination="VnK-zY-1zA" eventType="editingDidEnd" id="Zf8-nc-avQ"/>
-                                                                                    <action selector="accumulatorVolumeFieldSelected:" destination="VnK-zY-1zA" eventType="editingDidBegin" id="UHK-fM-jOv"/>
+                                                                                    <outlet property="delegate" destination="VnK-zY-1zA" id="0tq-XO-GZb"/>
                                                                                 </connections>
                                                                             </textField>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ml" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y1w-u2-aIK">
@@ -2210,8 +2198,7 @@ Actuation</string>
                                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                                 <textInputTraits key="textInputTraits"/>
                                                                                 <connections>
-                                                                                    <action selector="bolusDoseFieldChanged:" destination="VnK-zY-1zA" eventType="editingDidEnd" id="tAo-Df-QpG"/>
-                                                                                    <action selector="bolusDoseFieldSelected:" destination="VnK-zY-1zA" eventType="editingDidBegin" id="wWn-M4-MXi"/>
+                                                                                    <outlet property="delegate" destination="VnK-zY-1zA" id="9hF-ex-qSd"/>
                                                                                 </connections>
                                                                             </textField>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="mg" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DvF-Ag-Ofo">
@@ -2250,8 +2237,7 @@ Actuation</string>
                                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                                 <textInputTraits key="textInputTraits"/>
                                                                                 <connections>
-                                                                                    <action selector="bolusNumFieldChanged:" destination="VnK-zY-1zA" eventType="editingDidEnd" id="ZrN-WE-zK4"/>
-                                                                                    <action selector="bolusNumFieldSelected:" destination="VnK-zY-1zA" eventType="editingDidBegin" id="6OC-dh-iHm"/>
+                                                                                    <outlet property="delegate" destination="VnK-zY-1zA" id="LPa-Ng-VFk"/>
                                                                                 </connections>
                                                                             </textField>
                                                                         </subviews>
@@ -2387,11 +2373,13 @@ Actuation</string>
                         <outlet property="labelStack24" destination="mYW-63-mOJ" id="ejO-Zb-gUk"/>
                         <outlet property="labelStack30" destination="wqO-99-Xu6" id="HhM-0G-nLG"/>
                         <outlet property="labelStack6" destination="aDk-hy-84q" id="WFa-Ud-PrB"/>
+                        <outlet property="mainView" destination="ZZc-f4-ewT" id="bhi-eH-ong"/>
                         <outlet property="pumpConcentration" destination="hJF-8q-kjn" id="V08-nZ-vId"/>
                         <outlet property="pumpConcentrationLabel" destination="Vtr-8s-SMK" id="wfP-6H-bD0"/>
                         <outlet property="pumpRateTextField" destination="1vt-aH-neW" id="ajy-7s-Kjt"/>
                         <outlet property="pumpVolumeField" destination="IGB-ty-Ggv" id="ZPf-AA-4ak"/>
                         <outlet property="scalePicker" destination="0th-9a-4AR" id="GZn-xD-EoB"/>
+                        <outlet property="scrollView" destination="A3c-8J-sJa" id="TQZ-EH-wDU"/>
                         <outlet property="unitSwitch" destination="IWU-H6-R3e" id="YIo-yo-j0w"/>
                         <outlet property="yAxisUnitLabel" destination="BS2-P6-Zac" id="1It-MW-4wU"/>
                         <outlet property="yLabel1" destination="0pP-cW-agq" id="NJe-zc-ZxQ"/>
@@ -2992,11 +2980,9 @@ Actuation</string>
                                                         </userDefinedRuntimeAttributes>
                                                         <connections>
                                                             <action selector="pumpVolumeFieldChanged:" destination="nX1-pX-QKN" eventType="editingDidEnd" id="6TQ-1d-Y5X"/>
-                                                            <action selector="pumpVolumeFieldChanged:" destination="VnK-zY-1zA" eventType="editingDidEnd" id="BkM-au-ufX"/>
                                                             <action selector="pumpVolumeFieldChanged:" destination="63o-cQ-fIx" eventType="editingDidEnd" id="XvT-Dz-73a"/>
                                                             <action selector="pumpVolumeFieldSelected:" destination="63o-cQ-fIx" eventType="editingDidBegin" id="NTE-Hj-YXe"/>
                                                             <action selector="pumpVolumeFieldSelected:" destination="nX1-pX-QKN" eventType="editingDidBegin" id="h13-PN-2Zn"/>
-                                                            <action selector="pumpVolumeFieldSelected:" destination="VnK-zY-1zA" eventType="editingDidBegin" id="sEY-tZ-KGx"/>
                                                         </connections>
                                                     </textField>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ml" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LNr-F6-oJr">
@@ -3348,8 +3334,6 @@ AM</string>
                                                         <connections>
                                                             <action selector="accumulatorVolumeFieldChanged:" destination="nX1-pX-QKN" eventType="editingDidEnd" id="9SH-JK-Gcf"/>
                                                             <action selector="accumulatorVolumeFieldChanged:" destination="63o-cQ-fIx" eventType="editingDidEnd" id="TJu-s1-4hn"/>
-                                                            <action selector="accumulatorVolumeFieldChanged:" destination="VnK-zY-1zA" eventType="editingDidEnd" id="Ycp-fs-02y"/>
-                                                            <action selector="accumulatorVolumeFieldSelected:" destination="VnK-zY-1zA" eventType="editingDidBegin" id="Bad-8h-GGO"/>
                                                             <action selector="accumulatorVolumeFieldSelected:" destination="63o-cQ-fIx" eventType="editingDidBegin" id="xwU-2F-4ld"/>
                                                             <action selector="accumulatorVolumeFieldSelected:" destination="nX1-pX-QKN" eventType="editingDidBegin" id="y8u-b6-thh"/>
                                                         </connections>
@@ -3395,9 +3379,7 @@ Actuation</string>
                                                         </userDefinedRuntimeAttributes>
                                                         <connections>
                                                             <action selector="accumulatorVolumeFieldChanged:" destination="63o-cQ-fIx" eventType="editingDidEnd" id="1Xl-El-jxE"/>
-                                                            <action selector="accumulatorVolumeFieldChanged:" destination="VnK-zY-1zA" eventType="editingDidEnd" id="DGc-tO-9ya"/>
                                                             <action selector="accumulatorVolumeFieldChanged:" destination="nX1-pX-QKN" eventType="editingDidEnd" id="er3-Ni-jxv"/>
-                                                            <action selector="accumulatorVolumeFieldSelected:" destination="VnK-zY-1zA" eventType="editingDidBegin" id="4Lj-1d-wg3"/>
                                                             <action selector="accumulatorVolumeFieldSelected:" destination="nX1-pX-QKN" eventType="editingDidBegin" id="BGL-gm-fl4"/>
                                                             <action selector="accumulatorVolumeFieldSelected:" destination="63o-cQ-fIx" eventType="editingDidBegin" id="HGW-Iu-By3"/>
                                                         </connections>
@@ -4114,7 +4096,6 @@ Actuation</string>
                                                                 <connections>
                                                                     <action selector="constantDoseInputFieldEDB:" destination="IaZ-Ct-nvw" eventType="editingDidBegin" id="WOt-eV-5Ad"/>
                                                                     <action selector="constantDoseInputFieldEDE:" destination="IaZ-Ct-nvw" eventType="editingDidEnd" id="9tt-e2-qEe"/>
-                                                                    <action selector="doseInputFieldChanged:" destination="VnK-zY-1zA" eventType="editingDidEnd" id="Xer-bp-64c"/>
                                                                 </connections>
                                                             </textField>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="mg" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q8E-rT-agN">
@@ -5861,10 +5842,8 @@ AM</string>
                                                                     </userDefinedRuntimeAttribute>
                                                                 </userDefinedRuntimeAttributes>
                                                                 <connections>
-                                                                    <action selector="accumulatorVolumeFieldChanged:" destination="VnK-zY-1zA" eventType="editingDidEnd" id="Xhs-RG-u8F"/>
                                                                     <action selector="accumulatorVolumeFieldChanged:" destination="nSS-BY-aBq" eventType="editingDidEnd" id="opG-f2-MEl"/>
                                                                     <action selector="accumulatorVolumeFieldSelected:" destination="nSS-BY-aBq" eventType="editingDidBegin" id="Y2X-lh-7tt"/>
-                                                                    <action selector="accumulatorVolumeFieldSelected:" destination="VnK-zY-1zA" eventType="editingDidBegin" id="yTO-p1-7c6"/>
                                                                 </connections>
                                                             </textField>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ml" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bhp-fV-5Vf">
@@ -5904,10 +5883,8 @@ AM</string>
                                                                     </userDefinedRuntimeAttribute>
                                                                 </userDefinedRuntimeAttributes>
                                                                 <connections>
-                                                                    <action selector="pumpVolumeFieldChanged:" destination="VnK-zY-1zA" eventType="editingDidEnd" id="NeN-lA-7i6"/>
                                                                     <action selector="pumpVolumeFieldChanged:" destination="nSS-BY-aBq" eventType="editingDidEnd" id="rkm-Zb-RmO"/>
                                                                     <action selector="pumpVolumeFieldSelected:" destination="nSS-BY-aBq" eventType="editingDidBegin" id="ECi-Xr-Vs3"/>
-                                                                    <action selector="pumpVolumeFieldSelected:" destination="VnK-zY-1zA" eventType="editingDidBegin" id="uSc-hv-hWQ"/>
                                                                 </connections>
                                                             </textField>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ml" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dDo-bP-R85">
