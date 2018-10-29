@@ -107,16 +107,6 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
         }
     }
     
-    func delayedSelect(currentTextField: UITextField)
-    {
-        currentTextField.selectAll(nil)
-    }
-    
-    func delay(_ delay:Double, closure:@escaping ()->()) {
-        let when = DispatchTime.now() + delay
-        DispatchQueue.main.asyncAfter(deadline: when, execute: closure)
-    }
-    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool
     {
         textField.resignFirstResponder()

@@ -8,8 +8,8 @@
 
 import UIKit
 
-class View_PeriodicFlow: UIViewController {
-
+class View_PeriodicFlow: UIViewController, UITextFieldDelegate
+{
     @IBOutlet weak var doseSlider: UISlider!
     @IBOutlet weak var intervalStepper: UIStepper!
     @IBOutlet weak var intervalStepperLabel: UILabel!
@@ -18,6 +18,8 @@ class View_PeriodicFlow: UIViewController {
     @IBOutlet weak var pumpRateLabel: UITextView!
     @IBOutlet weak var totalDoseLabel: UITextField!
     @IBOutlet weak var warningImage: UIImageView!
+    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var mainView: UIView!
     weak var shapeLayer: CAShapeLayer?
     weak var shapeLayer2: CAShapeLayer?
     var startMinute = Float(0)
@@ -93,61 +95,111 @@ class View_PeriodicFlow: UIViewController {
     @IBOutlet weak var label24_4: UILabel!
     
     
-    
-    
-    @IBAction func accumulatorVolumeFieldSelected(_ sender: AllowedCharsTextField)
+    func textFieldDidBeginEditing(_ textField: UITextField)
     {
-        textHolder = accumulatorVolumeField.text!
-        perform(#selector(accumulatorVolumeFieldSelectedDelayed), with: nil, afterDelay: 0.01)
-    }
-    
-    func accumulatorVolumeFieldSelectedDelayed() -> Void
-    {
-        accumulatorVolumeField.selectAll(nil)
-        disableInputs(activeControl: "accumulatorVolumeField")
-    }
-    
-    @IBAction func accumulatorVolumeFieldChanged(_ sender: AllowedCharsTextField)
-    {
-        activateInputs()
-        if(accumulatorVolumeField.text == "")
+        scrollView.setContentOffset(CGPoint(x:0, y:313), animated: true)
+        
+        if(textField == startTimeField)
         {
-            accumulatorVolumeField.text = textHolder
+            disableInputs(currentTextField: textField)
         }
-        let accumulatorVolumeText = accumulatorVolumeField.text!
-        accumVol = (accumulatorVolumeText as NSString).floatValue
-        updateUI()
-    }
-    
-    
-    @IBAction func pumpVolumeFieldSelected(_ sender: AllowedCharsTextField)
-    {
-        textHolder = pumpVolumeField.text!
-        perform(#selector(pumpVolumeFieldSelectedDelayed), with: nil, afterDelay: 0.01)
-    }
-    
-    func pumpVolumeFieldSelectedDelayed() -> Void
-    {
-        pumpVolumeField.selectAll(nil)
-        disableInputs(activeControl: "pumpVolumeField")
-    }
-    
-    @IBAction func pumpVolumeFieldChanged(_ sender: AllowedCharsTextField)
-    {
-        activateInputs()
-        if(pumpVolumeField.text == "")
+        else
         {
-            pumpVolumeField.text = textHolder
+            disableInputs(currentTextField: textField)
+            textHolder = textField.text!
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1)
+            {
+                textField.selectAll(nil)
+            }
         }
-        let pumpVolumeText = pumpVolumeField.text!
-        pumpVolume = (pumpVolumeText as NSString).floatValue
-        updateUI()
     }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool
+    {
+        textField.resignFirstResponder()
+        activateInputs()
+        updateUI()
+        return true
+    }
     
+    func textFieldDidEndEditing(_ textField: UITextField)
+    {
+        scrollView.setContentOffset(CGPoint(x:0, y:0), animated: true)
+        if(textField == accumulatorVolumeField)
+        {
+            activateInputs()
+            if(accumulatorVolumeField.text == "")
+            {
+                accumulatorVolumeField.text = textHolder
+            }
+            let accumulatorVolumeText = accumulatorVolumeField.text!
+            accumVol = (accumulatorVolumeText as NSString).floatValue
+            updateUI()
+        }
+        else if(textField == pumpVolumeField)
+        {
+            activateInputs()
+            if(pumpVolumeField.text == "")
+            {
+                pumpVolumeField.text = textHolder
+            }
+            let pumpVolumeText = pumpVolumeField.text!
+            pumpVolume = (pumpVolumeText as NSString).floatValue
+            updateUI()
+        }
+        else if(textField == pumpConcentration)
+        {
+            activateInputs()
+            if(pumpConcentration.text == "")
+            {
+                pumpConcentration.text = textHolder
+            }
+            updateUI()
+        }
+        else if(textField == doseField)
+        {
+            activateInputs()
+            var inputText = doseField.text!
+            if (inputText == "")
+            {
+                inputText = textHolder
+            }
+            var inputFloat = (inputText as NSString).floatValue
+            if(inputFloat > doseSlider.maximumValue)
+            {
+                doseField.text = "\(doseSlider.maximumValue)"
+                inputFloat = doseSlider.maximumValue
+                inputText = doseField.text!
+            }
+            else if(inputFloat < doseSlider.minimumValue)
+            {
+                doseField.text = "\(doseSlider.minimumValue)"
+                inputFloat = doseSlider.minimumValue
+                inputText = doseField.text!
+            }
+            if(!mgMode)
+            {
+                let inputInt = Int(inputFloat)
+                //inputInt = inputInt - (inputInt % 5)
+                doseSlider.value = Float(inputInt)
+                let doseInputText = "\(doseSlider.value)"
+                doseField.text = roundValue(inputText: doseInputText, roundTo: 4)
+            }
+            else
+            {
+                let inputPrefix = roundValue(inputText: inputText, roundTo: 4)
+                doseField.text = inputPrefix
+                doseSlider.value = inputFloat
+            }
+            updateUI()
+        }
+        
+    }
+    
+   
     @IBAction func advancedSettingsClose(_ sender: UIButton)
     {
-        advancedSettingsConstraint.constant = 510
+        advancedSettingsConstraint.constant = 440
         UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations:
         {
             self.view.layoutIfNeeded()
@@ -156,20 +208,20 @@ class View_PeriodicFlow: UIViewController {
     
     @IBAction func advancedSettingsOpen(_ sender: UIButton)
     {
-        advancedSettingsConstraint.constant = 20
+        advancedSettingsConstraint.constant = 0
         UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations:
         {
             self.view.layoutIfNeeded()
         })
     }
     
-    func disableInputs(activeControl: String) -> Void
+    func disableInputs(currentTextField: UITextField) -> Void
     {
-        if(activeControl != "doseField"){ doseField.isUserInteractionEnabled = false }
-        if(activeControl != "startTimeField"){ startTimeField.isUserInteractionEnabled = false }
-        if(activeControl != "pumpConcentration"){ pumpConcentration.isUserInteractionEnabled = false }
-        if(activeControl != "accumulatorVolumeField"){ accumulatorVolumeField.isUserInteractionEnabled = false }
-        if(activeControl != "pumpVolumeField"){ pumpVolumeField.isUserInteractionEnabled = false }
+        if(currentTextField != doseField){ doseField.isUserInteractionEnabled = false }
+        if(currentTextField != startTimeField){ startTimeField.isUserInteractionEnabled = false }
+        if(currentTextField != pumpConcentration){ pumpConcentration.isUserInteractionEnabled = false }
+        if(currentTextField != accumulatorVolumeField){ accumulatorVolumeField.isUserInteractionEnabled = false }
+        if(currentTextField != pumpVolumeField){ pumpVolumeField.isUserInteractionEnabled = false }
         scalePicker.isUserInteractionEnabled = false
         unitPicker.isUserInteractionEnabled = false
         durationPicker.isUserInteractionEnabled = false
@@ -196,34 +248,7 @@ class View_PeriodicFlow: UIViewController {
         pumpVolumeField.isUserInteractionEnabled = true
     }
     
-    @IBAction func startTimeFieldSelected(_ sender: UITextField)
-    {
-        disableInputs(activeControl: "startTimeField")
-    }
-        
-    @IBAction func doseFieldSelected(_ sender: AllowedCharsTextField)
-    {
-        textHolder = doseField.text!
-        perform(#selector(selectDoseField), with: nil, afterDelay: 0.01)
-    }
-    
-    func selectDoseField() -> Void
-    {
-        doseField.selectAll(nil)
-        disableInputs(activeControl: "doseField")
-    }
-    
-    @IBAction func pumpConcentrationSelected(_ sender: AllowedCharsTextField)
-    {
-        textHolder = pumpConcentration.text!
-        perform(#selector(selectPumpConcentration), with: nil, afterDelay: 0.01)
-    }
-    
-    func selectPumpConcentration() -> Void
-    {
-        pumpConcentration.selectAll(nil)
-        disableInputs(activeControl: "pumpConcentration")
-    }
+   
     
     lazy var datePicker: UIDatePicker =
     {
@@ -240,53 +265,7 @@ class View_PeriodicFlow: UIViewController {
         return formatter
     }()
     
-    @IBAction func pumpConcentrationChaned(_ sender: AllowedCharsTextField)
-    {
-        activateInputs()
-        if(pumpConcentration.text == "")
-        {
-            pumpConcentration.text = textHolder
-        }
-        updateUI()
-    }
     
-    @IBAction func doseFieldChanged(_ sender: UITextField)
-    {
-        activateInputs()
-        var inputText = doseField.text!
-        if (inputText == "")
-        {
-            inputText = textHolder
-        }
-        var inputFloat = (inputText as NSString).floatValue
-        if(inputFloat > doseSlider.maximumValue)
-        {
-            doseField.text = "\(doseSlider.maximumValue)"
-            inputFloat = doseSlider.maximumValue
-            inputText = doseField.text!
-        }
-        else if(inputFloat < doseSlider.minimumValue)
-        {
-            doseField.text = "\(doseSlider.minimumValue)"
-            inputFloat = doseSlider.minimumValue
-            inputText = doseField.text!
-        }
-        if(!mgMode)
-        {
-            let inputInt = Int(inputFloat)
-            //inputInt = inputInt - (inputInt % 5)
-            doseSlider.value = Float(inputInt)
-            let doseInputText = "\(doseSlider.value)"
-            doseField.text = roundValue(inputText: doseInputText, roundTo: 4)
-        }
-        else
-        {
-            let inputPrefix = roundValue(inputText: inputText, roundTo: 4)
-            doseField.text = inputPrefix
-            doseSlider.value = inputFloat
-        }
-        updateUI()
-    }
     
     func initializeUI()
     {
@@ -600,14 +579,13 @@ class View_PeriodicFlow: UIViewController {
         
         let bolPerPeriod = (doseSlider.value / pumpConFloat) / accumVol
         let distBetweenBol = ((durTotal / bolPerPeriod) / (24*60)) * graphWidth    //in coordinate points
-        /*if(((durTotal / bolPerPeriod)) < 18)
-        {
-            scaling = 1
-            scalePicker.selectedSegmentIndex = 1
-        }*/
         if(scaling == 0)
         {
             xShift = Float(((startHour + (startMinute/Float(60))) / 24)) * graphWidth
+        }
+        else
+        {
+            xShift = Float(0)
         }
         
         
@@ -623,6 +601,7 @@ class View_PeriodicFlow: UIViewController {
         coordArray2.append(cSet)
         //stores index where beginning of graph is for later swapping
         var zeroIndex = 0
+        var zeroIndex2 = 0
         //points are calculated and added to array
         while (c < Int(bolNum))
         {
@@ -631,7 +610,7 @@ class View_PeriodicFlow: UIViewController {
             {
                 cSet = [xCoord, yCoord2]
                 coordArray2.append(cSet)
-                yCoord2 += (accumVol / 0.1) * graphHeight
+                yCoord2 += (accumVol / 0.7) * graphHeight
                 yCoord += bolHeight
                 cSet = [xCoord, yCoord]
                 coordArray.append(cSet)
@@ -648,6 +627,7 @@ class View_PeriodicFlow: UIViewController {
                     cSet = [graphWidth, yCoord2]
                     coordArray2.append(cSet)
                     zeroIndex = coordArray.count
+                    zeroIndex2 = coordArray2.count
                     xCoord = xCoord - graphWidth
                     cSet = [0, yCoord]
                     coordArray.append(cSet)
@@ -678,6 +658,7 @@ class View_PeriodicFlow: UIViewController {
                 cSet = [graphWidth, yCoord2]
                 coordArray2.append(cSet)
                 zeroIndex = coordArray.count
+                zeroIndex2 = coordArray2.count
                 xCoord = xCoord - graphWidth
                 cSet = [0, yCoord]
                 coordArray.append(cSet)
@@ -698,16 +679,18 @@ class View_PeriodicFlow: UIViewController {
             c += 1
         }
         
+        
         //if shift is needed, array is shifted
-        if(zeroIndex > 0)
+        if(zeroIndex > 0 || zeroIndex2 > 0)
         {
             let endArray = Array(coordArray[0..<zeroIndex])
             let beginArray = Array(coordArray[zeroIndex..<coordArray.count])
             coordArray = beginArray + endArray
-            let endArray2 = Array(coordArray2[0..<zeroIndex - 1])
-            let beginArray2 = Array(coordArray2[zeroIndex - 1..<coordArray2.count])
+            let endArray2 = Array(coordArray2[0..<zeroIndex2])
+            let beginArray2 = Array(coordArray2[zeroIndex2..<coordArray2.count])
             coordArray2 = beginArray2 + endArray2
         }
+        
         
         //scaling is applied if zoom feature is in use
         if(scaling == 0)
@@ -719,8 +702,8 @@ class View_PeriodicFlow: UIViewController {
             c = 0
             while(c < coordArray.count)
             {
-                coordArray[c][0] = coordArray[c][0] * 4
-                coordArray2[c][0] = coordArray2[c][0] * 4
+                coordArray[c][0] = coordArray[c][0] * Float(4)
+                coordArray2[c][0] = coordArray2[c][0] * Float(4)
                 c += 1
             }
             var nextHour = startHour
@@ -810,8 +793,8 @@ class View_PeriodicFlow: UIViewController {
         
         //add points to path
         c = 1
-        path.move(to: CGPoint(x: Int(coordArray[0][0] + graphX), y: Int(graphHeight + graphY - coordArray[0][1])))
-        path2.move(to: CGPoint(x: Int(coordArray2[0][0] + graphX2), y: Int(graphHeight + graphY2 - coordArray2[0][1])))
+        path.move(to: CGPoint(x: Int(graphX), y: Int(graphHeight + graphY - coordArray[0][1])))
+        path2.move(to: CGPoint(x: Int(graphX2), y: Int(graphHeight + graphY2 - coordArray2[0][1])))
         
         while(c < coordArray.count)
         {
@@ -850,7 +833,7 @@ class View_PeriodicFlow: UIViewController {
         shapeLayer.path = path.cgPath
         shapeLayer.lineCap = kCALineCapRound
         shapeLayer.lineJoin = kCALineJoinRound
-        view.layer.addSublayer(shapeLayer)
+        mainView.layer.addSublayer(shapeLayer)
         
         let shapeLayer2 = CAShapeLayer()
         shapeLayer2.fillColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0).cgColor
@@ -859,7 +842,7 @@ class View_PeriodicFlow: UIViewController {
         shapeLayer2.path = path2.cgPath
         shapeLayer2.lineCap = kCALineCapRound
         shapeLayer2.lineJoin = kCALineJoinRound
-        view.layer.addSublayer(shapeLayer2)
+        mainView.layer.addSublayer(shapeLayer2)
 
         
         //save shape layer to viewcontroller
@@ -1135,8 +1118,6 @@ class View_PeriodicFlow: UIViewController {
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(View_PeriodicFlow.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(View_PeriodicFlow.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
         NKInputView.with(doseField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
         NKInputView.with(pumpConcentration, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
@@ -1181,7 +1162,7 @@ class View_PeriodicFlow: UIViewController {
         
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy/MM/dd HH:mm"
-        let initDateTime = formatter.date(from: "2016/10/08 00:10")
+        let initDateTime = formatter.date(from: "2016/10/08 01:00")
         durationPicker.setDate(initDateTime!, animated: true)
         var currentHourVar = startHour
         var timeLabel = "AM"
@@ -1241,7 +1222,6 @@ class View_PeriodicFlow: UIViewController {
         attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
         yScale30_2.attributedText = attrString
 
-        
         initializeUI()
     }
     
@@ -1261,25 +1241,6 @@ class View_PeriodicFlow: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    @objc func keyboardWillShow(notification: NSNotification)
-    {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y == 0{
-                self.view.frame.origin.y -= keyboardSize.height
-            }
-        }
-    }
-    
-    @objc func keyboardWillHide(notification: NSNotification)
-    {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            if self.view.frame.origin.y != 0{
-                self.view.frame.origin.y += keyboardSize.height
-            }
-        }
-    }
-    
 }
 
 extension UITextView {
