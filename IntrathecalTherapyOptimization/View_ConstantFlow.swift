@@ -93,108 +93,115 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var mainView: UIView!
     
-    
+
     //****************************************************************//
     func textFieldDidBeginEditing(_ textField: UITextField)
     {
-        scrollView.setContentOffset(CGPoint(x:0, y:250), animated: true)
+        scrollView.setContentOffset(CGPoint(x:0, y:313), animated: true)
+
+        disableInputs(currentTextField: textField)
+        textHolder = textField.text!
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1)
+        {
+            textField.selectAll(nil)
+        }
+    }
+    
+    func delayedSelect(currentTextField: UITextField)
+    {
+        currentTextField.selectAll(nil)
+    }
+    
+    func delay(_ delay:Double, closure:@escaping ()->()) {
+        let when = DispatchTime.now() + delay
+        DispatchQueue.main.asyncAfter(deadline: when, execute: closure)
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool
     {
         textField.resignFirstResponder()
+        activateInputs()
+        updateUI()
         return true
     }
     
-    func textFieldDidEndEditing(_ textField: UITextField) {
+    func textFieldDidEndEditing(_ textField: UITextField)
+    {
         scrollView.setContentOffset(CGPoint(x:0, y:0), animated: true)
-    }
-    
-    /*@IBAction func bolusNumFieldSelected(_ sender: UITextField)
-    {
-        textHolder = bolusNumField.text!
-        perform(#selector(bolusNumFieldSelectedDelay), with: nil, afterDelay: 0.01)
-    }
-    
-    func bolusNumFieldSelectedDelay() -> Void
-    {
-        bolusNumField.selectAll(nil)
-        disableInputs(activeControl: "bolusNumField")
-    }
-    
-    @IBAction func bolusNumFieldChanged(_ sender: UITextField)
-    {
-        activateInputs()
-        updateUI()
-    }
-    
-    @IBAction func bolusDoseFieldSelected(_ sender: UITextField)
-    {
-        textHolder = bolusDoseField.text!
-        perform(#selector(bolusDoseFieldSelectedDelay), with: nil, afterDelay: 0.01)
-    }
-    
-    func bolusDoseFieldSelectedDelay() -> Void
-    {
-        bolusDoseField.selectAll(nil)
-        disableInputs(activeControl: "bolusDoseField")
-    }
-    
-    @IBAction func bolusDoseFieldChanged(_ sender: UITextField)
-    {
-        activateInputs()
-        updateUI()
-    }
-    
-    @IBAction func accumulatorVolumeFieldSelected(_ sender: AllowedCharsTextField)
-    {
-        textHolder = pumpConcentration.text!
-        perform(#selector(accumulatorVolumeFieldSelectedDelay), with: nil, afterDelay: 0.01)
-    }
-    
-    func accumulatorVolumeFieldSelectedDelay() -> Void
-    {
-        accumulatorVolumeField.selectAll(nil)
-        disableInputs(activeControl: "accumulatorVolumeField")
-    }
-    
-    
-    @IBAction func accumulatorVolumeFieldChanged(_ sender: AllowedCharsTextField)
-    {
-        activateInputs()
-        var inputText = accumulatorVolumeField.text!
-        if (inputText == "")
+        if(textField == accumulatorVolumeField)
         {
-            inputText = textHolder
+            activateInputs()
+            var inputText = textField.text!
+            if (inputText == "")
+            {
+                inputText = textHolder
+            }
+            let inputPrefix = roundValue(inputText: inputText, roundTo: 5)
+            textField.text = inputPrefix
+            accumVol = (inputPrefix as NSString).floatValue
+            updateUI()
         }
-        let inputPrefix = roundValue(inputText: inputText, roundTo: 5)
-        accumulatorVolumeField.text = inputPrefix
-        accumVol = (inputPrefix as NSString).floatValue
-        updateUI()
+        else if(textField == pumpVolumeField)
+        {
+            pumpVolume = (textField.text! as NSString).floatValue
+            activateInputs()
+            updateUI()
+        }
+        else if(textField == pumpConcentration)
+        {
+            activateInputs()
+            var inputText = textField.text!
+            if (inputText == "")
+            {
+                inputText = textHolder
+            }
+            let inputPrefix = roundValue(inputText: inputText, roundTo: 2)
+            textField.text = inputPrefix
+            updateUI()
+        }
+        else if(textField == doseInputField)
+        {
+            activateInputs()
+            var inputText = textField.text!
+            if (inputText == "")
+            {
+                inputText = textHolder
+            }
+            var inputFloat = (inputText as NSString).floatValue
+            if(inputFloat > doseSlider.maximumValue)
+            {
+                textField.text = "\(doseSlider.maximumValue)"
+                inputFloat = doseSlider.maximumValue
+                inputText = textField.text!
+            }
+            else if(inputFloat < doseSlider.minimumValue)
+            {
+                textField.text = "\(doseSlider.minimumValue)"
+                inputFloat = doseSlider.minimumValue
+                inputText = textField.text!
+            }
+            if(!mgMode)
+            {
+                var inputInt = Int(inputFloat)
+                //inputInt = inputInt - (inputInt % 5)
+                doseSlider.value = Float(inputInt)
+                let doseInputText = "\(doseSlider.value)"
+                textField.text = roundValue(inputText: doseInputText, roundTo: 4)
+            }
+            else
+            {
+                let inputPrefix = roundValue(inputText: inputText, roundTo: 4)
+                doseInputField.text = inputPrefix
+                doseSlider.value = inputFloat
+            }
+            updateUI()
+        }
+        else
+        {
+            activateInputs()
+            updateUI()
+        }
     }
-    
-    
-    @IBAction func pumpVolumeFieldSelected(_ sender: AllowedCharsTextField)
-    {
-        textHolder = pumpVolumeField.text!
-        perform(#selector(pumpVolumeFieldSelectedDelay), with: nil, afterDelay: 0.01)
-    }
-    
-    func pumpVolumeFieldSelectedDelay() -> Void
-    {
-        pumpVolumeField.selectAll(nil)
-        disableInputs(activeControl: "pumpVolumeField")
-    }
-    
-    
-    @IBAction func pumpVolumeFieldChanged(_ sender: AllowedCharsTextField)
-    {
-        pumpVolume = (pumpVolumeField.text! as NSString).floatValue
-        activateInputs()
-        updateUI()
-    }
- */
-
     
     @IBAction func advancedSettingsOpen(_ sender: UIButton)
     {
@@ -282,14 +289,14 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
         updateUI()
     }
     
-    func disableInputs(activeControl: String) -> Void
+    func disableInputs(currentTextField: UITextField) -> Void
     {
-        if(activeControl != "doseInputField"){ doseInputField.isUserInteractionEnabled = false }
-        if(activeControl != "pumpConcentration"){ pumpConcentration.isUserInteractionEnabled = false }
-        if(activeControl != "accumulatorVolumeField"){ accumulatorVolumeField.isUserInteractionEnabled = false }
-        if(activeControl != "pumpVolumeField"){ pumpVolumeField.isUserInteractionEnabled = false }
-        if(activeControl != "bolusDoseField"){ bolusDoseField.isUserInteractionEnabled = false }
-        if(activeControl != "bolusNumField"){ bolusNumField.isUserInteractionEnabled = false }
+        if(currentTextField != doseInputField){ doseInputField.isUserInteractionEnabled = false }
+        if(currentTextField != pumpConcentration){ pumpConcentration.isUserInteractionEnabled = false }
+        if(currentTextField != accumulatorVolumeField){ accumulatorVolumeField.isUserInteractionEnabled = false }
+        if(currentTextField != pumpVolumeField){ pumpVolumeField.isUserInteractionEnabled = false }
+        if(currentTextField != bolusDoseField){ bolusDoseField.isUserInteractionEnabled = false }
+        if(currentTextField != bolusNumField){ bolusNumField.isUserInteractionEnabled = false }
         exitButton.isUserInteractionEnabled = false
         doseSlider.isUserInteractionEnabled = false
         unitSwitch.isUserInteractionEnabled = false
@@ -314,94 +321,15 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
         bolusNumField.isUserInteractionEnabled = true
     }
     
-    /*
-    @IBAction func pumpConcentrationSelected(_ sender: AllowedCharsTextField)
-    {
-        textHolder = pumpConcentration.text!
-        perform(#selector(pumpConcentrationSelectedDelay), with: nil, afterDelay: 0.01)
-    }
-    
-    func pumpConcentrationSelectedDelay() -> Void
-    {
-        pumpConcentration.selectAll(nil)
-        disableInputs(activeControl: "pumpConcentration")
-        pumpConcentration.isUserInteractionEnabled = true
-    }
-    
-    @IBAction func pumpConcentrationChanged(_ sender: AllowedCharsTextField)
-    {
-        activateInputs()
-        var inputText = pumpConcentration.text!
-        if (inputText == "")
-        {
-            inputText = textHolder
-        }
-        let inputPrefix = roundValue(inputText: inputText, roundTo: 2)
-        pumpConcentration.text = inputPrefix
-        updateUI()
-    }
-    
-
-    @IBAction func doseInputFieldSelected(_ sender: AllowedCharsTextField)
-    {
-        textHolder = doseInputField.text!
-        perform(#selector(doseInputFieldSelectedDelay), with: nil, afterDelay: 0.01)
-    }
-    
-    func doseInputFieldSelectedDelay() -> Void
-    {
-        doseInputField.selectAll(nil)
-        disableInputs(activeControl: "doseInputField")
-        doseInputField.isUserInteractionEnabled = true
-    }
-    
-    @IBAction func doseInputFieldChanged(_ sender: AllowedCharsTextField)
-    {
-        activateInputs()
-        var inputText = doseInputField.text!
-        if (inputText == "")
-        {
-            inputText = textHolder
-        }
-        var inputFloat = (inputText as NSString).floatValue
-        if(inputFloat > doseSlider.maximumValue)
-        {
-            doseInputField.text = "\(doseSlider.maximumValue)"
-            inputFloat = doseSlider.maximumValue
-            inputText = doseInputField.text!
-        }
-        else if(inputFloat < doseSlider.minimumValue)
-        {
-            doseInputField.text = "\(doseSlider.minimumValue)"
-            inputFloat = doseSlider.minimumValue
-            inputText = doseInputField.text!
-        }
-        if(!mgMode)
-        {
-            var inputInt = Int(inputFloat)
-            //inputInt = inputInt - (inputInt % 5)
-            doseSlider.value = Float(inputInt)
-            let doseInputText = "\(doseSlider.value)"
-            doseInputField.text = roundValue(inputText: doseInputText, roundTo: 4)
-        }
-        else
-        {
-            let inputPrefix = roundValue(inputText: inputText, roundTo: 4)
-            doseInputField.text = inputPrefix
-            doseSlider.value = inputFloat
-        }
-    
-        updateUI()
-        
-    }*/
-    
+   
     @IBAction func scalePickerChanged(_ sender: UISegmentedControl)
     {
         let pickerValue = scalePicker.selectedSegmentIndex
         if(pickerValue == 0)
         {
             generateAndLoadGraph()
-            UIView.animate(withDuration: 0.7, animations: {
+            generateAndLoadGraph2()
+            UIView.animate(withDuration: 0.2, animations: {
                 self.labelStack6.alpha = 0.0
                 self.labelStack24.alpha = 1.0
                 self.labelStack30.alpha = 0.0
@@ -410,7 +338,8 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
         else if (pickerValue == 1)
         {
             generateAndLoadGraph()
-            UIView.animate(withDuration: 0.7, animations: {
+            generateAndLoadGraph2()
+            UIView.animate(withDuration: 0.2, animations: {
                 self.labelStack6.alpha = 1.0
                 self.labelStack24.alpha = 0.0
                 self.labelStack30.alpha = 0.0
@@ -419,7 +348,8 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
         else if (pickerValue == 2)
         {
             generateAndLoadGraph()
-            UIView.animate(withDuration: 0.7, animations: {
+            generateAndLoadGraph2()
+            UIView.animate(withDuration: 0.2, animations: {
                 self.labelStack6.alpha = 0.0
                 self.labelStack24.alpha = 0.0
                 self.labelStack30.alpha = 1.0
@@ -743,7 +673,7 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
         self.shapeLayer = shapeLayer
     }
 
-    func generateAndLoadGraph2()
+    func generateAndLoadGraph2() //Bottom
     {
         //remove old shape layer if any is present
         self.shapeLayer2?.removeFromSuperlayer()
