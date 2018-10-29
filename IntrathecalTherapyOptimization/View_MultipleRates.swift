@@ -8,7 +8,7 @@
 
 import UIKit
 
-class View_MultipleRates: UIViewController {
+class View_MultipleRates: UIViewController, UITextFieldDelegate {
 
     var globalYMargin = Float(55)
     var mgMode = true
@@ -80,6 +80,8 @@ class View_MultipleRates: UIViewController {
     @IBOutlet weak var topGraph: UIImageView!
     @IBOutlet weak var bottomGraph: UIImageView!
     @IBOutlet weak var unitSwitch: UISwitch!
+    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var mainView: UIView!
     
     // Advanced Settings
     @IBOutlet weak var advancedSettingsView: UIView!
@@ -126,418 +128,214 @@ class View_MultipleRates: UIViewController {
     @IBOutlet weak var timeInput4: UITextField!
     
     
-    @IBAction func timeInput1Selected(_ sender: UITextField)
+    
+    func textFieldDidBeginEditing(_ textField: UITextField)
     {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "H:mm"
-        let time = formatter.date(from: timeInput1.text!)
-        datePicker.date = time!
-    }
-    
-    @IBAction func timeInput2Selected(_ sender: UITextField)
-    {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "H:mm"
-        let time = formatter.date(from: timeInput2.text!)
-        datePicker.date = time!
-    }
-    
-    @IBAction func timeInput3Selected(_ sender: UITextField)
-    {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "H:mm"
-        let time = formatter.date(from: timeInput3.text!)
-        datePicker.date = time!
-    }
-    
-    @IBAction func timeInput4Selected(_ sender: UITextField)
-    {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "H:mm"
-        let time = formatter.date(from: timeInput4.text!)
-        datePicker.date = time!
-    }
-    
-    
-    
-    @IBAction func advancedSettingsClose(_ sender: UIButton)
-    {
-        advancedSettingsConstraint.constant = 540
-        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations:
+        scrollView.setContentOffset(CGPoint(x:0, y:313), animated: true)
+        if(textField == timeInput1 || textField == timeInput2 || textField == timeInput3 || textField == timeInput4)
         {
-            self.view.layoutIfNeeded()
-        })
-    }
-    
-    @IBAction func advancedSettingsOpen(_ sender: UIButton)
-    {
-        advancedSettingsConstraint.constant = 20
-        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations:
-        {
-            self.view.layoutIfNeeded()
-        })
-    }
-    
-    @IBAction func accumulatorVolumeFieldSelected(_ sender: AllowedCharsTextField)
-    {
-        textHolder = accumulatorVolumeField.text!
-        perform(#selector(accumulatorVolumeFieldSelectedDelayed), with: nil, afterDelay: 0.01)
-    }
-    
-    func accumulatorVolumeFieldSelectedDelayed() -> Void
-    {
-        accumulatorVolumeField.selectAll(nil)
-        disableInputs(activeControl: "accumulatorVolumeField")
-    }
-    
-    @IBAction func accumulatorVolumeFieldChanged(_ sender: AllowedCharsTextField)
-    {
-        activateInputs()
-        if(accumulatorVolumeField.text == "")
-        {
-            accumulatorVolumeField.text = textHolder
-        }
-        let accumulatorVolumeText = accumulatorVolumeField.text!
-        accumVol = (accumulatorVolumeText as NSString).floatValue
-        updateUI()
-    }
-
-    
-    @IBAction func pumpVolumeFieldSelected(_ sender: AllowedCharsTextField)
-    {
-        textHolder = pumpVolumeField.text!
-        perform(#selector(pumpVolumeFieldSelectedDelayed), with: nil, afterDelay: 0.01)
-    }
-    
-    func pumpVolumeFieldSelectedDelayed() -> Void
-    {
-        pumpVolumeField.selectAll(nil)
-        disableInputs(activeControl: "pumpVolumeField")
-    }
-    
-    @IBAction func pumpVolumeFieldChanged(_ sender: AllowedCharsTextField)
-    {
-        activateInputs()
-        if(pumpVolumeField.text == "")
-        {
-            pumpVolumeField.text = textHolder
-        }
-        let pumpVolumeText = pumpVolumeField.text!
-        pumpVolume = (pumpVolumeText as NSString).floatValue
-        updateUI()
-    }
-    
-    
-    func dismissPicker1()
-    {
-        activateInputs()
-        view.endEditing(true)
-        let components = Calendar.current.dateComponents([.hour, .minute], from: datePicker.date)
-        hour1 = Float(components.hour!)
-        minute1 = Float(components.minute!)
-        timeInput1.text = dateFormatter.string(from: datePicker.date)
-        updateUI()
-    }
-    
-    func dismissPicker2()
-    {
-        activateInputs()
-        view.endEditing(true)
-        let components = Calendar.current.dateComponents([.hour, .minute], from: datePicker.date)
-        hour2 = Float(components.hour!)
-        minute2 = Float(components.minute!)
-        timeInput2.text = dateFormatter.string(from: datePicker.date)
-        updateUI()
-    }
-    
-    func dismissPicker3()
-    {
-        activateInputs()
-        view.endEditing(true)
-        let components = Calendar.current.dateComponents([.hour, .minute], from: datePicker.date)
-        hour3 = Float(components.hour!)
-        minute3 = Float(components.minute!)
-        timeInput3.text = dateFormatter.string(from: datePicker.date)
-        updateUI()
-    }
-    
-    func dismissPicker4()
-    {
-        activateInputs()
-        view.endEditing(true)
-        let components = Calendar.current.dateComponents([.hour, .minute], from: datePicker.date)
-        hour4 = Float(components.hour!)
-        minute4 = Float(components.minute!)
-        timeInput4.text = dateFormatter.string(from: datePicker.date)
-        updateUI()
-    }
-    
-    
-    
-    func disableInputs(activeControl: String) -> Void
-    {
-        periodStepper.isUserInteractionEnabled = false
-        doseSlider1.isUserInteractionEnabled = false
-        doseSlider2.isUserInteractionEnabled = false
-        doseSlider3.isUserInteractionEnabled = false
-        doseSlider4.isUserInteractionEnabled = false
-        timeInput1.isUserInteractionEnabled = false
-        timeInput2.isUserInteractionEnabled = false
-        timeInput3.isUserInteractionEnabled = false
-        timeInput4.isUserInteractionEnabled = false
-        unitSwitch.isUserInteractionEnabled = false
-        advancedSettingsOpenButton.isUserInteractionEnabled = false
-        advancedSettingsCloseButton.isUserInteractionEnabled = false
-        if(activeControl != "accumulatorVolumeField"){ accumulatorVolumeField.isUserInteractionEnabled = false }
-
-        if(activeControl != "pumpVolumeField"){ pumpVolumeField.isUserInteractionEnabled = false }
-        if(activeControl != "doseInput1"){ doseInput1.isUserInteractionEnabled = false }
-        if(activeControl != "doseInput2"){ doseInput2.isUserInteractionEnabled = false }
-        if(activeControl != "doseInput3"){ doseInput3.isUserInteractionEnabled = false }
-        if(activeControl != "doseInput4"){ doseInput4.isUserInteractionEnabled = false }
-        if(activeControl != "concentrationField"){ concentrationField.isUserInteractionEnabled = false }
-    }
-    
-    func activateInputs() -> Void
-    {
-        periodStepper.isUserInteractionEnabled = true
-        doseSlider1.isUserInteractionEnabled = true
-        doseSlider2.isUserInteractionEnabled = true
-        doseSlider3.isUserInteractionEnabled = true
-        doseSlider4.isUserInteractionEnabled = true
-        timeInput1.isUserInteractionEnabled = true
-        timeInput2.isUserInteractionEnabled = true
-        timeInput3.isUserInteractionEnabled = true
-        timeInput4.isUserInteractionEnabled = true
-        unitSwitch.isUserInteractionEnabled = true
-        doseInput1.isUserInteractionEnabled = true
-        doseInput2.isUserInteractionEnabled = true
-        doseInput3.isUserInteractionEnabled = true
-        doseInput4.isUserInteractionEnabled = true
-        concentrationField.isUserInteractionEnabled = true
-        advancedSettingsCloseButton.isUserInteractionEnabled = true
-        advancedSettingsOpenButton.isUserInteractionEnabled = true
-        accumulatorVolumeField.isUserInteractionEnabled = true
-        pumpVolumeField.isUserInteractionEnabled = true
-    }
-    
-    
-    @IBAction func doseInput1Selected(_ sender: AllowedCharsTextField)
-    {
-        textHolder = doseInput1.text!
-        perform(#selector(selectDoseInput1), with: nil, afterDelay: 0.01)
-    }
-    
-    func selectDoseInput1() -> Void
-    {
-        doseInput1.selectAll(nil)
-        disableInputs(activeControl: "doseInput1")
-    }
-    
-    @IBAction func doseInput2Selected(_ sender: AllowedCharsTextField)
-    {
-        textHolder = doseInput2.text!
-        perform(#selector(selectDoseInput2), with: nil, afterDelay: 0.01)
-    }
-    
-    func selectDoseInput2() -> Void
-    {
-        doseInput2.selectAll(nil)
-        disableInputs(activeControl: "doseInput2")
-    }
-    
-    @IBAction func doseInput3Selected(_ sender: AllowedCharsTextField)
-    {
-        textHolder = doseInput3.text!
-        perform(#selector(selectDoseInput3), with: nil, afterDelay: 0.01)
-    }
-    
-    func selectDoseInput3() -> Void
-    {
-        doseInput3.selectAll(nil)
-        disableInputs(activeControl: "doseInput3")
-    }
-    
-    @IBAction func doseInput4Selected(_ sender: AllowedCharsTextField)
-    {
-        textHolder = doseInput4.text!
-        perform(#selector(selectDoseInput4), with: nil, afterDelay: 0.01)
-    }
-    
-    func selectDoseInput4() -> Void
-    {
-        doseInput4.selectAll(nil)
-        disableInputs(activeControl: "doseInput4")
-    }
-    
-    @IBAction func concentrationFieldSelected(_ sender: AllowedCharsTextField)
-    {
-        textHolder = concentrationField.text!
-        perform(#selector(selectConcentrationField), with: nil, afterDelay: 0.01)
-    }
-    
-    func selectConcentrationField() -> Void
-    {
-        concentrationField.selectAll(nil)
-        disableInputs(activeControl: "concentrationField")
-    }
-    
-    
-    
-    @IBAction func doseInput1Changed(_ sender: AllowedCharsTextField)
-    {
-        activateInputs()
-        var inputText = doseInput1.text!
-        if (inputText == "")
-        {
-            inputText = textHolder
-        }
-        var inputFloat = (inputText as NSString).floatValue
-        if(inputFloat > doseSlider1.maximumValue)
-        {
-            doseInput1.text = "\(doseSlider1.maximumValue)"
-            inputFloat = doseSlider1.maximumValue
-            inputText = doseInput1.text!
-        }
-        else if(inputFloat < doseSlider1.minimumValue)
-        {
-            doseInput1.text = "\(doseSlider1.minimumValue)"
-            inputFloat = doseSlider1.minimumValue
-            inputText = doseInput1.text!
-        }
-        if(!mgMode)
-        {
-            var inputInt = Int(inputFloat)
-            //inputInt = inputInt - (inputInt % 5)
-            doseSlider1.value = Float(inputInt)
-            let doseInputText = "\(doseSlider1.value)"
-            doseInput1.text = roundValue(inputText: doseInputText, roundTo: 4)
+            let formatter = DateFormatter()
+            formatter.dateFormat = "H:mm"
+            let time = formatter.date(from: textField.text!)
+            datePicker.date = time!
         }
         else
         {
-            let inputPrefix = roundValue(inputText: inputText, roundTo: 4)
-            doseInput1.text = inputPrefix
-            doseSlider1.value = inputFloat
+            disableInputs(currentTextField: textField)
+            textHolder = textField.text!
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1)
+            {
+                textField.selectAll(nil)
+            }
         }
-        updateUI()
     }
     
-    @IBAction func doseInput2Changed(_ sender: AllowedCharsTextField)
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool
     {
+        textField.resignFirstResponder()
         activateInputs()
-        var inputText = doseInput2.text!
-        if (inputText == "")
+        updateUI()
+        return true
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField)
+    {
+        scrollView.setContentOffset(CGPoint(x:0, y:0), animated: true)
+        if(textField == accumulatorVolumeField)
         {
-            inputText = textHolder
+            activateInputs()
+            if(accumulatorVolumeField.text == "")
+            {
+                accumulatorVolumeField.text = textHolder
+            }
+            let accumulatorVolumeText = accumulatorVolumeField.text!
+            accumVol = (accumulatorVolumeText as NSString).floatValue
+            updateUI()
+        }
+        else if(textField == pumpVolumeField)
+        {
+            activateInputs()
+            if(pumpVolumeField.text == "")
+            {
+                pumpVolumeField.text = textHolder
+            }
+            let pumpVolumeText = pumpVolumeField.text!
+            pumpVolume = (pumpVolumeText as NSString).floatValue
+            updateUI()
+        }
+        else if(textField == doseInput1)
+        {
+            activateInputs()
+            var inputText = doseInput1.text!
+            if (inputText == "")
+            {
+                inputText = textHolder
+            }
+            var inputFloat = (inputText as NSString).floatValue
+            if(inputFloat > doseSlider1.maximumValue)
+            {
+                doseInput1.text = "\(doseSlider1.maximumValue)"
+                inputFloat = doseSlider1.maximumValue
+                inputText = doseInput1.text!
+            }
+            else if(inputFloat < doseSlider1.minimumValue)
+            {
+                doseInput1.text = "\(doseSlider1.minimumValue)"
+                inputFloat = doseSlider1.minimumValue
+                inputText = doseInput1.text!
+            }
+            if(!mgMode)
+            {
+                var inputInt = Int(inputFloat)
+                //inputInt = inputInt - (inputInt % 5)
+                doseSlider1.value = Float(inputInt)
+                let doseInputText = "\(doseSlider1.value)"
+                doseInput1.text = roundValue(inputText: doseInputText, roundTo: 4)
+            }
+            else
+            {
+                let inputPrefix = roundValue(inputText: inputText, roundTo: 4)
+                doseInput1.text = inputPrefix
+                doseSlider1.value = inputFloat
+            }
+            updateUI()
+        }
+        else if(textField == doseInput2)
+        {
+            activateInputs()
+            var inputText = doseInput2.text!
+            if (inputText == "")
+            {
+                inputText = textHolder
+            }
+            
+            var inputFloat = (inputText as NSString).floatValue
+            if(inputFloat > doseSlider2.maximumValue)
+            {
+                doseInput2.text = "\(doseSlider2.maximumValue)"
+                inputFloat = doseSlider2.maximumValue
+                inputText = doseInput2.text!
+            }
+            else if(inputFloat < doseSlider2.minimumValue)
+            {
+                doseInput2.text = "\(doseSlider2.minimumValue)"
+                inputFloat = doseSlider2.minimumValue
+                inputText = doseInput2.text!
+            }
+            if(!mgMode)
+            {
+                var inputInt = Int(inputFloat)
+                //inputInt = inputInt - (inputInt % 5)
+                doseSlider2.value = Float(inputInt)
+                let doseInputText = "\(doseSlider2.value)"
+                doseInput2.text = roundValue(inputText: doseInputText, roundTo: 4)
+            }
+            else
+            {
+                let inputPrefix = roundValue(inputText: inputText, roundTo: 4)
+                doseInput2.text = inputPrefix
+                doseSlider2.value = inputFloat
+            }
+            updateUI()
+        }
+        else if(textField == doseInput3)
+        {
+            activateInputs()
+            var inputText = doseInput3.text!
+            if (inputText == "")
+            {
+                inputText = textHolder
+            }
+            var inputFloat = (inputText as NSString).floatValue
+            if(inputFloat > doseSlider3.maximumValue)
+            {
+                doseInput3.text = "\(doseSlider3.maximumValue)"
+                inputFloat = doseSlider3.maximumValue
+                inputText = doseInput3.text!
+            }
+            else if(inputFloat < doseSlider3.minimumValue)
+            {
+                doseInput3.text = "\(doseSlider3.minimumValue)"
+                inputFloat = doseSlider3.minimumValue
+                inputText = doseInput3.text!
+            }
+            if(!mgMode)
+            {
+                var inputInt = Int(inputFloat)
+                //inputInt = inputInt - (inputInt % 5)
+                doseSlider3.value = Float(inputInt)
+                let doseInputText = "\(doseSlider3.value)"
+                doseInput3.text = roundValue(inputText: doseInputText, roundTo: 4)
+            }
+            else
+            {
+                let inputPrefix = roundValue(inputText: inputText, roundTo: 4)
+                doseInput3.text = inputPrefix
+                doseSlider3.value = inputFloat
+            }
+            updateUI()
+        }
+        else if(textField == doseInput4)
+        {
+            activateInputs()
+            var inputText = doseInput4.text!
+            if (inputText == "")
+            {
+                inputText = textHolder
+            }
+            var inputFloat = (inputText as NSString).floatValue
+            if(inputFloat > doseSlider4.maximumValue)
+            {
+                doseInput1.text = "\(doseSlider4.maximumValue)"
+                inputFloat = doseSlider4.maximumValue
+                inputText = doseInput4.text!
+            }
+            else if(inputFloat < doseSlider4.minimumValue)
+            {
+                doseInput1.text = "\(doseSlider4.minimumValue)"
+                inputFloat = doseSlider4.minimumValue
+                inputText = doseInput4.text!
+            }
+            if(!mgMode)
+            {
+                var inputInt = Int(inputFloat)
+                //inputInt = inputInt - (inputInt % 5)
+                doseSlider4.value = Float(inputInt)
+                let doseInputText = "\(doseSlider4.value)"
+                doseInput4.text = roundValue(inputText: doseInputText, roundTo: 4)
+            }
+            else
+            {
+                let inputPrefix = roundValue(inputText: inputText, roundTo: 4)
+                doseInput4.text = inputPrefix
+                doseSlider4.value = inputFloat
+            }
+            updateUI()
         }
         
-        var inputFloat = (inputText as NSString).floatValue
-        if(inputFloat > doseSlider2.maximumValue)
-        {
-            doseInput2.text = "\(doseSlider2.maximumValue)"
-            inputFloat = doseSlider2.maximumValue
-            inputText = doseInput2.text!
-        }
-        else if(inputFloat < doseSlider2.minimumValue)
-        {
-            doseInput2.text = "\(doseSlider2.minimumValue)"
-            inputFloat = doseSlider2.minimumValue
-            inputText = doseInput2.text!
-        }
-        if(!mgMode)
-        {
-            var inputInt = Int(inputFloat)
-            //inputInt = inputInt - (inputInt % 5)
-            doseSlider2.value = Float(inputInt)
-            let doseInputText = "\(doseSlider2.value)"
-            doseInput2.text = roundValue(inputText: doseInputText, roundTo: 4)
-        }
-        else
-        {
-            let inputPrefix = roundValue(inputText: inputText, roundTo: 4)
-            doseInput2.text = inputPrefix
-            doseSlider2.value = inputFloat
-        }
-        updateUI()
     }
+    
 
-    @IBAction func doseInput3Changed(_ sender: AllowedCharsTextField)
-    {
-        activateInputs()
-        var inputText = doseInput3.text!
-        if (inputText == "")
-        {
-            inputText = textHolder
-        }
-        var inputFloat = (inputText as NSString).floatValue
-        if(inputFloat > doseSlider3.maximumValue)
-        {
-            doseInput3.text = "\(doseSlider3.maximumValue)"
-            inputFloat = doseSlider3.maximumValue
-            inputText = doseInput3.text!
-        }
-        else if(inputFloat < doseSlider3.minimumValue)
-        {
-            doseInput3.text = "\(doseSlider3.minimumValue)"
-            inputFloat = doseSlider3.minimumValue
-            inputText = doseInput3.text!
-        }
-        if(!mgMode)
-        {
-            var inputInt = Int(inputFloat)
-            //inputInt = inputInt - (inputInt % 5)
-            doseSlider3.value = Float(inputInt)
-            let doseInputText = "\(doseSlider3.value)"
-            doseInput3.text = roundValue(inputText: doseInputText, roundTo: 4)
-        }
-        else
-        {
-            let inputPrefix = roundValue(inputText: inputText, roundTo: 4)
-            doseInput3.text = inputPrefix
-            doseSlider3.value = inputFloat
-        }
-        updateUI()
-    }
-    
-    @IBAction func doseInput4Changed(_ sender: AllowedCharsTextField)
-    {
-        activateInputs()
-        var inputText = doseInput4.text!
-        if (inputText == "")
-        {
-            inputText = textHolder
-        }
-        var inputFloat = (inputText as NSString).floatValue
-        if(inputFloat > doseSlider4.maximumValue)
-        {
-            doseInput1.text = "\(doseSlider4.maximumValue)"
-            inputFloat = doseSlider4.maximumValue
-            inputText = doseInput4.text!
-        }
-        else if(inputFloat < doseSlider4.minimumValue)
-        {
-            doseInput1.text = "\(doseSlider4.minimumValue)"
-            inputFloat = doseSlider4.minimumValue
-            inputText = doseInput4.text!
-        }
-        if(!mgMode)
-        {
-            var inputInt = Int(inputFloat)
-            //inputInt = inputInt - (inputInt % 5)
-            doseSlider4.value = Float(inputInt)
-            let doseInputText = "\(doseSlider4.value)"
-            doseInput4.text = roundValue(inputText: doseInputText, roundTo: 4)
-        }
-        else
-        {
-            let inputPrefix = roundValue(inputText: inputText, roundTo: 4)
-            doseInput4.text = inputPrefix
-            doseSlider4.value = inputFloat
-        }
-        updateUI()
-    }
-    
-    
     @IBAction func startPicker1Changed(_ sender: UIDatePicker)
     {
         if(isValid())
@@ -546,7 +344,7 @@ class View_MultipleRates: UIViewController {
         }
         
     }
-
+    
     @IBAction func startPicker2Changed(_ sender: UIDatePicker)
     {
         if(isValid())
@@ -554,7 +352,7 @@ class View_MultipleRates: UIViewController {
             updateUI()
         }
     }
-
+    
     @IBAction func startPicker3Changed(_ sender: UIDatePicker)
     {
         if(isValid())
@@ -562,7 +360,7 @@ class View_MultipleRates: UIViewController {
             updateUI()
         }
     }
-
+    
     @IBAction func startPicker4Changed(_ sender: UIDatePicker)
     {
         if(isValid())
@@ -570,9 +368,9 @@ class View_MultipleRates: UIViewController {
             updateUI()
         }
     }
-
-
-
+    
+    
+    
     
     @IBAction func slider2Changed(_ sender: UISlider)
     {
@@ -661,6 +459,126 @@ class View_MultipleRates: UIViewController {
         }
         updateUI()
     }
+   
+    
+    @IBAction func advancedSettingsClose(_ sender: UIButton)
+    {
+        advancedSettingsConstraint.constant = 540
+        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations:
+        {
+            self.view.layoutIfNeeded()
+        })
+    }
+    
+    @IBAction func advancedSettingsOpen(_ sender: UIButton)
+    {
+        advancedSettingsConstraint.constant = 20
+        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations:
+        {
+            self.view.layoutIfNeeded()
+        })
+    }
+    
+    
+    
+    
+    
+    
+    
+    func dismissPicker1()
+    {
+        activateInputs()
+        view.endEditing(true)
+        let components = Calendar.current.dateComponents([.hour, .minute], from: datePicker.date)
+        hour1 = Float(components.hour!)
+        minute1 = Float(components.minute!)
+        timeInput1.text = dateFormatter.string(from: datePicker.date)
+        updateUI()
+    }
+    
+    func dismissPicker2()
+    {
+        activateInputs()
+        view.endEditing(true)
+        let components = Calendar.current.dateComponents([.hour, .minute], from: datePicker.date)
+        hour2 = Float(components.hour!)
+        minute2 = Float(components.minute!)
+        timeInput2.text = dateFormatter.string(from: datePicker.date)
+        updateUI()
+    }
+    
+    func dismissPicker3()
+    {
+        activateInputs()
+        view.endEditing(true)
+        let components = Calendar.current.dateComponents([.hour, .minute], from: datePicker.date)
+        hour3 = Float(components.hour!)
+        minute3 = Float(components.minute!)
+        timeInput3.text = dateFormatter.string(from: datePicker.date)
+        updateUI()
+    }
+    
+    func dismissPicker4()
+    {
+        activateInputs()
+        view.endEditing(true)
+        let components = Calendar.current.dateComponents([.hour, .minute], from: datePicker.date)
+        hour4 = Float(components.hour!)
+        minute4 = Float(components.minute!)
+        timeInput4.text = dateFormatter.string(from: datePicker.date)
+        updateUI()
+    }
+    
+    
+    
+    func disableInputs(currentTextField: UITextField) -> Void
+    {
+        periodStepper.isUserInteractionEnabled = false
+        doseSlider1.isUserInteractionEnabled = false
+        doseSlider2.isUserInteractionEnabled = false
+        doseSlider3.isUserInteractionEnabled = false
+        doseSlider4.isUserInteractionEnabled = false
+        timeInput1.isUserInteractionEnabled = false
+        timeInput2.isUserInteractionEnabled = false
+        timeInput3.isUserInteractionEnabled = false
+        timeInput4.isUserInteractionEnabled = false
+        unitSwitch.isUserInteractionEnabled = false
+        advancedSettingsOpenButton.isUserInteractionEnabled = false
+        advancedSettingsCloseButton.isUserInteractionEnabled = false
+        if(currentTextField != accumulatorVolumeField){ accumulatorVolumeField.isUserInteractionEnabled = false }
+        if(currentTextField != pumpVolumeField){ pumpVolumeField.isUserInteractionEnabled = false }
+        if(currentTextField != doseInput1){ doseInput1.isUserInteractionEnabled = false }
+        if(currentTextField != doseInput2){ doseInput2.isUserInteractionEnabled = false }
+        if(currentTextField != doseInput3){ doseInput3.isUserInteractionEnabled = false }
+        if(currentTextField != doseInput4){ doseInput4.isUserInteractionEnabled = false }
+        if(currentTextField != concentrationField){ concentrationField.isUserInteractionEnabled = false }
+    }
+    
+    func activateInputs() -> Void
+    {
+        periodStepper.isUserInteractionEnabled = true
+        doseSlider1.isUserInteractionEnabled = true
+        doseSlider2.isUserInteractionEnabled = true
+        doseSlider3.isUserInteractionEnabled = true
+        doseSlider4.isUserInteractionEnabled = true
+        timeInput1.isUserInteractionEnabled = true
+        timeInput2.isUserInteractionEnabled = true
+        timeInput3.isUserInteractionEnabled = true
+        timeInput4.isUserInteractionEnabled = true
+        unitSwitch.isUserInteractionEnabled = true
+        doseInput1.isUserInteractionEnabled = true
+        doseInput2.isUserInteractionEnabled = true
+        doseInput3.isUserInteractionEnabled = true
+        doseInput4.isUserInteractionEnabled = true
+        concentrationField.isUserInteractionEnabled = true
+        advancedSettingsCloseButton.isUserInteractionEnabled = true
+        advancedSettingsOpenButton.isUserInteractionEnabled = true
+        accumulatorVolumeField.isUserInteractionEnabled = true
+        pumpVolumeField.isUserInteractionEnabled = true
+    }
+    
+    
+    
     
  
     @IBAction func unitSwitchChanged(_ sender: UISwitch)
@@ -999,7 +917,6 @@ class View_MultipleRates: UIViewController {
         attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
         label30_2.attributedText = attrString
 
-        
         initializeUI()
     }
     
@@ -1015,27 +932,6 @@ class View_MultipleRates: UIViewController {
         AppDelegate.AppUtility.lockOrientation(UIInterfaceOrientationMask.portrait)
     }
     
-    @objc func keyboardWillShow(notification: NSNotification)
-    {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
-        {
-            if self.view.frame.origin.y == 0
-            {
-                self.view.frame.origin.y -= keyboardSize.height
-            }
-        }
-    }
-    
-    @objc func keyboardWillHide(notification: NSNotification)
-    {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
-        {
-            if self.view.frame.origin.y != 0
-            {
-                self.view.frame.origin.y += keyboardSize.height
-            }
-        }
-    }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator)
     {
@@ -1349,7 +1245,7 @@ class View_MultipleRates: UIViewController {
         shapeLayer.path = path.cgPath
         shapeLayer.lineCap = kCALineCapRound
         shapeLayer.lineJoin = kCALineJoinRound
-        view.layer.addSublayer(shapeLayer)
+        mainView.layer.addSublayer(shapeLayer)
         
         //save shape layer to viewcontroller
         self.shapeLayer = shapeLayer
@@ -1511,7 +1407,7 @@ class View_MultipleRates: UIViewController {
         shapeLayer.path = path.cgPath
         shapeLayer.lineCap = kCALineCapRound
         shapeLayer.lineJoin = kCALineJoinRound
-        view.layer.addSublayer(shapeLayer)
+        mainView.layer.addSublayer(shapeLayer)
         
         
         //save shape layer to viewcontroller
