@@ -374,7 +374,7 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
         let totalDose = doseSlider.value
         let pumpCon = pumpConcentration.text!
         let pumpConFloat = (pumpCon as NSString).floatValue
-        var timeBetween = String(Float(1440) / ((totalDose / pumpConFloat) / defAccumVol))
+        var timeBetween = String(Float(1440) / ((totalDose / pumpConFloat) / accumVol))
         timeBetween = roundValue(inputText: timeBetween, roundTo: 2)
         if(totalDose == 0)
         {
