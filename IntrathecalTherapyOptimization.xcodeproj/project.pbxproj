@@ -42,6 +42,7 @@
 		16FB4CAB210F612F0039FC37 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 16FB4CAA210F612F0039FC37 /* Assets.xcassets */; };
 		16FB4CAE210F612F0039FC37 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 16FB4CAC210F612F0039FC37 /* LaunchScreen.storyboard */; };
 		16FB4CB9210F612F0039FC37 /* IntrathecalTherapyOptimizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16FB4CB8210F612F0039FC37 /* IntrathecalTherapyOptimizationTests.swift */; };
+		F67C928521C04A68007A07C8 /* KeyboardBackspace2 (1).png in Resources */ = {isa = PBXBuildFile; fileRef = F67C928421C04A68007A07C8 /* KeyboardBackspace2 (1).png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -95,6 +96,7 @@
 		16FB4CB4210F612F0039FC37 /* IntrathecalTherapyOptimizationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IntrathecalTherapyOptimizationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		16FB4CB8210F612F0039FC37 /* IntrathecalTherapyOptimizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntrathecalTherapyOptimizationTests.swift; sourceTree = "<group>"; };
 		16FB4CBA210F612F0039FC37 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F67C928421C04A68007A07C8 /* KeyboardBackspace2 (1).png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "KeyboardBackspace2 (1).png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +139,7 @@
 		16FB4CA2210F612F0039FC37 /* IntrathecalTherapyOptimization */ = {
 			isa = PBXGroup;
 			children = (
+				F67C928421C04A68007A07C8 /* KeyboardBackspace2 (1).png */,
 				16A3563D2163F59200363829 /* Graph_C.png */,
 				16A3563E2163F59200363829 /* Graph_M.png */,
 				16A3563B2163F3CC00363829 /* Graph_P_MAT.png */,
@@ -282,6 +285,7 @@
 				162247352138A36A0097D7E6 /* downArrow.png in Resources */,
 				16B4357C2136275900866809 /* NumericKeyboard.xib in Resources */,
 				16FB4CAE210F612F0039FC37 /* LaunchScreen.storyboard in Resources */,
+				F67C928521C04A68007A07C8 /* KeyboardBackspace2 (1).png in Resources */,
 				16FB4CAB210F612F0039FC37 /* Assets.xcassets in Resources */,
 				16A3563F2163F59200363829 /* Graph_C.png in Resources */,
 				165696E22114EB1A00E54421 /* upArrow.png in Resources */,

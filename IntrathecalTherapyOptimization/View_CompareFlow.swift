@@ -44,12 +44,12 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
     
     //Overview Outlets
     @IBOutlet weak var showConstantSwitch: UISwitch!
-    @IBOutlet weak var constantTotalDoseField: UISwitch!
     @IBOutlet weak var constantConvertDoseButton: UIButton!
+    @IBOutlet weak var constantTotalDoseField: UITextField!
     @IBOutlet weak var showPeriodicSwitch: UISwitch!
     @IBOutlet weak var periodicTotalDoseField: UITextField!
     @IBOutlet weak var perioidicConvertDoseButton: UIButton!
-    @IBOutlet weak var showMultiRateSwitch: UISwitch!
+    @IBOutlet weak var showMultirateSwitch: UISwitch!
     @IBOutlet weak var multiRateTotalDoseField: UITextField!
     @IBOutlet weak var multiRateConvertDoseButton: UIButton!
     @IBOutlet weak var masterConcentrationField: UITextField!
@@ -92,6 +92,8 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
     @IBOutlet weak var multirateDoseField4: AllowedCharsTextField!
     @IBOutlet weak var multirateDoseLabel4: UILabel!
     @IBOutlet weak var multirateStartField4: UITextField!
+    @IBOutlet weak var multirateControlStack3: UIStackView!
+    @IBOutlet weak var multirateControlStack4: UIStackView!
     
 
     
@@ -130,6 +132,25 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
             multirateView.alpha = 1.0
         }
     }
+    
+    @IBAction func constantGraphSwitchChanged(_ sender: Any)
+    {
+        constantShow = showConstantSwitch.isOn
+        updateConstant()
+    }
+    
+    @IBAction func periodicGraphSwitchChanged(_ sender: Any)
+    {
+        periodicShow = showPeriodicSwitch.isOn
+        updatePeriodic()
+    }
+    
+    @IBAction func multirateGraphSwitchChanged(_ sender: Any)
+    {
+        multirateShow = showMultirateSwitch.isOn
+        updateMultirate()
+    }
+    
     
     //Multirate Functions
     func dismissPicker1()
@@ -178,8 +199,68 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
     
     @IBAction func multiratePeriodStepperChanged(_ sender: Any)
     {
-        
+        let stepperState = Int(multiratePeriodStepper.value)
+        multiratePeriodLabel.text = "\(stepperState)"
+        if(stepperState == 2)
+        {
+            multirateControlStack3.isUserInteractionEnabled = false
+            multirateControlStack4.isUserInteractionEnabled = false
+            multirateStartField1.text = "00:00"
+            hour1 = 0
+            minute1 = 0
+            multirateStartField2.text = "12:00"
+            hour2 = 12
+            minute2 = 0
+            UIView.animate(withDuration: 0.5, animations:
+                {
+                    self.multirateControlStack3.alpha = 0.0
+                    self.multirateControlStack4.alpha = 0.0
+            })
+        }
+        else if(stepperState == 3)
+        {
+            multirateControlStack3.isUserInteractionEnabled = true
+            multirateControlStack4.isUserInteractionEnabled = false
+            multirateStartField1.text = "00:00"
+            hour1 = 0
+            minute1 = 0
+            multirateStartField2.text = "8:00"
+            hour2 = 8
+            minute2 = 0
+            multirateStartField3.text = "16:00"
+            hour3 = 16
+            minute3 = 0
+            UIView.animate(withDuration: 0.6, animations:
+                {
+                    self.multirateControlStack3.alpha = 1.0
+                    self.multirateControlStack4.alpha = 0.0
+            })
+        }
+        else if(stepperState == 4)
+        {
+            multirateControlStack3.isUserInteractionEnabled = true
+            multirateControlStack4.isUserInteractionEnabled = true
+            multirateStartField1.text = "00:00"
+            hour1 = 0
+            minute1 = 0
+            multirateStartField2.text = "6:00"
+            hour2 = 6
+            minute2 = 0
+            multirateStartField3.text = "12:00"
+            hour3 = 12
+            minute3 = 0
+            multirateStartField4.text = "18:00"
+            hour4 = 18
+            minute4 = 0
+            UIView.animate(withDuration: 0.6, animations:
+                {
+                    self.multirateControlStack3.alpha = 1.0
+                    self.multirateControlStack4.alpha = 1.0
+            })
+        }
+        updateMultirate()
     }
+    
     @IBAction func multirateSliderChanged1(_ sender: Any)
     {
         if(!mgMode)
@@ -297,18 +378,17 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
     {
         var cVal = Int(periodicBolusStepper.value)
         if(cVal == 7 && prevStepperVal == 6) { cVal = 8 }
-        if(cVal == 7 && prevStepperVal == 8) { cVal = 6 }
-        if(cVal == 11 && prevStepperVal == 10) { cVal = 12 }
-        if(cVal == 11 && prevStepperVal == 12){ cVal = 10 }
-        if(cVal == 13) { cVal = 15 }
-        if(cVal == 14) { cVal = 12 }
-        if(cVal == 17 && prevStepperVal == 16) { cVal = 18 }
-        if(cVal == 17 && prevStepperVal == 18) { cVal = 16 }
-        if(cVal == 19 && prevStepperVal == 18) { cVal = 20 }
-        if(cVal == 19 && prevStepperVal == 20) { cVal = 18 }
-        if(cVal == 21) { cVal = 24 }
-        if(cVal == 23) { cVal = 20 }
-        
+        else if(cVal == 7 && prevStepperVal == 8) { cVal = 6 }
+        else if(cVal == 11 && prevStepperVal == 10) { cVal = 12 }
+        else if(cVal == 11 && prevStepperVal == 12){ cVal = 10 }
+        else if(cVal == 13) { cVal = 15 }
+        else if(cVal == 14) { cVal = 12 }
+        else if(cVal == 17 && prevStepperVal == 16) { cVal = 18 }
+        else if(cVal == 17 && prevStepperVal == 18) { cVal = 16 }
+        else if(cVal == 19 && prevStepperVal == 18) { cVal = 20 }
+        else if(cVal == 19 && prevStepperVal == 20) { cVal = 18 }
+        else if(cVal == 21) { cVal = 24 }
+        else if(cVal == 23) { cVal = 20 }
         
         periodicBolusStepper.value = Double(cVal)
         if (cVal == 1)
@@ -641,14 +721,56 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         
     }
     
+    @IBAction func masterUnitSwitchChanged(_ sender: Any)
+    {
+        if(masterUnitSwitch.isOn)
+        {
+            
+        }
+        else
+        {
+            
+        }
+    }
+    
     func updatePeriodic() -> Void
     {
-        genPeriodicGraph()
+        let totalDose = Double(periodicDoseSlider.value) * periodicBolusStepper.value
+        periodicTotalDoseField.text = "\(totalDose)"
+        if(periodicShow)
+        {
+            genPeriodicGraph()
+        }
+        else
+        {
+            self.periodicShapeLayer?.removeFromSuperlayer()
+        }
     }
     
     func updateMultirate() -> Void
     {
-        genMultiRateGraph()
+        var totalDose = Float(0)
+        if(Int(multiratePeriodStepper.value) == 2)
+        {
+            totalDose = multirateDoseSlider1.value + multirateDoseSlider2.value
+        }
+        else if(Int(multiratePeriodStepper.value) == 3)
+        {
+            totalDose = multirateDoseSlider1.value + multirateDoseSlider2.value + multirateDoseSlider3.value
+        }
+        else if(Int(multiratePeriodStepper.value) == 4)
+        {
+            totalDose = multirateDoseSlider1.value + multirateDoseSlider2.value + multirateDoseSlider3.value + multirateDoseSlider4.value
+        }
+        multiRateTotalDoseField.text = "\(totalDose)"
+        if(multirateShow)
+        {
+            genMultiRateGraph()
+        }
+        else
+        {
+            self.multiRateShapeLayer?.removeFromSuperlayer()
+        }
     }
     
     func updateConstant() -> Void
@@ -670,6 +792,7 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         {
             constantPumpRateField.text = "1 Valve Actuation every " + timeBetween + " minutes"
         }
+        constantTotalDoseField.text = "\(totalDose)"
         if(constantShow)
         {
             genConstantGraph()
@@ -1197,6 +1320,17 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         let calendar = Calendar.current
         startHour = Float(calendar.component(.hour, from: date))
         startMinute = Float(calendar.component(.minute, from: date))
+        multirateControlStack3.isUserInteractionEnabled = false
+        multirateControlStack4.isUserInteractionEnabled = false
+        multirateStartField1.text = "00:00"
+        hour1 = 0
+        minute1 = 0
+        multirateStartField2.text = "12:00"
+        hour2 = 12
+        minute2 = 0
+        self.multirateControlStack3.alpha = 0.0
+        self.multirateControlStack4.alpha = 0.0
+        
         genConstantGraph()
         genPeriodicGraph()
         genMultiRateGraph()
