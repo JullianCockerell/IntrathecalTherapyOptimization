@@ -11,7 +11,7 @@ import UIKit
 class View_CompareFlow: UIViewController, UITextFieldDelegate
 {
     var accumVol = Float(0.0025)
-    var yLabelMax = Float(0.07)
+    var yLabelMax = Float(0.25)
     var startHour = Float(0)
     var startMinute = Float(0)
     var mgMode = true
@@ -19,6 +19,7 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
     var constantShow = true
     var periodicShow = true
     var multirateShow = true
+    var pageNum = 0
     var prevStepperVal = 1
     var hour1 = Float(0)
     var hour2 = Float(0)
@@ -33,6 +34,7 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
 
     //General
     @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var zoomSelection: UISegmentedControl!
     @IBOutlet weak var pageSelection: UISegmentedControl!
     @IBOutlet weak var overviewView: UIView!
     @IBOutlet weak var constantView: UIView!
@@ -40,6 +42,10 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
     @IBOutlet weak var periodicView: UIView!
     @IBOutlet weak var graphDisplay: UIImageView!
     @IBOutlet weak var graphBorder: UIView!
+    @IBOutlet weak var labelsMedium: UIStackView!
+    @IBOutlet weak var labelsLarge: UIStackView!
+    @IBOutlet weak var labelsSmall: UIStackView!
+    @IBOutlet weak var controlHolder: UIView!
     weak var constantShapeLayer: CAShapeLayer?
     weak var periodicShapeLayer: CAShapeLayer?
     weak var multiRateShapeLayer: CAShapeLayer?
@@ -58,6 +64,7 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
     @IBOutlet weak var masterConcentrationLabel: UILabel!
     @IBOutlet weak var dosePerClickField: UITextField!
     @IBOutlet weak var masterUnitSwitch: UISwitch!
+    @IBOutlet weak var resetFlowModesButton: UIButton!
     
     //Constant Outlets
     @IBOutlet weak var constantDoseSlider: UISlider!
@@ -104,7 +111,10 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
     @IBAction func pageSelectionChanged(_ sender: UISegmentedControl)
     {
         let pageChoice = pageSelection.selectedSegmentIndex
-        
+        pageNum = pageChoice
+        updateMultirate()
+        updatePeriodic()
+        updateConstant()
         if(pageChoice == 0)
         {
             overviewView.alpha = 1.0
@@ -450,6 +460,171 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
             return formatter
     }()
     
+    //Converts all flow modes to same total dose, while keeping proportions/settings
+    @IBAction func convertConstant(_ sender: Any)
+    {
+        //Total dose for constant pulled from UI
+        let totalDoseText = constantTotalDoseField.text!
+        let totalDoseFloat = (totalDoseText as! NSString).floatValue
+        
+        //Calculations for periodic flow are made
+        let periodicBolusNum = periodicBolusStepper.value
+        let newBolusDose = totalDoseFloat / Float(periodicBolusNum)
+        periodicDoseSlider.value = newBolusDose
+        periodicDoseInputField.text = "\(newBolusDose)"
+        updatePeriodic()
+        
+        //Calculations for multirate flow are made
+        let multirateTotalDoseText = multiRateTotalDoseField.text!
+        let multirateTotalDoseFloat = (multirateTotalDoseText as NSString).floatValue
+        let newDose1 = (multirateDoseSlider1.value / multirateTotalDoseFloat) * totalDoseFloat
+        let newDose2 = (multirateDoseSlider2.value / multirateTotalDoseFloat) * totalDoseFloat
+        let newDose3 = (multirateDoseSlider3.value / multirateTotalDoseFloat) * totalDoseFloat
+        let newDose4 = (multirateDoseSlider4.value / multirateTotalDoseFloat) * totalDoseFloat
+        multirateDoseSlider1.value = newDose1
+        multirateDoseField1.text = "\(newDose1)"
+        multirateDoseSlider2.value = newDose2
+        multirateDoseField2.text = "\(newDose2)"
+        multirateDoseSlider3.value = newDose3
+        multirateDoseField3.text = "\(newDose3)"
+        multirateDoseSlider4.value = newDose4
+        multirateDoseField4.text = "\(newDose4)"
+        updateMultirate()
+    }
+    
+    //Converts all flow modes to same total dose, while keeping proportions/settings
+    @IBAction func convertPeriodic(_ sender: Any)
+    {
+        //Total dose for periodic pulled from UI
+        let totalDoseText = periodicTotalDoseField.text!
+        let totalDoseFloat = (totalDoseText as! NSString).floatValue
+        
+        //Calculations for constant flow are made
+        constantDoseSlider.value = totalDoseFloat
+        constantDoseInputField.text = "\(totalDoseFloat)"
+        updateConstant()
+        
+        //Calculations for multirate flow are made
+        let multirateTotalDoseText = multiRateTotalDoseField.text!
+        let multirateTotalDoseFloat = (multirateTotalDoseText as NSString).floatValue
+        let newDose1 = (multirateDoseSlider1.value / multirateTotalDoseFloat) * totalDoseFloat
+        let newDose2 = (multirateDoseSlider2.value / multirateTotalDoseFloat) * totalDoseFloat
+        let newDose3 = (multirateDoseSlider3.value / multirateTotalDoseFloat) * totalDoseFloat
+        let newDose4 = (multirateDoseSlider4.value / multirateTotalDoseFloat) * totalDoseFloat
+        multirateDoseSlider1.value = newDose1
+        multirateDoseField1.text = "\(newDose1)"
+        multirateDoseSlider2.value = newDose2
+        multirateDoseField2.text = "\(newDose2)"
+        multirateDoseSlider3.value = newDose3
+        multirateDoseField3.text = "\(newDose3)"
+        multirateDoseSlider4.value = newDose4
+        multirateDoseField4.text = "\(newDose4)"
+        updateMultirate()
+    }
+    
+    //Converts all flow modes to same total dose, while keeping proportions/settings
+    @IBAction func convertMultirate(_ sender: Any)
+    {
+        //Total dose for multirate pulled from UI
+        let totalDoseText = multiRateTotalDoseField.text
+        let totalDoseFloat = (totalDoseText as! NSString).floatValue
+        
+        //Calculations for constant flow are made
+        constantDoseSlider.value = totalDoseFloat
+        constantDoseInputField.text = "\(totalDoseFloat)"
+        updateConstant()
+        
+        //Calculations for periodic flow are made
+        let periodicBolusNum = periodicBolusStepper.value
+        let newBolusDose = totalDoseFloat / Float(periodicBolusNum)
+        periodicDoseSlider.value = newBolusDose
+        periodicDoseInputField.text = "\(newBolusDose)"
+        updatePeriodic()
+    }
+    
+    @IBAction func zoomSelectionChanged(_ sender: Any)
+    {
+        if(zoomSelection.selectedSegmentIndex == 0)
+        {
+            yLabelMax = Float(0.25)
+            labelsSmall.alpha = 1.0
+            labelsMedium.alpha = 0
+            labelsLarge.alpha = 0
+        }
+        else if(zoomSelection.selectedSegmentIndex == 1)
+        {
+            yLabelMax = Float(0.5)
+            labelsSmall.alpha = 0
+            labelsMedium.alpha = 1.0
+            labelsLarge.alpha = 0
+        }
+        else if(zoomSelection.selectedSegmentIndex == 2)
+        {
+            yLabelMax = Float(1)
+            labelsSmall.alpha = 0
+            labelsMedium.alpha = 0
+            labelsLarge.alpha = 1.0
+        }
+        updateConstant()
+        updatePeriodic()
+        updateMultirate()
+    }
+    
+    @IBAction func resetFlowModes(_ sender: Any)
+    {
+        masterUnitSwitch.isOn = true
+        mgMode = true
+        unitLabel = "mg"
+        masterConcentrationLabel.text = unitLabel + "/mL"
+        constantDoseInputLabel.text = unitLabel + "/day"
+        periodicDoseInputLabel.text = unitLabel
+        multirateDoseLabel1.text = unitLabel
+        multirateDoseLabel2.text = unitLabel
+        multirateDoseLabel3.text = unitLabel
+        multirateDoseLabel4.text = unitLabel
+        constantDoseSlider.maximumValue = 5
+        masterConcentrationField.text = "10.0"
+        constantDoseSlider.value = 1
+        constantDoseInputField.text = "1.0"
+        periodicDoseSlider.value = 0.5
+        periodicDoseSlider.maximumValue = 5
+        periodicDoseInputField.text = "0.5"
+        multirateDoseSlider1.maximumValue = 5
+        multirateDoseSlider1.value = 0.35
+        multirateDoseField1.text = "0.35"
+        multirateDoseSlider2.maximumValue = 5
+        multirateDoseSlider2.value = 0.65
+        multirateDoseField2.text = "0.65"
+        multirateDoseSlider3.maximumValue = 5
+        multirateDoseSlider3.value = 0.9
+        multirateDoseField3.text = "0.9"
+        multirateDoseSlider4.maximumValue = 5
+        multirateDoseSlider4.value = 1.2
+        multirateDoseField4.text = "1.2"
+        periodicBolusStepper.value = 2
+        multiratePeriodStepper.value = 2
+        periodicBolusNumLabel.text = "2 Periods"
+        multiratePeriodLabel.text = "2"
+        
+        multirateControlStack3.isUserInteractionEnabled = false
+        multirateControlStack4.isUserInteractionEnabled = false
+        multirateStartField1.text = "00:00"
+        hour1 = 0
+        minute1 = 0
+        multirateStartField2.text = "12:00"
+        hour2 = 12
+        minute2 = 0
+        self.multirateControlStack3.alpha = 0.0
+        self.multirateControlStack4.alpha = 0.0
+        
+        updateConstant()
+        updatePeriodic()
+        updateMultirate()
+    }
+    
+    
+    
+    
     func textFieldDidBeginEditing(_ textField: UITextField)
     {
         scrollView.setContentOffset(CGPoint(x:0, y:313), animated: true)
@@ -741,8 +916,8 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         {
             mgMode = true
             unitLabel = "mg"
-            masterConcentrationLabel.text = unitLabel
-            constantDoseInputLabel.text = unitLabel
+            masterConcentrationLabel.text = unitLabel + "/mL"
+            constantDoseInputLabel.text = unitLabel + "/day"
             periodicDoseInputLabel.text = unitLabel
             multirateDoseLabel1.text = unitLabel
             multirateDoseLabel2.text = unitLabel
@@ -750,23 +925,23 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
             multirateDoseLabel4.text = unitLabel
             constantDoseSlider.maximumValue = 5
             masterConcentrationField.text = "10.0"
-            constantDoseSlider.value = 0.5
-            constantDoseInputField.text = "0.5"
+            constantDoseSlider.value = 1
+            constantDoseInputField.text = "1.0"
             periodicDoseSlider.value = 0.5
             periodicDoseSlider.maximumValue = 5
             periodicDoseInputField.text = "0.5"
             multirateDoseSlider1.maximumValue = 5
-            multirateDoseSlider1.value = 0.5
-            multirateDoseField1.text = "0.5"
+            multirateDoseSlider1.value = 0.35
+            multirateDoseField1.text = "0.35"
             multirateDoseSlider2.maximumValue = 5
-            multirateDoseSlider2.value = 1.0
-            multirateDoseField2.text = "1.0"
+            multirateDoseSlider2.value = 0.65
+            multirateDoseField2.text = "0.65"
             multirateDoseSlider3.maximumValue = 5
-            multirateDoseSlider3.value = 1.5
-            multirateDoseField3.text = "1.5"
+            multirateDoseSlider3.value = 0.9
+            multirateDoseField3.text = "0.9"
             multirateDoseSlider4.maximumValue = 5
-            multirateDoseSlider4.value = 2.0
-            multirateDoseField4.text = "2.0"
+            multirateDoseSlider4.value = 1.2
+            multirateDoseField4.text = "1.2"
             updateConstant()
             updatePeriodic()
             updateMultirate()
@@ -775,8 +950,8 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         {
             mgMode = false
             unitLabel = "mcg"
-            masterConcentrationLabel.text = unitLabel
-            constantDoseInputLabel.text = unitLabel
+            masterConcentrationLabel.text = unitLabel + "/mL"
+            constantDoseInputLabel.text = unitLabel + "/day"
             periodicDoseInputLabel.text = unitLabel
             multirateDoseLabel1.text = unitLabel
             multirateDoseLabel2.text = unitLabel
@@ -815,8 +990,9 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
     func updatePeriodic() -> Void
     {
         let totalDose = Double(periodicDoseSlider.value) * periodicBolusStepper.value
-        periodicTotalDoseField.text = "\(totalDose)" + " " + unitLabel
-        if(periodicShow)
+        let totalDoseRounded = Double(totalDose * 100).rounded() / 100
+        periodicTotalDoseField.text = "\(totalDoseRounded)" + " " + unitLabel
+        if((periodicShow || pageNum == 2) && (pageNum != 1 && pageNum != 3))
         {
             genPeriodicGraph()
         }
@@ -841,8 +1017,9 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         {
             totalDose = multirateDoseSlider1.value + multirateDoseSlider2.value + multirateDoseSlider3.value + multirateDoseSlider4.value
         }
-        multiRateTotalDoseField.text = "\(totalDose)" + " " + unitLabel
-        if(multirateShow)
+        let totalDoseRounded = roundValue(inputText: "\(totalDose)", roundTo: 2)
+        multiRateTotalDoseField.text = totalDoseRounded + " " + unitLabel
+        if((multirateShow || pageNum == 3) && (pageNum != 1 && pageNum != 2))
         {
             genMultiRateGraph()
         }
@@ -872,7 +1049,7 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
             constantPumpRateField.text = "1 Valve Actuation every " + timeBetween + " minutes"
         }
         constantTotalDoseField.text = "\(totalDose)" + " " + unitLabel
-        if(constantShow)
+        if((constantShow || pageNum == 1) && (pageNum != 2 && pageNum != 3))
         {
             genConstantGraph()
         }
@@ -915,7 +1092,7 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         let pumpCon = masterConcentrationField.text!
         let pumpConFloat = (pumpCon as NSString).floatValue
         var bolNum = Int(((totalDose / pumpConFloat) / accumVol))
-        let bolHeight = ((accumVol / Float(1)) * graphHeight) + 8
+        let bolHeight = ((accumVol / yLabelMax) * graphHeight) + 8
         let bolSpacing = graphWidth / Float(bolNum)
         bolNum += 1
         
@@ -1067,7 +1244,7 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
             {
                 cSet = [xCoord, yCoord2]
                 coordArray2.append(cSet)
-                yCoord2 += (accumVol / 0.7) * graphHeight
+                yCoord2 += (accumVol / yLabelMax) * graphHeight
                 yCoord += bolHeight
                 cSet = [xCoord, yCoord]
                 coordArray.append(cSet)
@@ -1223,7 +1400,7 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         //points are calculated and added to array
         xCoord += ((hour1 / 24.00) + (minute1 / (24.00 * 60.00))) * graphWidth
         let maxYValue = multirateDoseSlider1.maximumValue / pumpConFloat
-        yCoord = ((multirateDoseSlider1.value / pumpConFloat)) * graphHeight
+        yCoord = ((multirateDoseSlider1.value / pumpConFloat)/Float(yLabelMax)) * graphHeight
         var cSet: [Int] = [Int(xCoord), Int(yCoord)]
         coordArray.append(cSet)
         var date1 = multirateStartField1.text
@@ -1308,7 +1485,7 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
                 cSet = [Int(xCoord), Int(yCoord)]
                 coordArray.append(cSet)
             }
-            yCoord = (sliderVal) * graphHeight
+            yCoord = ((sliderVal)/(yLabelMax)) * graphHeight
             cSet = [Int(xCoord), Int(yCoord)]
             coordArray.append(cSet)
             c += 1
@@ -1410,6 +1587,19 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         updateConstant()
         updatePeriodic()
         updateMultirate()
+        
+        self.graphBorder.layer.borderColor = UIColor.darkGray.cgColor
+        self.graphBorder.layer.borderWidth = 2
+        self.graphBorder.layer.cornerRadius = 5
+        
+        self.controlHolder.layer.borderColor = UIColor.darkGray.cgColor
+        self.controlHolder.layer.borderWidth = 2
+        self.controlHolder.layer.cornerRadius = 5
+        
+        self.resetFlowModesButton.layer.cornerRadius = 5
+        self.constantConvertDoseButton.layer.cornerRadius = 5
+        self.perioidicConvertDoseButton.layer.cornerRadius = 5
+        self.multiRateConvertDoseButton.layer.cornerRadius = 5
     }
     
     override func didReceiveMemoryWarning()
