@@ -387,7 +387,7 @@
                                                                     <constraint firstAttribute="width" constant="130" id="4hp-ZE-8qZ"/>
                                                                 </constraints>
                                                                 <nil key="textColor"/>
-                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
                                                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                                                 <userDefinedRuntimeAttributes>
                                                                     <userDefinedRuntimeAttribute type="string" keyPath="allowedChars" value=".0987654321"/>
@@ -506,7 +506,7 @@
                                                                             <constraint firstAttribute="width" constant="85" id="Mlr-GO-cVd"/>
                                                                         </constraints>
                                                                         <nil key="textColor"/>
-                                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                        <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
                                                                         <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                                                         <connections>
                                                                             <outlet property="delegate" destination="63o-cQ-fIx" id="EpR-kr-Oyq"/>
@@ -582,7 +582,7 @@
                                                                             <constraint firstAttribute="width" constant="86" id="r5j-e1-f79"/>
                                                                         </constraints>
                                                                         <nil key="textColor"/>
-                                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                        <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
                                                                         <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                                                         <userDefinedRuntimeAttributes>
                                                                             <userDefinedRuntimeAttribute type="string" keyPath="allowedChars" value=".0987654321"/>
@@ -643,7 +643,7 @@ Dose</string>
                                                                     <constraint firstAttribute="width" constant="100" id="P2e-TV-cLf"/>
                                                                 </constraints>
                                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
                                                                 <textInputTraits key="textInputTraits"/>
                                                             </textField>
                                                         </subviews>
@@ -2021,6 +2021,7 @@ AM</string>
                                                     <constraint firstAttribute="height" constant="40" id="7j3-wO-AaY"/>
                                                     <constraint firstAttribute="width" constant="160" id="IRr-Cp-p4n"/>
                                                 </constraints>
+                                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="16"/>
                                                 <state key="normal" title="Additional Features">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
@@ -2418,11 +2419,11 @@ Actuation</string>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K7J-cI-cMw" userLabel="graphBorder1">
-                                                <rect key="frame" x="17" y="42.5" width="734" height="184"/>
+                                                <rect key="frame" x="17" y="12.5" width="734" height="214"/>
                                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OmA-UB-gyc" userLabel="graphBorder2">
-                                                <rect key="frame" x="17" y="233.5" width="734" height="184"/>
+                                                <rect key="frame" x="17" y="236" width="734" height="229"/>
                                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qtz-VE-62W" userLabel="miscBorder">
@@ -2470,7 +2471,7 @@ Actuation</string>
                                                                                     <constraint firstAttribute="width" constant="70" id="Wbh-cK-TQL"/>
                                                                                 </constraints>
                                                                                 <nil key="textColor"/>
-                                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
                                                                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                                                                 <userDefinedRuntimeAttributes>
                                                                                     <userDefinedRuntimeAttribute type="string" keyPath="allowedChars" value=".0987654321"/>
@@ -2511,7 +2512,7 @@ Actuation</string>
                                                                                     <constraint firstAttribute="width" constant="70" id="HXE-k7-bN5"/>
                                                                                 </constraints>
                                                                                 <nil key="textColor"/>
-                                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
                                                                                 <textInputTraits key="textInputTraits"/>
                                                                                 <connections>
                                                                                     <outlet property="delegate" destination="nX1-pX-QKN" id="QTx-ZW-l4f"/>
@@ -2557,7 +2558,7 @@ Actuation</string>
                                                                                     <constraint firstAttribute="width" constant="70" id="Ric-rW-HJB"/>
                                                                                 </constraints>
                                                                                 <nil key="textColor"/>
-                                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
                                                                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                                                                 <userDefinedRuntimeAttributes>
                                                                                     <userDefinedRuntimeAttribute type="string" keyPath="allowedChars" value=".0987654321"/>
@@ -2598,7 +2599,7 @@ Actuation</string>
                                                                                     <constraint firstAttribute="width" constant="70" id="1up-dJ-nD8"/>
                                                                                 </constraints>
                                                                                 <nil key="textColor"/>
-                                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
                                                                                 <textInputTraits key="textInputTraits"/>
                                                                                 <connections>
                                                                                     <outlet property="delegate" destination="nX1-pX-QKN" id="du7-Ur-fjF"/>
@@ -2641,7 +2642,7 @@ Actuation</string>
                                                                                     <constraint firstAttribute="width" constant="70" id="HMj-S3-luH"/>
                                                                                 </constraints>
                                                                                 <nil key="textColor"/>
-                                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
                                                                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                                                                 <userDefinedRuntimeAttributes>
                                                                                     <userDefinedRuntimeAttribute type="string" keyPath="allowedChars" value=".0987654321"/>
@@ -2682,7 +2683,7 @@ Actuation</string>
                                                                                     <constraint firstAttribute="width" constant="70" id="mAF-vY-OXL"/>
                                                                                 </constraints>
                                                                                 <nil key="textColor"/>
-                                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
                                                                                 <textInputTraits key="textInputTraits"/>
                                                                                 <connections>
                                                                                     <outlet property="delegate" destination="nX1-pX-QKN" id="0lu-Oq-Nz2"/>
@@ -2725,7 +2726,7 @@ Actuation</string>
                                                                                     <constraint firstAttribute="width" constant="70" id="7bE-8C-3tV"/>
                                                                                 </constraints>
                                                                                 <nil key="textColor"/>
-                                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
                                                                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                                                                 <userDefinedRuntimeAttributes>
                                                                                     <userDefinedRuntimeAttribute type="string" keyPath="allowedChars" value=".0987654321"/>
@@ -2766,7 +2767,7 @@ Actuation</string>
                                                                                     <constraint firstAttribute="width" constant="70" id="k35-er-F5e"/>
                                                                                 </constraints>
                                                                                 <nil key="textColor"/>
-                                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
                                                                                 <textInputTraits key="textInputTraits"/>
                                                                                 <connections>
                                                                                     <outlet property="delegate" destination="nX1-pX-QKN" id="Fy2-1d-59t"/>
@@ -2886,7 +2887,7 @@ Actuation</string>
                                                                             <constraint firstAttribute="width" constant="60" id="UBk-Al-C6G"/>
                                                                         </constraints>
                                                                         <nil key="textColor"/>
-                                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                        <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
                                                                         <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                                                         <userDefinedRuntimeAttributes>
                                                                             <userDefinedRuntimeAttribute type="string" keyPath="allowedChars" value=".0987654321"/>
@@ -2929,7 +2930,7 @@ Actuation</string>
                                                                             <constraint firstAttribute="width" constant="100" id="aXc-Ga-xCQ"/>
                                                                         </constraints>
                                                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                        <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
                                                                         <textInputTraits key="textInputTraits"/>
                                                                     </textField>
                                                                 </subviews>
@@ -3021,7 +3022,7 @@ Refill</string>
                                                 </constraints>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="XM1-kx-5SC" userLabel="LabelStack24">
-                                                <rect key="frame" x="69" y="424" width="614" height="47"/>
+                                                <rect key="frame" x="69" y="418" width="614" height="47"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RuU-DM-FRT">
                                                         <rect key="frame" x="0.0" y="0.0" width="103.5" height="47"/>
@@ -3071,7 +3072,7 @@ PM</string>
                                                 </constraints>
                                             </stackView>
                                             <stackView opaque="NO" alpha="0.0" contentMode="scaleToFill" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="Idb-MD-4B1" userLabel="LabelStack6">
-                                                <rect key="frame" x="69" y="424" width="614" height="47"/>
+                                                <rect key="frame" x="69" y="418" width="614" height="47"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iKh-dF-cga">
                                                         <rect key="frame" x="0.0" y="0.0" width="103.5" height="47"/>
@@ -3120,7 +3121,7 @@ AM</string>
                                                 </constraints>
                                             </stackView>
                                             <stackView opaque="NO" alpha="0.0" contentMode="scaleToFill" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="FpO-jM-Ujd" userLabel="LabelStack30">
-                                                <rect key="frame" x="69" y="424" width="614" height="47"/>
+                                                <rect key="frame" x="69" y="418" width="614" height="47"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wW2-X0-lba">
                                                         <rect key="frame" x="0.0" y="0.0" width="103.5" height="47"/>
@@ -3275,6 +3276,7 @@ AM</string>
                                                     <constraint firstAttribute="height" constant="40" id="U5r-fT-izj"/>
                                                     <constraint firstAttribute="width" constant="160" id="iiG-OI-gYa"/>
                                                 </constraints>
+                                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="16"/>
                                                 <state key="normal" title="Additional Features">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
@@ -3482,7 +3484,7 @@ Actuation</string>
                                                 </constraints>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Multi-Rate Flow" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OEP-ce-lmx">
-                                                <rect key="frame" x="294" y="-10" width="180" height="70"/>
+                                                <rect key="frame" x="294" y="0.0" width="180" height="70"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="70" id="9rK-pt-NiC"/>
                                                     <constraint firstAttribute="width" constant="180" id="iw7-gJ-vyG"/>
@@ -3491,17 +3493,8 @@ Actuation</string>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="  Period Dose (mg)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vxb-Rv-fUB">
-                                                <rect key="frame" x="83" y="67" width="156" height="21"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
-                                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="  Dose (mg)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xF4-aA-EQr">
-                                                <rect key="frame" x="83" y="251" width="103" height="21"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="  Period Dose (mg)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vxb-Rv-fUB">
+                                                <rect key="frame" x="83" y="55" width="143.5" height="23.5"/>
                                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                 <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -3518,6 +3511,13 @@ Actuation</string>
                                                     <segue destination="0AW-Po-UeD" kind="show" id="uW3-vx-Ckq"/>
                                                 </connections>
                                             </button>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="  Dose (mg)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xF4-aA-EQr">
+                                                <rect key="frame" x="83" y="241" width="89.5" height="23.5"/>
+                                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                         </subviews>
                                         <color key="backgroundColor" red="0.25490196078431371" green="0.25490196078431371" blue="0.25882352941176467" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
@@ -3528,12 +3528,12 @@ Actuation</string>
                                             <constraint firstItem="Sz3-0s-gHx" firstAttribute="top" secondItem="h0k-Iy-Rdw" secondAttribute="bottom" constant="63" id="1zB-HP-gSD"/>
                                             <constraint firstItem="SeA-Wk-xVX" firstAttribute="width" secondItem="4jX-g4-lZg" secondAttribute="width" multiplier="0.3" id="2Wz-DD-Ych"/>
                                             <constraint firstItem="Zb6-XX-PQ8" firstAttribute="height" secondItem="6Iv-el-gnL" secondAttribute="height" id="2fn-6e-eZQ"/>
-                                            <constraint firstItem="OEP-ce-lmx" firstAttribute="top" secondItem="4jX-g4-lZg" secondAttribute="top" constant="-10" id="3f5-cM-91n"/>
+                                            <constraint firstItem="OEP-ce-lmx" firstAttribute="top" secondItem="4jX-g4-lZg" secondAttribute="top" id="3f5-cM-91n"/>
                                             <constraint firstItem="6Iv-el-gnL" firstAttribute="top" secondItem="4jX-g4-lZg" secondAttribute="top" constant="50" id="4ch-EY-RTq"/>
                                             <constraint firstItem="GyT-Xv-eNp" firstAttribute="bottom" secondItem="h0k-Iy-Rdw" secondAttribute="bottom" id="4r4-06-tj5"/>
                                             <constraint firstItem="K7J-cI-cMw" firstAttribute="width" secondItem="6Iv-el-gnL" secondAttribute="width" constant="120" id="8H6-Cp-C4f"/>
                                             <constraint firstItem="qtz-VE-62W" firstAttribute="width" secondItem="Y21-Iz-g9B" secondAttribute="width" constant="20" id="8YG-Ob-y7V"/>
-                                            <constraint firstItem="OmA-UB-gyc" firstAttribute="height" secondItem="GyT-Xv-eNp" secondAttribute="height" constant="15" id="Apm-bn-JG9"/>
+                                            <constraint firstItem="OmA-UB-gyc" firstAttribute="height" secondItem="GyT-Xv-eNp" secondAttribute="height" constant="60" id="Apm-bn-JG9"/>
                                             <constraint firstItem="Ppn-TC-dm5" firstAttribute="top" secondItem="Kxb-ed-1mf" secondAttribute="top" constant="-10" id="CTK-dZ-hBu"/>
                                             <constraint firstItem="6Iv-el-gnL" firstAttribute="centerX" secondItem="h0k-Iy-Rdw" secondAttribute="centerX" id="CcX-vS-6a4"/>
                                             <constraint firstItem="OEP-ce-lmx" firstAttribute="centerX" secondItem="4jX-g4-lZg" secondAttribute="centerX" id="Ecz-qJ-EZ6"/>
@@ -3547,14 +3547,16 @@ Actuation</string>
                                             <constraint firstItem="Idb-MD-4B1" firstAttribute="centerY" secondItem="XM1-kx-5SC" secondAttribute="centerY" id="Onu-su-2jd"/>
                                             <constraint firstItem="Zb6-XX-PQ8" firstAttribute="trailing" secondItem="6Iv-el-gnL" secondAttribute="leading" constant="-6" id="PCq-s8-mjk"/>
                                             <constraint firstItem="GLc-dr-T3y" firstAttribute="top" secondItem="r4Z-3e-fOk" secondAttribute="bottom" constant="8" id="Q4m-wb-48K"/>
+                                            <constraint firstItem="Vxb-Rv-fUB" firstAttribute="leading" secondItem="Zb6-XX-PQ8" secondAttribute="trailing" constant="12" id="QQV-R5-vhC"/>
                                             <constraint firstItem="OmA-UB-gyc" firstAttribute="width" secondItem="GyT-Xv-eNp" secondAttribute="width" constant="120" id="Rn4-8r-npO"/>
                                             <constraint firstItem="6Iv-el-gnL" firstAttribute="top" secondItem="h0k-Iy-Rdw" secondAttribute="top" id="RnF-Qs-Hgj"/>
-                                            <constraint firstItem="XM1-kx-5SC" firstAttribute="top" secondItem="h0k-Iy-Rdw" secondAttribute="bottom" constant="14" id="T4w-Mj-tW5"/>
+                                            <constraint firstItem="XM1-kx-5SC" firstAttribute="top" secondItem="h0k-Iy-Rdw" secondAttribute="bottom" constant="8" id="T4w-Mj-tW5"/>
+                                            <constraint firstItem="xF4-aA-EQr" firstAttribute="top" secondItem="K7J-cI-cMw" secondAttribute="bottom" constant="14.5" id="TP2-rK-OwE"/>
                                             <constraint firstItem="FpO-jM-Ujd" firstAttribute="centerY" secondItem="Idb-MD-4B1" secondAttribute="centerY" id="Tmr-cC-wfm"/>
-                                            <constraint firstItem="K7J-cI-cMw" firstAttribute="height" secondItem="6Iv-el-gnL" secondAttribute="height" constant="15" id="UQ4-RW-OeO"/>
+                                            <constraint firstItem="K7J-cI-cMw" firstAttribute="height" secondItem="6Iv-el-gnL" secondAttribute="height" constant="45" id="UQ4-RW-OeO"/>
                                             <constraint firstItem="Idb-MD-4B1" firstAttribute="width" secondItem="XM1-kx-5SC" secondAttribute="width" id="Uv3-Xo-CgP"/>
-                                            <constraint firstItem="K7J-cI-cMw" firstAttribute="centerY" secondItem="6Iv-el-gnL" secondAttribute="centerY" id="VXs-0t-F2S"/>
-                                            <constraint firstItem="OmA-UB-gyc" firstAttribute="centerY" secondItem="GyT-Xv-eNp" secondAttribute="centerY" id="Vz1-7l-daD"/>
+                                            <constraint firstItem="K7J-cI-cMw" firstAttribute="centerY" secondItem="6Iv-el-gnL" secondAttribute="centerY" constant="-15" id="VXs-0t-F2S"/>
+                                            <constraint firstItem="OmA-UB-gyc" firstAttribute="centerY" secondItem="GyT-Xv-eNp" secondAttribute="centerY" constant="25" id="Vz1-7l-daD"/>
                                             <constraint firstItem="K7J-cI-cMw" firstAttribute="centerX" secondItem="6Iv-el-gnL" secondAttribute="centerX" id="WUt-ah-gzz"/>
                                             <constraint firstItem="Kxb-ed-1mf" firstAttribute="centerX" secondItem="4jX-g4-lZg" secondAttribute="centerX" id="Y9j-G6-Nbh"/>
                                             <constraint firstItem="Ppn-TC-dm5" firstAttribute="width" secondItem="Kxb-ed-1mf" secondAttribute="width" constant="20" id="Yxd-SD-Otc"/>
@@ -3581,7 +3583,9 @@ Actuation</string>
                                             <constraint firstItem="r4Z-3e-fOk" firstAttribute="centerX" secondItem="4jX-g4-lZg" secondAttribute="centerX" id="tp5-iE-mVd"/>
                                             <constraint firstItem="GyT-Xv-eNp" firstAttribute="width" secondItem="6Iv-el-gnL" secondAttribute="width" id="tuf-uK-fLh"/>
                                             <constraint firstItem="GLc-dr-T3y" firstAttribute="centerX" secondItem="4jX-g4-lZg" secondAttribute="centerX" id="wCs-s0-3wo"/>
+                                            <constraint firstItem="Vxb-Rv-fUB" firstAttribute="top" secondItem="4jX-g4-lZg" secondAttribute="top" constant="55" id="wF2-A7-Kc5"/>
                                             <constraint firstItem="h0k-Iy-Rdw" firstAttribute="centerX" secondItem="4jX-g4-lZg" secondAttribute="centerX" id="y1g-O6-RGd"/>
+                                            <constraint firstItem="xF4-aA-EQr" firstAttribute="leading" secondItem="yL3-M4-8U2" secondAttribute="trailing" constant="12" id="zRe-PZ-OIN"/>
                                             <constraint firstItem="yL3-M4-8U2" firstAttribute="centerY" secondItem="GyT-Xv-eNp" secondAttribute="centerY" id="zXE-tX-KoA"/>
                                         </constraints>
                                     </view>
@@ -3706,7 +3710,7 @@ Actuation</string>
                                         <rect key="frame" x="0.0" y="0.0" width="768" height="1004"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="32U-Bh-qHQ">
-                                                <rect key="frame" x="22.5" y="30" width="723" height="360"/>
+                                                <rect key="frame" x="17.5" y="30" width="733" height="360"/>
                                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Graph_C.png" translatesAutoresizingMaskIntoConstraints="NO" id="10k-ds-1Ax">
@@ -3775,15 +3779,15 @@ Actuation</string>
                                                                                         <constraints>
                                                                                             <constraint firstAttribute="height" constant="20.5" id="Jno-8E-La6"/>
                                                                                         </constraints>
-                                                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                                        <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
                                                                                         <nil key="textColor"/>
                                                                                         <nil key="highlightedColor"/>
                                                                                     </label>
-                                                                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="FYN-4o-cqM">
-                                                                                        <rect key="frame" x="0.0" y="50.5" width="160" height="31"/>
+                                                                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="FYN-4o-cqM">
+                                                                                        <rect key="frame" x="0.0" y="50.5" width="160" height="27"/>
                                                                                         <subviews>
-                                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Show" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iIH-ii-t93">
-                                                                                                <rect key="frame" x="0.0" y="0.0" width="50" height="31"/>
+                                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Show" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iIH-ii-t93">
+                                                                                                <rect key="frame" x="0.0" y="0.0" width="50" height="27"/>
                                                                                                 <constraints>
                                                                                                     <constraint firstAttribute="width" constant="50" id="fkj-58-oMD"/>
                                                                                                 </constraints>
@@ -3791,24 +3795,24 @@ Actuation</string>
                                                                                                 <nil key="textColor"/>
                                                                                                 <nil key="highlightedColor"/>
                                                                                             </label>
-                                                                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="htH-WB-05I">
-                                                                                                <rect key="frame" x="60" y="0.0" width="102" height="31"/>
+                                                                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="htH-WB-05I">
+                                                                                                <rect key="frame" x="60" y="0.0" width="102" height="27"/>
                                                                                                 <connections>
                                                                                                     <action selector="constantGraphSwitchChanged:" destination="IaZ-Ct-nvw" eventType="valueChanged" id="eop-m7-Oyp"/>
                                                                                                 </connections>
                                                                                             </switch>
                                                                                         </subviews>
                                                                                     </stackView>
-                                                                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="5q3-MC-HdD">
-                                                                                        <rect key="frame" x="0.0" y="111.5" width="160" height="30"/>
+                                                                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="5q3-MC-HdD">
+                                                                                        <rect key="frame" x="0.0" y="107.5" width="160" height="30"/>
                                                                                         <subviews>
-                                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dose" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FLk-gf-Glo">
+                                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Dose" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FLk-gf-Glo">
                                                                                                 <rect key="frame" x="0.0" y="0.0" width="41" height="30"/>
                                                                                                 <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
                                                                                                 <nil key="textColor"/>
                                                                                                 <nil key="highlightedColor"/>
                                                                                             </label>
-                                                                                            <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="lcI-vO-VKt">
+                                                                                            <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="lcI-vO-VKt">
                                                                                                 <rect key="frame" x="51" y="0.0" width="109" height="30"/>
                                                                                                 <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                                 <nil key="textColor"/>
@@ -3817,19 +3821,15 @@ Actuation</string>
                                                                                             </textField>
                                                                                         </subviews>
                                                                                     </stackView>
-                                                                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PWa-30-BZP">
-                                                                                        <rect key="frame" x="0.0" y="171.5" width="160" height="30"/>
-                                                                                        <subviews>
-                                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CmP-rI-Sv9">
-                                                                                                <rect key="frame" x="0.0" y="0.0" width="160" height="30"/>
-                                                                                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                                                <state key="normal" title="Convert Total Dose"/>
-                                                                                                <connections>
-                                                                                                    <action selector="convertConstant:" destination="IaZ-Ct-nvw" eventType="touchUpInside" id="G4k-Pw-bXP"/>
-                                                                                                </connections>
-                                                                                            </button>
-                                                                                        </subviews>
-                                                                                    </stackView>
+                                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CmP-rI-Sv9">
+                                                                                        <rect key="frame" x="0.0" y="167.5" width="160" height="34"/>
+                                                                                        <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                        <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="16"/>
+                                                                                        <state key="normal" title="Convert Total Dose"/>
+                                                                                        <connections>
+                                                                                            <action selector="convertConstant:" destination="IaZ-Ct-nvw" eventType="touchUpInside" id="G4k-Pw-bXP"/>
+                                                                                        </connections>
+                                                                                    </button>
                                                                                 </subviews>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="width" constant="160" id="jMj-Ls-jqf"/>
@@ -3844,10 +3844,10 @@ Actuation</string>
                                                                                         <nil key="textColor"/>
                                                                                         <nil key="highlightedColor"/>
                                                                                     </label>
-                                                                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="t9S-b8-AbM">
+                                                                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="t9S-b8-AbM">
                                                                                         <rect key="frame" x="0.0" y="50.5" width="160" height="31"/>
                                                                                         <subviews>
-                                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Show" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GtV-Az-Z6t">
+                                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Show" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GtV-Az-Z6t">
                                                                                                 <rect key="frame" x="0.0" y="0.0" width="50" height="31"/>
                                                                                                 <constraints>
                                                                                                     <constraint firstAttribute="width" constant="50" id="3XB-na-0eR"/>
@@ -3856,7 +3856,7 @@ Actuation</string>
                                                                                                 <nil key="textColor"/>
                                                                                                 <nil key="highlightedColor"/>
                                                                                             </label>
-                                                                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ht3-Ec-OFH">
+                                                                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ht3-Ec-OFH">
                                                                                                 <rect key="frame" x="60" y="0.0" width="102" height="31"/>
                                                                                                 <connections>
                                                                                                     <action selector="periodicGraphSwitchChanged:" destination="IaZ-Ct-nvw" eventType="valueChanged" id="ySV-2j-QX5"/>
@@ -3864,17 +3864,17 @@ Actuation</string>
                                                                                             </switch>
                                                                                         </subviews>
                                                                                     </stackView>
-                                                                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="e3m-Y5-smb">
-                                                                                        <rect key="frame" x="0.0" y="111.5" width="160" height="30"/>
+                                                                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="e3m-Y5-smb">
+                                                                                        <rect key="frame" x="0.0" y="111.5" width="160" height="26"/>
                                                                                         <subviews>
-                                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dose" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="spX-sN-406">
-                                                                                                <rect key="frame" x="0.0" y="0.0" width="41" height="30"/>
+                                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Dose" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="spX-sN-406">
+                                                                                                <rect key="frame" x="0.0" y="0.0" width="41" height="26"/>
                                                                                                 <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
                                                                                                 <nil key="textColor"/>
                                                                                                 <nil key="highlightedColor"/>
                                                                                             </label>
-                                                                                            <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="iXF-N9-vPl">
-                                                                                                <rect key="frame" x="51" y="0.0" width="109" height="30"/>
+                                                                                            <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="iXF-N9-vPl">
+                                                                                                <rect key="frame" x="51" y="0.0" width="109" height="26"/>
                                                                                                 <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                                 <nil key="textColor"/>
                                                                                                 <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
@@ -3883,8 +3883,9 @@ Actuation</string>
                                                                                         </subviews>
                                                                                     </stackView>
                                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Wp-l6-q0X">
-                                                                                        <rect key="frame" x="0.0" y="171.5" width="160" height="30"/>
+                                                                                        <rect key="frame" x="0.0" y="167.5" width="160" height="34"/>
                                                                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                        <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="16"/>
                                                                                         <state key="normal" title="Convert Total Dose"/>
                                                                                         <connections>
                                                                                             <action selector="convertPeriodic:" destination="IaZ-Ct-nvw" eventType="touchUpInside" id="Yw4-Hf-RCg"/>
@@ -3901,11 +3902,11 @@ Actuation</string>
                                                                                         <nil key="textColor"/>
                                                                                         <nil key="highlightedColor"/>
                                                                                     </label>
-                                                                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="J8w-3R-wFY">
-                                                                                        <rect key="frame" x="0.0" y="50.5" width="160" height="31"/>
+                                                                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="J8w-3R-wFY">
+                                                                                        <rect key="frame" x="0.0" y="50.5" width="160" height="27"/>
                                                                                         <subviews>
-                                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Show" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r2Q-uF-OqQ">
-                                                                                                <rect key="frame" x="0.0" y="0.0" width="50" height="31"/>
+                                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Show" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r2Q-uF-OqQ">
+                                                                                                <rect key="frame" x="0.0" y="0.0" width="50" height="27"/>
                                                                                                 <constraints>
                                                                                                     <constraint firstAttribute="width" constant="50" id="f3Z-4Q-HQ9"/>
                                                                                                 </constraints>
@@ -3913,24 +3914,24 @@ Actuation</string>
                                                                                                 <nil key="textColor"/>
                                                                                                 <nil key="highlightedColor"/>
                                                                                             </label>
-                                                                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FAY-a9-jze">
-                                                                                                <rect key="frame" x="60" y="0.0" width="102" height="31"/>
+                                                                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FAY-a9-jze">
+                                                                                                <rect key="frame" x="60" y="0.0" width="102" height="27"/>
                                                                                                 <connections>
                                                                                                     <action selector="multirateGraphSwitchChanged:" destination="IaZ-Ct-nvw" eventType="valueChanged" id="nVr-4W-B1A"/>
                                                                                                 </connections>
                                                                                             </switch>
                                                                                         </subviews>
                                                                                     </stackView>
-                                                                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="ouu-qN-RnM">
-                                                                                        <rect key="frame" x="0.0" y="111.5" width="160" height="30"/>
+                                                                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="ouu-qN-RnM">
+                                                                                        <rect key="frame" x="0.0" y="107.5" width="160" height="30"/>
                                                                                         <subviews>
-                                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dose" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jbI-kw-Eh7">
+                                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Dose" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jbI-kw-Eh7">
                                                                                                 <rect key="frame" x="0.0" y="0.0" width="41" height="30"/>
                                                                                                 <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
                                                                                                 <nil key="textColor"/>
                                                                                                 <nil key="highlightedColor"/>
                                                                                             </label>
-                                                                                            <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="jvB-J5-hQG">
+                                                                                            <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="jvB-J5-hQG">
                                                                                                 <rect key="frame" x="51" y="0.0" width="109" height="30"/>
                                                                                                 <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                                 <nil key="textColor"/>
@@ -3940,8 +3941,9 @@ Actuation</string>
                                                                                         </subviews>
                                                                                     </stackView>
                                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5qK-He-0DR">
-                                                                                        <rect key="frame" x="0.0" y="171.5" width="160" height="30"/>
+                                                                                        <rect key="frame" x="0.0" y="167.5" width="160" height="34"/>
                                                                                         <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                        <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="16"/>
                                                                                         <state key="normal" title="Convert Total Dose"/>
                                                                                         <connections>
                                                                                             <action selector="convertMultirate:" destination="IaZ-Ct-nvw" eventType="touchUpInside" id="PSJ-vO-HfS"/>
@@ -4854,12 +4856,22 @@ PM</string>
                                             <constraint firstItem="32U-Bh-qHQ" firstAttribute="height" secondItem="10k-ds-1Ax" secondAttribute="height" id="cac-V1-huI"/>
                                             <constraint firstItem="32U-Bh-qHQ" firstAttribute="centerX" secondItem="10k-ds-1Ax" secondAttribute="centerX" id="egi-cF-klr"/>
                                             <constraint firstItem="3OZ-tg-c9K" firstAttribute="height" secondItem="NIM-tW-gkL" secondAttribute="height" id="fLD-ZV-nVK"/>
-                                            <constraint firstItem="32U-Bh-qHQ" firstAttribute="width" secondItem="10k-ds-1Ax" secondAttribute="width" constant="90" id="mCr-2l-jfJ"/>
+                                            <constraint firstItem="32U-Bh-qHQ" firstAttribute="width" secondItem="10k-ds-1Ax" secondAttribute="width" constant="100" id="mCr-2l-jfJ"/>
                                             <constraint firstItem="3OZ-tg-c9K" firstAttribute="leading" secondItem="NIM-tW-gkL" secondAttribute="trailing" constant="50" id="qlC-X8-9xd"/>
                                             <constraint firstItem="NIM-tW-gkL" firstAttribute="top" secondItem="10k-ds-1Ax" secondAttribute="bottom" constant="50" id="u3Z-Xv-7DE"/>
                                             <constraint firstItem="NIM-tW-gkL" firstAttribute="centerX" secondItem="wcv-GK-PmD" secondAttribute="centerX" constant="-120" id="yph-TQ-oKa"/>
                                         </constraints>
                                     </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Compare Flow" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vU7-Ob-N8N">
+                                        <rect key="frame" x="294" y="4" width="180" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="180" id="XjJ-iB-P6X"/>
+                                            <constraint firstAttribute="height" constant="30" id="oVh-Ml-69O"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="24"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                     <stackView opaque="NO" alpha="0.0" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="aPU-hM-HX9">
                                         <rect key="frame" x="18.5" y="30" width="45" height="360"/>
                                         <subviews>
@@ -5087,6 +5099,7 @@ PM</string>
                                     <constraint firstItem="yPK-OJ-Ha0" firstAttribute="width" secondItem="aPU-hM-HX9" secondAttribute="width" id="23p-CJ-1Zs"/>
                                     <constraint firstItem="jkz-sw-sWI" firstAttribute="width" secondItem="yPK-OJ-Ha0" secondAttribute="width" id="7Za-AN-4XM"/>
                                     <constraint firstItem="10k-ds-1Ax" firstAttribute="centerY" secondItem="aPU-hM-HX9" secondAttribute="centerY" id="8aY-d4-ZwA"/>
+                                    <constraint firstItem="vU7-Ob-N8N" firstAttribute="top" secondItem="nV9-UY-U2R" secondAttribute="top" constant="4" id="9oC-1z-4bq"/>
                                     <constraint firstItem="wcv-GK-PmD" firstAttribute="top" secondItem="nV9-UY-U2R" secondAttribute="top" id="A0F-zf-rZD"/>
                                     <constraint firstAttribute="trailing" secondItem="wcv-GK-PmD" secondAttribute="trailing" id="AJE-ji-41W"/>
                                     <constraint firstItem="jkz-sw-sWI" firstAttribute="height" secondItem="yPK-OJ-Ha0" secondAttribute="height" id="GOf-oq-jza"/>
@@ -5097,6 +5110,7 @@ PM</string>
                                     <constraint firstItem="yPK-OJ-Ha0" firstAttribute="centerY" secondItem="aPU-hM-HX9" secondAttribute="centerY" id="P7E-fD-5gP"/>
                                     <constraint firstAttribute="bottom" secondItem="wcv-GK-PmD" secondAttribute="bottom" id="RtQ-Cb-L89"/>
                                     <constraint firstItem="yPK-OJ-Ha0" firstAttribute="centerX" secondItem="aPU-hM-HX9" secondAttribute="centerX" id="U1S-v7-N2I"/>
+                                    <constraint firstItem="vU7-Ob-N8N" firstAttribute="centerX" secondItem="nV9-UY-U2R" secondAttribute="centerX" id="W5b-OL-kYy"/>
                                     <constraint firstItem="jkz-sw-sWI" firstAttribute="centerY" secondItem="yPK-OJ-Ha0" secondAttribute="centerY" id="kOg-P4-TzJ"/>
                                     <constraint firstItem="aPU-hM-HX9" firstAttribute="leading" secondItem="10k-ds-1Ax" secondAttribute="leading" constant="-49" id="ouf-iI-bu9"/>
                                     <constraint firstItem="10k-ds-1Ax" firstAttribute="height" secondItem="aPU-hM-HX9" secondAttribute="height" id="saG-v3-Vm5"/>

@@ -401,7 +401,6 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         else if(cVal == 19 && prevStepperVal == 20) { cVal = 18 }
         else if(cVal == 21) { cVal = 24 }
         else if(cVal == 23) { cVal = 20 }
-        
         periodicBolusStepper.value = Double(cVal)
         if (cVal == 1)
         {
@@ -411,8 +410,8 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         {
             periodicBolusNumLabel.text = "\(cVal)" + " Periods"
         }
-        updatePeriodic()
         prevStepperVal = cVal
+        updatePeriodic()
     }
     
     
@@ -887,7 +886,7 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
             let pumpConText = masterConcentrationField.text!
             let pumpConFloat = (pumpConText as NSString).floatValue
             let dosePerClick = accumVol * pumpConFloat
-            let dosePerClickRounded = Double(dosePerClick * 100).rounded() / 100
+            let dosePerClickRounded = Double(dosePerClick * 1000).rounded() / 1000
             dosePerClickField.text = "\(dosePerClickRounded)" + " " + unitLabel
             updateConstant()
             updatePeriodic()
@@ -1198,7 +1197,6 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         //create path for graph to draw
         let path = UIBezierPath()
         let path2 = UIBezierPath()
-        var xShift = Float(0)
         
         let bolNum = Float(periodicBolusStepper.value)
         let cycWidth = graphWidth / bolNum
@@ -1213,22 +1211,41 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         
         let pumpConText = masterConcentrationField.text!
         let pumpConFloat = (pumpConText as NSString).floatValue
-        // let flowRate = bolusRate / pumpConFloat
-        // let bolHeight = (bolusRate / maxBolusRate) * graphHeight
-        let bolHeight = ((accumVol * pumpConFloat) / yLabelMax) * graphHeight
         let bolWidth = (durTotal / (60*24)) * graphWidth
         let basWidth = cycWidth - bolWidth
         
         let bolPerPeriod = (periodicDoseSlider.value / pumpConFloat) / accumVol
         let distBetweenBol = ((durTotal / bolPerPeriod) / (24*60)) * graphWidth    //in coordinate points
-
+        let accumDose = (accumVol * pumpConFloat)
+        let bolHeight = ((accumDose) / yLabelMax) * graphHeight
+        let totalVol = bolPerPeriod * accumVol
         
-        //ok to use cartesian coordinates, will be shifted when assigning points to path
+        //check to see if auto-zoom required
+        if((totalVol / yLabelMax) > 1)
+        {
+            if(totalVol > 0.25 && totalVol <= 0.5)
+            {
+                zoomSelection.selectedSegmentIndex = 1
+                yLabelMax = Float(0.5)
+                labelsSmall.alpha = 0
+                labelsMedium.alpha = 1
+                labelsLarge.alpha = 0
+            }
+            else
+            {
+                zoomSelection.selectedSegmentIndex = 2
+                yLabelMax = Float(1)
+                labelsSmall.alpha = 0
+                labelsMedium.alpha = 0
+                labelsLarge.alpha = 1
+            }
+        }
+        
+        //ok to use cartesian coordinates, shifted when assigning points to path
         var coordArray = [[Float]]()
         var coordArray2 = [[Float]]()
         var c = 0
         var bolCounter = 0
-        xCoord += xShift
         var cSet: [Float] = [xCoord, yCoord]
         coordArray.append(cSet)
         cSet = [xCoord, yCoord2]
@@ -1393,6 +1410,54 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         let graphY = Float(graphDisplay.frame.origin.y) - 3
         let graphWidth = Float(graphDisplay.bounds.width)
         let graphHeight = Float(graphDisplay.bounds.height)
+        var maxVolume = Float(0)
+        
+        //check to see if auto-zoom required
+        var holdVolume = multirateDoseSlider1.value / pumpConFloat
+        if(holdVolume > maxVolume)
+        {
+            maxVolume = holdVolume
+        }
+        holdVolume = multirateDoseSlider2.value / pumpConFloat
+        if(holdVolume > maxVolume)
+        {
+            maxVolume = holdVolume
+        }
+        if(stepperState > 2)
+        {
+            holdVolume = multirateDoseSlider3.value / pumpConFloat
+            if(holdVolume > maxVolume)
+            {
+                maxVolume = holdVolume
+            }
+        }
+        if(stepperState > 3)
+        {
+            holdVolume = multirateDoseSlider4.value / pumpConFloat
+            if(holdVolume > maxVolume)
+            {
+                maxVolume = holdVolume
+            }
+        }
+        if((maxVolume / yLabelMax) > 1)
+        {
+            if(maxVolume > 0.25 && maxVolume <= 0.5)
+            {
+                zoomSelection.selectedSegmentIndex = 1
+                yLabelMax = Float(0.5)
+                labelsSmall.alpha = 0
+                labelsMedium.alpha = 1
+                labelsLarge.alpha = 0
+            }
+            else
+            {
+                zoomSelection.selectedSegmentIndex = 2
+                yLabelMax = Float(1)
+                labelsSmall.alpha = 0
+                labelsMedium.alpha = 0
+                labelsLarge.alpha = 1
+            }
+        }
         
         //stores index where beginning of graph should be for later swapping
         var zeroIndex = 0
@@ -1400,7 +1465,7 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         //points are calculated and added to array
         xCoord += ((hour1 / 24.00) + (minute1 / (24.00 * 60.00))) * graphWidth
         let maxYValue = multirateDoseSlider1.maximumValue / pumpConFloat
-        yCoord = ((multirateDoseSlider1.value / pumpConFloat)/Float(yLabelMax)) * graphHeight
+        yCoord = ((multirateDoseSlider1.value / pumpConFloat) / yLabelMax) * graphHeight
         var cSet: [Int] = [Int(xCoord), Int(yCoord)]
         coordArray.append(cSet)
         var date1 = multirateStartField1.text
