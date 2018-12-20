@@ -25,7 +25,7 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
     // index 0 for mg, index 1 for mcg
     let defAccumVol = Float(0.0025)
     let defDose = [Float(0.5), Float(40.0)]
-    let defConcentration = [Float(10.0), Float(350.0)]
+    let defConcentration = [Float(20.0), Float(350.0)]
     let defDoseMax = [Float(5), Float(300)]
     let defPumpVolume = Float(20)
     
@@ -95,6 +95,7 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
     
 
     //****************************************************************//
+    //Executes when any textfield is selected by user
     func textFieldDidBeginEditing(_ textField: UITextField)
     {
         scrollView.setContentOffset(CGPoint(x:0, y:313), animated: true)
@@ -107,6 +108,7 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
         }
     }
     
+    //Executes when text input keyboard is dismissed, resigns the textfield as first responder
     func textFieldShouldReturn(_ textField: UITextField) -> Bool
     {
         textField.resignFirstResponder()
@@ -115,6 +117,7 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
         return true
     }
     
+    //Executes when any given textfield resigns as first responder
     func textFieldDidEndEditing(_ textField: UITextField)
     {
         scrollView.setContentOffset(CGPoint(x:0, y:0), animated: true)
@@ -172,8 +175,7 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
             }
             if(!mgMode)
             {
-                var inputInt = Int(inputFloat)
-                //inputInt = inputInt - (inputInt % 5)
+                let inputInt = Int(inputFloat)
                 doseSlider.value = Float(inputInt)
                 let doseInputText = "\(doseSlider.value)"
                 textField.text = roundValue(inputText: doseInputText, roundTo: 4)
@@ -193,6 +195,7 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
         }
     }
     
+    //Opens advanced settings sub-menu
     @IBAction func advancedSettingsOpen(_ sender: UIButton)
     {
         advancedSettingsConstraint.constant = 20
@@ -202,6 +205,7 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
         })
     }
     
+    //Closes advanced settings sub-menu
     @IBAction func advancedSettingsClose(_ sender: UIButton)
     {
         advancedSettingsConstraint.constant = 440
@@ -211,7 +215,7 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
         })
     }
     
-
+    //Executes when units are changed, switches all labels and units according to selection (mg/mcg), sets default values
     @IBAction func unitSwitchChanged(_ sender: UISwitch)
     {
         if(mgMode)
@@ -257,7 +261,7 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
         updateUI()
     }
     
-    
+    //Executes when the value of the slider is changed by dragging (does not execute when slider value is changed programmatically)
     @IBAction func doseSliderChanged(_ sender: UISlider)
     {
         if(!mgMode)
@@ -279,6 +283,7 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
         updateUI()
     }
     
+    //Locks controls so they cannot be interacted with by user
     func disableInputs(currentTextField: UITextField) -> Void
     {
         if(currentTextField != doseInputField){ doseInputField.isUserInteractionEnabled = false }
@@ -295,6 +300,7 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
         advancedSettingsCloseButton.isUserInteractionEnabled = false
     }
     
+    //Unlocks controls to be user-interactive again
     func activateInputs() -> Void
     {
         doseInputField.isUserInteractionEnabled = true
@@ -311,7 +317,7 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
         bolusNumField.isUserInteractionEnabled = true
     }
     
-   
+   //Executes when zoom scale is changed, zooms graphs according to selection
     @IBAction func scalePickerChanged(_ sender: UISegmentedControl)
     {
         let pickerValue = scalePicker.selectedSegmentIndex
@@ -349,9 +355,11 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
         
     }
     
+    //Shape variables that hold the graph objects
     weak var shapeLayer: CAShapeLayer?
     weak var shapeLayer2: CAShapeLayer?
     
+    //Updates all UI components and sets them to default values, usually run on startup
     func initializeUI()
     {
         doseSlider.value = defDose[0]
@@ -365,6 +373,7 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
         updateUI()
     }
     
+    //Updates all UI components, labels, graphs, etc.
     func updateUI() -> Void
     {
         let inputText = doseInputField.text!
@@ -423,7 +432,7 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
     }
     
     
-    
+    //Function that truncates string input to given amount of decimal places, returns truncated string
     func roundValue(inputText: String, roundTo: Int) -> String
     {
         var cap = 0
@@ -435,36 +444,21 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
         return String(inputText.characters.prefix(cap))
     }
     
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator)
-    {
-        if( size.width > 1000)
-        {
-            graphHeight.constant = 280
-        }
-        else    
-        {
-            graphHeight.constant = 409.5
-        }
-        super.viewWillTransition(to: size, with: coordinator)
-        coordinator.animate(alongsideTransition: nil, completion:
-        {
-            _ in
-            self.updateUI()
-        })
-    }
-    
+    //Executes on page loading, page refreshing
     override func viewWillAppear(_ animated: Bool)
     {
         AppDelegate.AppUtility.lockOrientation(UIInterfaceOrientationMask.all)
     
     }
     
+    //Executed on page closing
     override func viewWillDisappear(_ animated: Bool)
     {
         super.viewWillDisappear(animated)
         AppDelegate.AppUtility.lockOrientation(UIInterfaceOrientationMask.portrait)
     }
 
+    //Initialization function, runs when this page is first called, used mostly for page setup
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -547,10 +541,9 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
     override func didReceiveMemoryWarning()
     {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
-    
+    //Generates and loads top graph, graping in terms of dose
     func generateAndLoadGraph()
     {
         //remove old shape layer if any is present
@@ -605,6 +598,7 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
                 c += 1
             }
             
+            //Zooming scaler applied to coordinate points
             let scaling = scalePicker.selectedSegmentIndex
             if(scaling == 0)
             {
@@ -663,7 +657,8 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
         self.shapeLayer = shapeLayer
     }
 
-    func generateAndLoadGraph2() //Bottom
+    //Generates and loads bottom graph, showing volume instead of dose
+    func generateAndLoadGraph2()
     {
         //remove old shape layer if any is present
         self.shapeLayer2?.removeFromSuperlayer()
@@ -681,7 +676,7 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
         let pumpConFloat = (pumpCon as NSString).floatValue
         var bolNum = Int(((totalDose / pumpConFloat) / accumVol))
         totalDailyBoluses = bolNum
-        let bolHeight = (accumVol / Float(0.007)) * graphHeight   //.007 is max currently
+        let bolHeight = (accumVol / Float(0.003)) * graphHeight   //.003 is max currently
         let bolSpacing = graphWidth / Float(bolNum)
         bolNum += 1
         

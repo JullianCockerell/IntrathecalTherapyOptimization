@@ -71,24 +71,24 @@ class View_HomePage: UIViewController {
             UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations:
                 {
                     self.view.layoutIfNeeded()
-                    self.button1.layer.shadowOpacity = 1.0
-                    self.button2.alpha = 1.0
+                    //self.button2.alpha = 1.0
                     self.button3.alpha = 1.0
                     self.flowOptions.alpha = 0.0
                     self.upButton.alpha = 0.0
             })
+            self.button1.layer.shadowOpacity = 1.0
             buttonPressed = false
         }
         else
         {
-            self.squareBottom.constant = 620
+            self.squareBottom.constant = 313
             UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations:
                 {
                     self.view.layoutIfNeeded()
                     self.button1.layer.shadowOpacity = 0.0
                     self.squareBackground.layer.shadowOffset = CGSize(width: 0.0, height: 6.0)
                     self.squareBackground.layer.shadowOpacity = 1.0
-                    self.button2.alpha = 0.0
+                    //self.button2.alpha = 0.0
                     self.button3.alpha = 0.0
                     self.flowOptions.alpha = 1.0
                     self.upButton.alpha = 1.0
@@ -105,7 +105,7 @@ class View_HomePage: UIViewController {
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseIn, animations: {
             self.view.layoutIfNeeded()
             self.button1.layer.shadowOpacity = 1.0
-            self.button2.alpha = 1.0
+            //self.button2.alpha = 1.0
             self.button3.alpha = 1.0
             self.flowOptions.alpha = 0.0
             self.upButton.alpha = 0.0
@@ -113,16 +113,18 @@ class View_HomePage: UIViewController {
         buttonPressed = false
     }
     
-    override func viewDidLoad() {
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
+        //Load PDF into view controller
         let pdfLoc = NSURL(fileURLWithPath:Bundle.main.path(forResource: "Pump", ofType:"pdf")!)
         let request = NSURLRequest(url: pdfLoc as URL);
         self.overviewDisplay.loadRequest(request as URLRequest);
     }
 
-    override func didReceiveMemoryWarning() {
+    override func didReceiveMemoryWarning()
+    {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     override var shouldAutorotate: Bool
@@ -142,7 +144,7 @@ class View_HomePage: UIViewController {
         
         squareBackground.layer.cornerRadius = globalRadius
         button1.layer.cornerRadius = globalRadius
-        button2.layer.cornerRadius = globalRadius
+        //button2.layer.cornerRadius = globalRadius
         button3.layer.cornerRadius = globalRadius
         subButton1.layer.cornerRadius = globalRadius
         showOverviewButton.layer.cornerRadius = globalRadius
@@ -162,10 +164,10 @@ class View_HomePage: UIViewController {
         button1.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5).cgColor
         button1.layer.shadowOffset = CGSize(width: 0.0, height: 6.0)
         button1.layer.shadowOpacity = 1.0
-        button2.layer.cornerRadius = globalRadius
+        /*button2.layer.cornerRadius = globalRadius
         button2.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5).cgColor
         button2.layer.shadowOffset = CGSize(width: 0.0, height: 6.0)
-        button2.layer.shadowOpacity = 1.0
+        button2.layer.shadowOpacity = 1.0*/
         button3.layer.cornerRadius = globalRadius
         button3.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5).cgColor
         button3.layer.shadowOffset = CGSize(width: 0.0, height: 6.0)
