@@ -491,17 +491,19 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         updateMultirate()
     }
     
-    //Converts all flow modes to same total dose, while keeping proportions/settings
+    //TEMPORARY NAME, syncs all doses to constant (used to sync to periodic)
     @IBAction func convertPeriodic(_ sender: Any)
     {
-        //Total dose for periodic pulled from UI
-        let totalDoseText = periodicTotalDoseField.text!
+        //Total dose for constant pulled from UI
+        let totalDoseText = constantTotalDoseField.text!
         let totalDoseFloat = (totalDoseText as! NSString).floatValue
         
-        //Calculations for constant flow are made
-        constantDoseSlider.value = totalDoseFloat
-        constantDoseInputField.text = "\(totalDoseFloat)"
-        updateConstant()
+        //Calculations for periodic flow are made
+        let periodicBolusNum = periodicBolusStepper.value
+        let newBolusDose = totalDoseFloat / Float(periodicBolusNum)
+        periodicDoseSlider.value = newBolusDose
+        periodicDoseInputField.text = "\(newBolusDose)"
+        updatePeriodic()
         
         //Calculations for multirate flow are made
         let multirateTotalDoseText = multiRateTotalDoseField.text!
@@ -923,7 +925,7 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
             multirateDoseLabel3.text = unitLabel
             multirateDoseLabel4.text = unitLabel
             constantDoseSlider.maximumValue = 5
-            masterConcentrationField.text = "10.0"
+            masterConcentrationField.text = "20.0"
             constantDoseSlider.value = 1
             constantDoseInputField.text = "1.0"
             periodicDoseSlider.value = 0.5
@@ -1646,18 +1648,20 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         let pumpConText = masterConcentrationField.text!
         let pumpConFloat = (pumpConText as NSString).floatValue
         let dosePerClick = accumVol * pumpConFloat
-        let dosePerClickRounded = Double(dosePerClick * 100).rounded() / 100
+        let dosePerClickRounded = Double(dosePerClick * 1000).rounded() / 1000
         dosePerClickField.text = "\(dosePerClickRounded)" + " " + unitLabel
         
         updateConstant()
         updatePeriodic()
         updateMultirate()
         
-        self.graphBorder.layer.borderColor = UIColor.darkGray.cgColor
+        let bColor = UIColor.darkGray.cgColor
+        
+        self.graphBorder.layer.borderColor = bColor
         self.graphBorder.layer.borderWidth = 2
         self.graphBorder.layer.cornerRadius = 5
         
-        self.controlHolder.layer.borderColor = UIColor.darkGray.cgColor
+        self.controlHolder.layer.borderColor = bColor
         self.controlHolder.layer.borderWidth = 2
         self.controlHolder.layer.cornerRadius = 5
         

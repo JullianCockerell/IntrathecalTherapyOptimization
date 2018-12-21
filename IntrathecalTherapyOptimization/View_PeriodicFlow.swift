@@ -37,7 +37,7 @@ class View_PeriodicFlow: UIViewController, UITextFieldDelegate
     // index 0 for mg, index 1 for mcg
     let defAccumVol = Float(0.0025)
     let defDose = [Float(2.5), Float(50.0)]
-    let defConcentration = [Float(8.0), Float(300.0)]
+    let defConcentration = [Float(20.0), Float(300.0)]
     let defDoseMax = [Float(5), Float(100)]
     let defYScale = [Float(0.03), Float(1.5)]
     let defPumpVolume = Float(20)
@@ -828,7 +828,7 @@ class View_PeriodicFlow: UIViewController, UITextFieldDelegate
         //create shape layer for that path
         let shapeLayer = CAShapeLayer()
         shapeLayer.fillColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0).cgColor
-        shapeLayer.strokeColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+        shapeLayer.strokeColor = #colorLiteral(red: 0.5819664598, green: 0.7728845477, blue: 0, alpha: 1).cgColor
         shapeLayer.lineWidth = 3
         shapeLayer.path = path.cgPath
         shapeLayer.lineCap = kCALineCapRound
@@ -837,7 +837,7 @@ class View_PeriodicFlow: UIViewController, UITextFieldDelegate
         
         let shapeLayer2 = CAShapeLayer()
         shapeLayer2.fillColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0).cgColor
-        shapeLayer2.strokeColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+        shapeLayer2.strokeColor = #colorLiteral(red: 0.5819664598, green: 0.7728845477, blue: 0, alpha: 1).cgColor
         shapeLayer2.lineWidth = 3
         shapeLayer2.path = path2.cgPath
         shapeLayer2.lineCap = kCALineCapRound
@@ -1128,30 +1128,31 @@ class View_PeriodicFlow: UIViewController, UITextFieldDelegate
         let toolBar = UIToolbar().ToolbarPicker(mySelect: #selector(View_PeriodicFlow.dismissPicker))
         startTimeField.inputAccessoryView = toolBar
         
+        
+        let bColor = UIColor.darkGray.cgColor
         pumpRateLabel.centerVertically()
-        self.pumpRateLabel.layer.borderColor = UIColor.lightGray.cgColor
+        self.pumpRateLabel.layer.borderColor = bColor
         self.pumpRateLabel.layer.cornerRadius = 5
-        let borderColor = UIColor.lightGray.cgColor
         self.advancedSettingsView.layer.borderWidth = 2
         self.advancedSettingsView.layer.cornerRadius = 10
-        self.advancedSettingsView.layer.borderColor = UIColor.lightGray.cgColor
-        durationPicker.layer.borderColor = borderColor
+        self.advancedSettingsView.layer.borderColor = bColor
+        durationPicker.layer.borderColor = bColor
         durationPicker.layer.borderWidth = 2.0
         durationPicker.layer.cornerRadius = 5
         durationPicker.setValue(UIColor.white, forKeyPath: "textColor")
         graphStyle.layer.cornerRadius = 10
-        graphStyle.layer.borderColor = borderColor
+        graphStyle.layer.borderColor = bColor
         graphStyle.layer.borderWidth = 2
         graphStyle2.layer.cornerRadius = 10
-        graphStyle2.layer.borderColor = borderColor
+        graphStyle2.layer.borderColor = bColor
         graphStyle2.layer.borderWidth = 2
         displayStyle.layer.cornerRadius = 10
-        displayStyle.layer.borderColor = borderColor
+        displayStyle.layer.borderColor = bColor
         displayStyle.layer.borderWidth = 2
         controlStyle.layer.cornerRadius = 10
-        controlStyle.layer.borderColor = borderColor
+        controlStyle.layer.borderColor = bColor
         controlStyle.layer.borderWidth = 2
-        self.advancedSettingsOpenButton.layer.borderColor = UIColor.lightGray.cgColor
+        self.advancedSettingsOpenButton.layer.borderColor = bColor
         self.advancedSettingsOpenButton.layer.borderWidth = 2
         self.advancedSettingsOpenButton.layer.cornerRadius = 5
         

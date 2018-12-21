@@ -848,28 +848,29 @@ class View_MultipleRates: UIViewController, UITextFieldDelegate {
         let toolBar4 = UIToolbar().ToolbarPicker(mySelect: #selector(View_MultipleRates.dismissPicker4))
         timeInput4.inputAccessoryView = toolBar4
         
-        miscStackTopDistance.constant = 30
+        miscStackTopDistance.constant = 23
         controlStack3.alpha = 0.0
         controlStack4.alpha = 0.0
         
+        let bColor = UIColor.darkGray.cgColor
+        
         self.advancedSettingsView.layer.borderWidth = 2
         self.advancedSettingsView.layer.cornerRadius = 10
-        self.advancedSettingsView.layer.borderColor = UIColor.lightGray.cgColor
-        
+        self.advancedSettingsView.layer.borderColor = bColor
         self.graphBorder.layer.borderWidth = 2
         self.graphBorder.layer.cornerRadius = 10
-        self.graphBorder.layer.borderColor = UIColor.lightGray.cgColor
+        self.graphBorder.layer.borderColor = bColor
         self.graphBorder2.layer.borderWidth = 2
         self.graphBorder2.layer.cornerRadius = 10
-        self.graphBorder2.layer.borderColor = UIColor.lightGray.cgColor
+        self.graphBorder2.layer.borderColor = bColor
         self.controlBorder.layer.borderWidth = 2
         self.controlBorder.layer.cornerRadius = 10
-        self.controlBorder.layer.borderColor = UIColor.lightGray.cgColor
+        self.controlBorder.layer.borderColor = bColor
         self.miscBorder.layer.borderWidth = 2
         self.miscBorder.layer.cornerRadius = 10
-        self.miscBorder.layer.borderColor = UIColor.lightGray.cgColor
+        self.miscBorder.layer.borderColor = bColor
         
-        self.advancedSettingsOpenButton.layer.borderColor = UIColor.lightGray.cgColor
+        self.advancedSettingsOpenButton.layer.borderColor = bColor
         self.advancedSettingsOpenButton.layer.borderWidth = 2
         self.advancedSettingsOpenButton.layer.cornerRadius = 5
         

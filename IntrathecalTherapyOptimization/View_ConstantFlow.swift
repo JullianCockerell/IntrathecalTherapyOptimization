@@ -470,22 +470,23 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
         NKInputView.with(bolusDoseField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
         NKInputView.with(bolusNumField, type: NKInputView.NKKeyboardType.decimalPad, returnKeyType: NKInputView.NKKeyboardReturnKeyType.done)
         
-       
-        self.borderImage.layer.borderColor = UIColor.lightGray.cgColor
+        let bColor = UIColor.darkGray.cgColor
+        
+        self.borderImage.layer.borderColor = bColor
         self.borderImage.layer.borderWidth = 2
         self.borderImage.layer.cornerRadius = 10
-        self.advancedSettingsOpenButton.layer.borderColor = UIColor.lightGray.cgColor
+        self.advancedSettingsOpenButton.layer.borderColor = bColor
         self.advancedSettingsOpenButton.layer.borderWidth = 2
         self.advancedSettingsOpenButton.layer.cornerRadius = 5
         self.graphStyle.layer.borderWidth = 2
         self.graphStyle.layer.cornerRadius = 10
-        self.graphStyle.layer.borderColor = UIColor.lightGray.cgColor
+        self.graphStyle.layer.borderColor = bColor
         self.graphStyle2.layer.borderWidth = 2
         self.graphStyle2.layer.cornerRadius = 10
-        self.graphStyle2.layer.borderColor = UIColor.lightGray.cgColor
+        self.graphStyle2.layer.borderColor = bColor
         self.advancedSettingsView.layer.borderWidth = 2
         self.advancedSettingsView.layer.cornerRadius = 10
-        self.advancedSettingsView.layer.borderColor = UIColor.lightGray.cgColor
+        self.advancedSettingsView.layer.borderColor = bColor
         
         
         let paragraphStyle = NSMutableParagraphStyle()
@@ -532,8 +533,6 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
         attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
         label30_3.attributedText = attrString
         
-
-    
         initializeUI()
     }
     
@@ -645,7 +644,7 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
         //create shape layer for that path
         let shapeLayer = CAShapeLayer()
         shapeLayer.fillColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0).cgColor
-        shapeLayer.strokeColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+        shapeLayer.strokeColor = #colorLiteral(red: 0, green: 0.3846940696, blue: 0.5895510316, alpha: 1).cgColor
         shapeLayer.lineWidth = 3
         shapeLayer.path = path.cgPath
         shapeLayer.lineCap = kCALineCapRound
@@ -758,7 +757,7 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
         //create shape layer for that path
         let shapeLayer2 = CAShapeLayer()
         shapeLayer2.fillColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0).cgColor
-        shapeLayer2.strokeColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+        shapeLayer2.strokeColor = #colorLiteral(red: 0, green: 0.3846940696, blue: 0.5895510316, alpha: 1).cgColor
         shapeLayer2.lineWidth = 3
         shapeLayer2.path = path.cgPath
         shapeLayer2.lineCap = kCALineCapRound
