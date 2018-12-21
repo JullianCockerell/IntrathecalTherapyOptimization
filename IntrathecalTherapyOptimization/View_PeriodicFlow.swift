@@ -897,7 +897,6 @@ class View_PeriodicFlow: UIViewController, UITextFieldDelegate
         let bolHeight2 = (accumVol / maxVolumeAxis) * graphHeight
         let bolWidth = (durTotal / (60*24)) * graphWidth
         let basWidth = cycWidth - bolWidth
-        
         let bolPerPeriod = (doseSlider.value / pumpConFloat) / accumVol
         let distBetweenBol = ((durTotal / bolPerPeriod) / (24*60)) * graphWidth    //in coordinate points
         if(scaling == 0)
@@ -1176,12 +1175,19 @@ class View_PeriodicFlow: UIViewController, UITextFieldDelegate
             doseBracket.alpha = 1
         }
         let firstBolusX = bolStartArray.min()
-        let labelX = (firstBolusX! + (bolWidth / 2) + graphX2) - 40
+        var labelX = (firstBolusX! + (bolWidth / 2) + graphX2) - 40
+        if(intervalStepper.value > 1)
+        {
+            labelX += cycWidth
+        }
         let labelY = (graphHeight + graphY2) - bolHeight
         doseBracketWidth.constant = CGFloat(bolWidth)
         doseTop.constant = CGFloat(labelY)
         doseLeading.constant = CGFloat(labelX)
-        
+        let totalBolusVolume = bolPerPeriod * accumVol
+        let totalBolusVolumeText = "\(totalBolusVolume)"
+        let totalBolusVolumeTextRounded = roundValue(inputText: totalBolusVolumeText, roundTo: 2)
+        bolusDoseLabel.text = totalBolusVolumeTextRounded + " mL"
         //save shape layer to viewcontroller
         self.shapeLayer = shapeLayer
         self.shapeLayer2 = shapeLayer2

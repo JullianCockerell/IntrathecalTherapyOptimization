@@ -512,7 +512,8 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         let periodicBolusNum = periodicBolusStepper.value
         let newBolusDose = totalDoseFloat / Float(periodicBolusNum)
         periodicDoseSlider.value = newBolusDose
-        periodicDoseInputField.text = "\(newBolusDose)"
+        let newBolusDoseText = roundValue(inputText: "\(newBolusDose)", roundTo: 2)
+        periodicDoseInputField.text = newBolusDoseText
         updatePeriodic()
         
         //Calculations for multirate flow are made
@@ -523,13 +524,13 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         let newDose3 = (multirateDoseSlider3.value / multirateTotalDoseFloat) * totalDoseFloat
         let newDose4 = (multirateDoseSlider4.value / multirateTotalDoseFloat) * totalDoseFloat
         multirateDoseSlider1.value = newDose1
-        multirateDoseField1.text = "\(newDose1)"
+        multirateDoseField1.text = roundValue(inputText: "\(newDose1)", roundTo: 2)
         multirateDoseSlider2.value = newDose2
-        multirateDoseField2.text = "\(newDose2)"
+        multirateDoseField2.text = roundValue(inputText: "\(newDose2)", roundTo: 2)
         multirateDoseSlider3.value = newDose3
-        multirateDoseField3.text = "\(newDose3)"
+        multirateDoseField3.text = roundValue(inputText: "\(newDose3)", roundTo: 2)
         multirateDoseSlider4.value = newDose4
-        multirateDoseField4.text = "\(newDose4)"
+        multirateDoseField4.text = roundValue(inputText: "\(newDose4)", roundTo: 2)
         updateMultirate()
     }
     
@@ -1032,7 +1033,7 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         multiRateTotalDoseField.text = totalDoseRounded + " " + unitLabel
         if(multirateShow)
         {
-            genMultiRateGraph()
+            newGenMultiRateGraph()
         }
         else
         {
@@ -1091,7 +1092,7 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         //remove old shape layer if any is present
         self.constantShapeLayer?.removeFromSuperlayer()
         let graphX = Float(graphDisplay.frame.origin.x)
-        let graphY = Float(graphDisplay.frame.origin.y) - 3
+        let graphY = Float(graphDisplay.frame.origin.y)
         let graphWidth = Float(graphDisplay.bounds.width)
         let graphHeight = Float(graphDisplay.bounds.height)
         
@@ -1103,7 +1104,7 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         let pumpCon = masterConcentrationField.text!
         let pumpConFloat = (pumpCon as NSString).floatValue
         var bolNum = Int(((totalDose / pumpConFloat) / accumVol))
-        let bolHeight = ((accumVol / yLabelMax) * graphHeight) + 8
+        let bolHeight = ((accumVol / yLabelMax) * graphHeight)
         let bolSpacing = graphWidth / Float(bolNum)
         bolNum += 1
         
@@ -1211,7 +1212,6 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         let path = UIBezierPath()
         let path2 = UIBezierPath()
         var xShift = Float(0)
-        //test
         let bolNum = Float(periodicBolusStepper.value)
         let cycWidth = graphWidth / bolNum
         
@@ -1394,12 +1394,19 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
             doseBracket.alpha = 1
         }
         let firstBolusX = bolStartArray.min()
-        let labelX = (firstBolusX! + (bolWidth / 2) + graphX2) - 40
-        let labelY = (graphHeight + graphY2) - bolHeight
+        var labelX = (firstBolusX! + (bolWidth / 2) + graphX2) - 42
+        if(periodicBolusStepper.value > 1)
+        {
+            labelX += cycWidth
+        }
+        let labelY = (graphHeight + graphY2) - (bolHeight2 + 40)
         doseBracketWidth.constant = CGFloat(bolWidth)
         doseTop.constant = CGFloat(labelY)
         doseLeading.constant = CGFloat(labelX)
-        
+        let totalBolusVolume = bolPerPeriod * accumVol
+        let totalBolusVolumeText = "\(totalBolusVolume)"
+        let totalBolusVolumeTextRounded = roundValue(inputText: totalBolusVolumeText, roundTo: 2)
+        bolusDoseLabel.text = totalBolusVolumeTextRounded + " mL"
         //save shape layer to viewcontroller
         self.periodicShapeLayer = shapeLayer2
     }
@@ -1613,35 +1620,6 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         let graphHeight = Float(graphDisplay3.bounds.height)
         var maxVolume = Float(0)
         
-        //check to see if auto-zoom required
-        var holdVolume = multirateDoseSlider1.value / pumpConFloat
-        if(holdVolume > maxVolume)
-        {
-            maxVolume = holdVolume
-        }
-        holdVolume = multirateDoseSlider2.value / pumpConFloat
-        if(holdVolume > maxVolume)
-        {
-            maxVolume = holdVolume
-        }
-        if(stepperState > 2)
-        {
-            holdVolume = multirateDoseSlider3.value / pumpConFloat
-            if(holdVolume > maxVolume)
-            {
-                maxVolume = holdVolume
-            }
-        }
-        if(stepperState > 3)
-        {
-            holdVolume = multirateDoseSlider4.value / pumpConFloat
-            if(holdVolume > maxVolume)
-            {
-                maxVolume = holdVolume
-            }
-        }
-        
-        
         //stores index where beginning of graph should be for later swapping
         var zeroIndex = 0
         
@@ -1763,6 +1741,167 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         shapeLayer.lineCap = kCALineCapRound
         shapeLayer.lineJoin = kCALineJoinRound
         scrollView.layer.addSublayer(shapeLayer)
+        
+        //save shape layer to viewcontroller
+        self.multiRateShapeLayer = shapeLayer
+    }
+    
+    func newGenMultiRateGraph() -> Void
+    {
+        //remove old shape layer if any is present
+        self.multiRateShapeLayer?.removeFromSuperlayer()
+        
+        //create path for graph to draw
+        let stepperState = Int(multiratePeriodStepper.value)
+        let path = UIBezierPath()
+        var xCoord = Float(0)
+        var yCoord = Float(0)
+        
+        
+        //ok to use cartesian coordinates, will be shifted when assigning points to path
+        var coordArray = [[Float]]()
+        var c = 0
+        
+        let graphX = Float(graphDisplay3.frame.origin.x)
+        let graphY = Float(graphDisplay3.frame.origin.y)
+        let graphWidth = Float(graphDisplay3.bounds.width)
+        let graphHeight = Float(graphDisplay3.bounds.height)
+        
+        //stores index where beginning of graph should be for later swapping
+        var zeroIndex = 0
+        
+        //points are calculated and added to array
+        xCoord += ((hour1 / 24.00) + (minute1 / (24.00 * 60.00))) * graphWidth
+        var cSet: [Float] = [xCoord, yCoord]
+        coordArray.append(cSet)
+        var date1 = multirateStartField1.text
+        var date2 = multirateStartField1.text
+        var sliderVal = multirateDoseSlider1.value
+        var bolusNumber = 0
+        let pumpConText = masterConcentrationField.text!
+        let pumpConFloat = (pumpConText as NSString).floatValue
+        let bolHeight = (accumVol / yLabelMax) * graphHeight
+        
+        while(c < stepperState)
+        {
+            if(c == 0)
+            {
+                date1 = multirateStartField1.text
+                date2 = multirateStartField2.text
+                sliderVal = multirateDoseSlider1.value
+            }
+            else if(c == 1)
+            {
+                date1 = multirateStartField2.text
+                date2 = multirateStartField3.text
+                sliderVal = multirateDoseSlider2.value
+            }
+            else if(c == 2)
+            {
+                date1 = multirateStartField3.text
+                date2 = multirateStartField4.text
+                sliderVal = multirateDoseSlider3.value
+            }
+            else if(c == 3)
+            {
+                date1 = multirateStartField4.text
+                date2 = multirateStartField1.text
+                sliderVal = multirateDoseSlider4.value
+            }
+            if(stepperState - c == 1)
+            {
+                date2 = multirateStartField1.text
+            }
+            
+            let pumpConFloat = (masterConcentrationField.text! as NSString).floatValue
+            let bolPerPeriod = (sliderVal / pumpConFloat) / accumVol
+            let distBetweenBol = (calculateXDistance(startTime: date1!, endTime: date2!, gWidth: graphWidth)) / bolPerPeriod
+            bolusNumber = 0
+            if(bolPerPeriod == 0)
+            {
+                xCoord += calculateXDistance(startTime: date1!, endTime: date2!, gWidth: graphWidth)
+                if(xCoord > graphWidth)
+                {
+                    let xDiff = xCoord - graphWidth
+                    xCoord = graphWidth
+                    cSet = [xCoord, yCoord]
+                    coordArray.append(cSet)
+                    zeroIndex = coordArray.count
+                    xCoord = 0
+                    cSet = [xCoord, yCoord]
+                    coordArray.append(cSet)
+                    xCoord = xDiff
+                    cSet = [xCoord, yCoord]
+                    coordArray.append(cSet)
+                }
+                else
+                {
+                    cSet = [xCoord, yCoord]
+                    coordArray.append(cSet)
+                }
+            }
+            else
+            {
+                while(bolusNumber < Int(bolPerPeriod))
+                {
+                    yCoord += bolHeight
+                    cSet = [xCoord, yCoord]
+                    coordArray.append(cSet)
+                    yCoord -= bolHeight
+                    cSet = [xCoord, yCoord]
+                    coordArray.append(cSet)
+                    xCoord += distBetweenBol
+                    if(xCoord > graphWidth)
+                    {
+                        let xDiff = xCoord - graphWidth
+                        xCoord = graphWidth
+                        cSet = [xCoord, yCoord]
+                        coordArray.append(cSet)
+                        zeroIndex = coordArray.count
+                        xCoord = 0
+                        cSet = [xCoord, yCoord]
+                        coordArray.append(cSet)
+                        xCoord = xDiff
+                        cSet = [xCoord, yCoord]
+                        coordArray.append(cSet)
+                    }
+                    else
+                    {
+                        cSet = [xCoord, yCoord]
+                        coordArray.append(cSet)
+                    }
+                    bolusNumber += 1
+                }
+            }
+            c += 1
+        }
+        
+        //if shift is needed, array is shifted
+        if(zeroIndex > 0)
+        {
+            let endArray = Array(coordArray[0..<zeroIndex])
+            let beginArray = Array(coordArray[zeroIndex..<coordArray.count])
+            coordArray = beginArray + endArray
+        }
+        //add points to path
+        c = 1
+        path.move(to: CGPoint(x: Int(coordArray[0][0] + graphX), y: Int(graphHeight + graphY - coordArray[0][1])))
+        while(c < coordArray.count)
+        {
+            path.addLine(to: CGPoint(x: Int(coordArray[c][0] + graphX), y: Int(graphHeight + graphY - coordArray[c][1])))
+            c += 1
+        }
+        
+        //create shape layer for that path
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.fillColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0).cgColor
+        shapeLayer.strokeColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+        shapeLayer.lineWidth = 3
+        shapeLayer.path = path.cgPath
+        shapeLayer.lineCap = kCALineCapRound
+        shapeLayer.lineJoin = kCALineJoinRound
+        scrollView.layer.addSublayer(shapeLayer)
+        
         
         //save shape layer to viewcontroller
         self.multiRateShapeLayer = shapeLayer
