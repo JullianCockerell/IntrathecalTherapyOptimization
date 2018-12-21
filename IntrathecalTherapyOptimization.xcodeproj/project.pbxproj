@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1601C1D721CD4D9100FE7186 /* Bracket.png in Resources */ = {isa = PBXBuildFile; fileRef = 1601C1D621CD4D9100FE7186 /* Bracket.png */; };
 		1615FED72111FB4F00FB990C /* View_ConstantFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1615FED62111FB4F00FB990C /* View_ConstantFlow.swift */; };
 		1615FED92112046000FB990C /* View_MultipleRates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1615FED82112046000FB990C /* View_MultipleRates.swift */; };
 		162247352138A36A0097D7E6 /* downArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 162247342138A36A0097D7E6 /* downArrow.png */; };
@@ -55,6 +56,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1601C1D621CD4D9100FE7186 /* Bracket.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Bracket.png; sourceTree = "<group>"; };
 		1615FED62111FB4F00FB990C /* View_ConstantFlow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View_ConstantFlow.swift; sourceTree = "<group>"; };
 		1615FED82112046000FB990C /* View_MultipleRates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View_MultipleRates.swift; sourceTree = "<group>"; };
 		162247342138A36A0097D7E6 /* downArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = downArrow.png; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 		16FB4CA2210F612F0039FC37 /* IntrathecalTherapyOptimization */ = {
 			isa = PBXGroup;
 			children = (
+				1601C1D621CD4D9100FE7186 /* Bracket.png */,
 				16A3563D2163F59200363829 /* Graph_C.png */,
 				16A3563E2163F59200363829 /* Graph_M.png */,
 				16A3563B2163F3CC00363829 /* Graph_P_MAT.png */,
@@ -296,6 +299,7 @@
 				162579D7211E1CD700B1CC40 /* Swoosh.jpg in Resources */,
 				16414DA0215A82B10020173B /* Pump.pdf in Resources */,
 				162579D5211E19C000B1CC40 /* Flowonix_Light.png in Resources */,
+				1601C1D721CD4D9100FE7186 /* Bracket.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
