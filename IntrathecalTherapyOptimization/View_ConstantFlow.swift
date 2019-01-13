@@ -644,7 +644,7 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
         //create shape layer for that path
         let shapeLayer = CAShapeLayer()
         shapeLayer.fillColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0).cgColor
-        shapeLayer.strokeColor = #colorLiteral(red: 0, green: 0.3846940696, blue: 0.5895510316, alpha: 1).cgColor
+        shapeLayer.strokeColor = #colorLiteral(red: 0.5803921569, green: 0.7725490196, blue: 0, alpha: 1).cgColor
         shapeLayer.lineWidth = 3
         shapeLayer.path = path.cgPath
         shapeLayer.lineCap = kCALineCapRound
@@ -675,7 +675,7 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
         let pumpConFloat = (pumpCon as NSString).floatValue
         var bolNum = Int(((totalDose / pumpConFloat) / accumVol))
         totalDailyBoluses = bolNum
-        let bolHeight = (accumVol / Float(0.003)) * graphHeight   //.003 is max currently
+        let bolHeight = ((accumVol - 0.0015) / Float(0.0015)) * graphHeight   //.003 is max currently
         let bolSpacing = graphWidth / Float(bolNum)
         bolNum += 1
         
@@ -757,7 +757,7 @@ class View_ConstantFlow: UIViewController, UITextFieldDelegate {
         //create shape layer for that path
         let shapeLayer2 = CAShapeLayer()
         shapeLayer2.fillColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0).cgColor
-        shapeLayer2.strokeColor = #colorLiteral(red: 0, green: 0.3846940696, blue: 0.5895510316, alpha: 1).cgColor
+        shapeLayer2.strokeColor = #colorLiteral(red: 0.5803921569, green: 0.7725490196, blue: 0, alpha: 1).cgColor
         shapeLayer2.lineWidth = 3
         shapeLayer2.path = path.cgPath
         shapeLayer2.lineCap = kCALineCapRound

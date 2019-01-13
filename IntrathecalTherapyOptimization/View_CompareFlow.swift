@@ -59,6 +59,9 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
     weak var constantShapeLayer: CAShapeLayer?
     weak var periodicShapeLayer: CAShapeLayer?
     weak var multiRateShapeLayer: CAShapeLayer?
+    @IBOutlet weak var warningImage: UIImageView!
+    @IBOutlet weak var warningImage2: UIImageView!
+    
     
     //Overview Outlets
     @IBOutlet weak var showConstantSwitch: UISwitch!
@@ -118,6 +121,47 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
     
     
     //Overview Functions
+    func isValid() -> Bool
+    {
+        var durTotal = Float(0)
+        let stepperState = Int(multiratePeriodStepper.value)
+        if(stepperState == 2)
+        {
+            durTotal = calculateXDistance(startTime: multirateStartField1.text!, endTime: multirateStartField2.text!, gWidth: 100.00) + calculateXDistance(startTime: multirateStartField2.text!, endTime: multirateStartField1.text!, gWidth: 100.00)
+        }
+        else if (stepperState == 3)
+        {
+            durTotal = calculateXDistance(startTime: multirateStartField1.text!, endTime: multirateStartField2.text!, gWidth: 100.00) + calculateXDistance(startTime: multirateStartField2.text!, endTime: multirateStartField3.text!, gWidth: 100.00) + calculateXDistance(startTime: multirateStartField3.text!, endTime: multirateStartField1.text!, gWidth: 100.00)
+        }
+        else if (stepperState == 4)
+        {
+            durTotal = calculateXDistance(startTime: multirateStartField1.text!, endTime: multirateStartField2.text!, gWidth: 100.00) + calculateXDistance(startTime: multirateStartField2.text!, endTime: multirateStartField3.text!, gWidth: 100.00) + calculateXDistance(startTime: multirateStartField3.text!, endTime: multirateStartField4.text!, gWidth: 100.00) + calculateXDistance(startTime: multirateStartField4.text!, endTime: multirateStartField1.text!, gWidth: 100.00)
+        }
+        print(durTotal)
+        if(durTotal > 100.00)
+        {
+            warningImage.alpha = 1.0
+            self.multiRateShapeLayer?.removeFromSuperlayer()
+        }
+        else{warningImage.alpha = 0.0}
+        return (durTotal <= 100.00)
+    }
+    
+    func calculateXDistance(startTime: String, endTime: String, gWidth: Float) -> Float
+    {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "H:mm"
+        let startTime2 = formatter.date(from: startTime)
+        let endTime2 = formatter.date(from: endTime)
+        var components = Calendar.current.dateComponents([.hour, .minute], from: startTime2!)
+        let sTime = (Float(components.hour!) / 24.00) + (Float(components.minute!) / (24.00 * 60.00))
+        components = Calendar.current.dateComponents([.hour, .minute], from: endTime2!)
+        let eTime = (Float(components.hour!) / 24.00) + (Float(components.minute!) / (24.00 * 60.00))
+        let xDist = ((eTime - sTime) * (gWidth))
+        if(xDist < 0){return (gWidth + xDist)}
+        return xDist
+    }
+    
     @IBAction func pageSelectionChanged(_ sender: UISegmentedControl)
     {
         let pageChoice = pageSelection.selectedSegmentIndex
@@ -1004,12 +1048,34 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         let totalDose = Double(periodicDoseSlider.value) * periodicBolusStepper.value
         let totalDoseRounded = Double(totalDose * 100).rounded() / 100
         periodicTotalDoseField.text = "\(totalDoseRounded)" + " " + unitLabel
+        let periodNum = periodicBolusStepper.value
+        let periodDurationDate = periodicDurationPicker.date
+        let calendar = Calendar.current
+        let hour = calendar.component(.hour, from: periodDurationDate)
+        let minute = calendar.component(.minute, from: periodDurationDate)
+        let durInDays = (Float(hour)/24) + (Float(minute)/1440)
         if(periodicShow)
         {
-            newGenPeriodicGraph()
+            if(durInDays * Float(periodNum) > 1)
+            {
+                self.periodicShapeLayer?.removeFromSuperlayer()
+                warningImage2.alpha = 1
+                bolusDoseLabel.alpha = 0
+                doseBracket.alpha = 0
+            }
+            else
+            {
+                newGenPeriodicGraph()
+                warningImage2.alpha = 0
+                bolusDoseLabel.alpha = 1
+                doseBracket.alpha = 1
+            }
         }
         else
         {
+            warningImage2.alpha = 0
+            bolusDoseLabel.alpha = 0
+            doseBracket.alpha = 0
             self.periodicShapeLayer?.removeFromSuperlayer()
         }
     }
@@ -1033,7 +1099,10 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         multiRateTotalDoseField.text = totalDoseRounded + " " + unitLabel
         if(multirateShow)
         {
-            newGenMultiRateGraph()
+            if(isValid())
+            {
+                newGenMultiRateGraph()
+            }
         }
         else
         {
@@ -1376,7 +1445,7 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         //create shape layer for that path
         let shapeLayer2 = CAShapeLayer()
         shapeLayer2.fillColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0).cgColor
-        shapeLayer2.strokeColor = #colorLiteral(red: 0.5819664598, green: 0.7728845477, blue: 0, alpha: 1).cgColor
+        shapeLayer2.strokeColor = #colorLiteral(red: 0.5803921569, green: 0.7725490196, blue: 0, alpha: 1).cgColor
         shapeLayer2.lineWidth = 3
         shapeLayer2.path = path2.cgPath
         shapeLayer2.lineCap = kCALineCapRound
@@ -1902,25 +1971,10 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         shapeLayer.lineJoin = kCALineJoinRound
         scrollView.layer.addSublayer(shapeLayer)
         
-        
         //save shape layer to viewcontroller
         self.multiRateShapeLayer = shapeLayer
     }
     
-    func calculateXDistance(startTime: String, endTime: String, gWidth: Float) -> Float
-    {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "H:mm"
-        let startTime2 = formatter.date(from: startTime)
-        let endTime2 = formatter.date(from: endTime)
-        var components = Calendar.current.dateComponents([.hour, .minute], from: startTime2!)
-        let sTime = (Float(components.hour!) / 24.00) + (Float(components.minute!) / (24.00 * 60.00))
-        components = Calendar.current.dateComponents([.hour, .minute], from: endTime2!)
-        let eTime = (Float(components.hour!) / 24.00) + (Float(components.minute!) / (24.00 * 60.00))
-        let xDist = ((eTime - sTime) * (gWidth))
-        if(xDist < 0){return (gWidth + xDist)}
-        return xDist
-    }
     
     override func viewDidLoad()
     {
@@ -1979,6 +2033,14 @@ class View_CompareFlow: UIViewController, UITextFieldDelegate
         self.graphBorder.layer.borderColor = bColor
         self.graphBorder.layer.borderWidth = 2
         self.graphBorder.layer.cornerRadius = 5
+        
+        self.graphBorder2.layer.borderColor = bColor
+        self.graphBorder2.layer.borderWidth = 2
+        self.graphBorder2.layer.cornerRadius = 5
+        
+        self.graphBorder3.layer.borderColor = bColor
+        self.graphBorder3.layer.borderWidth = 2
+        self.graphBorder3.layer.cornerRadius = 5
         
         self.controlHolder.layer.borderColor = bColor
         self.controlHolder.layer.borderWidth = 2

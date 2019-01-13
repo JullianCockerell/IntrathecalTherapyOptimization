@@ -35,6 +35,9 @@ class View_PeriodicFlow: UIViewController, UITextFieldDelegate
     var yScaleMax = Float(0.07)
     var prevStepperVal = 1
     var maxVolumeAxis = Float(0.005)
+    var bolDurationInDays = Float(0)
+    var prevDate = Date()
+    var currDate = Date()
     
     @IBOutlet weak var doseTop: NSLayoutConstraint!
     @IBOutlet weak var doseLeading: NSLayoutConstraint!
@@ -299,6 +302,7 @@ class View_PeriodicFlow: UIViewController, UITextFieldDelegate
         let components = Calendar.current.dateComponents([.hour, .minute], from: durationPicker.date)
         let durHour = Float(components.hour!)
         let durMinute = Float(components.minute!)
+        bolDurationInDays = (durHour / 24) + (durMinute / 1440)
         let pumpConText = pumpConcentration.text!
         let pumpConFloat = (pumpConText as NSString).floatValue
         let bolusGrams = accumVol * pumpConFloat
@@ -458,19 +462,24 @@ class View_PeriodicFlow: UIViewController, UITextFieldDelegate
     
     @IBAction func durationPickerChanged(_ sender: UIDatePicker)
     {
-        if(isValid())
+        let components = Calendar.current.dateComponents([.hour, .minute], from: durationPicker.date)
+        let durationInDays = Float(((Float(components.hour!)/24) + (Float(components.minute!)/1440)))
+        print(durationInDays * Float(intervalStepper.value))
+        if(durationInDays * Float(intervalStepper.value) > 1)
         {
-            updateUI()
+            durationPicker.date = prevDate
         }
         else
         {
-            self.shapeLayer?.removeFromSuperlayer()
+            prevDate = durationPicker.date
         }
+        updateUI()
     }
     
     @IBAction func intervalStepperChanged(_ sender: UIStepper)
     {
         var cVal = Int(sender.value)
+        let prevVal = cVal
         if(cVal == 7 && prevStepperVal == 6) { cVal = 8 }
         if(cVal == 7 && prevStepperVal == 8) { cVal = 6 }
         if(cVal == 11 && prevStepperVal == 10) { cVal = 12 }
@@ -484,8 +493,14 @@ class View_PeriodicFlow: UIViewController, UITextFieldDelegate
         if(cVal == 21) { cVal = 24 }
         if(cVal == 23) { cVal = 20 }
         
+        print(Float(cVal) * bolDurationInDays)
         
-        intervalStepper.value = Double(cVal)
+        if(Float(cVal) * bolDurationInDays > 1)
+        {
+            cVal = prevStepperVal
+            intervalStepper.value = Double(prevStepperVal)
+        }
+        
         if (cVal == 1)
         {
             intervalStepperLabel.text = "\(cVal)" + " Period"
@@ -858,7 +873,7 @@ class View_PeriodicFlow: UIViewController, UITextFieldDelegate
         self.shapeLayer2 = shapeLayer2
     }
     
-    func generateAndLoadGraph()
+    func generateAndLoadGraph() //Active
     {
         //remove old shape layer if any is present
         self.shapeLayer?.removeFromSuperlayer()
@@ -894,7 +909,7 @@ class View_PeriodicFlow: UIViewController, UITextFieldDelegate
         // let flowRate = bolusRate / pumpConFloat
         // let bolHeight = (bolusRate / maxBolusRate) * graphHeight
         let bolHeight = ((accumVol * pumpConFloat) / yScaleMax) * graphHeight
-        let bolHeight2 = (accumVol / maxVolumeAxis) * graphHeight
+        let bolHeight2 = ((accumVol - 0.0015) / (0.0015)) * graphHeight
         let bolWidth = (durTotal / (60*24)) * graphWidth
         let basWidth = cycWidth - bolWidth
         let bolPerPeriod = (doseSlider.value / pumpConFloat) / accumVol
@@ -1015,7 +1030,7 @@ class View_PeriodicFlow: UIViewController, UITextFieldDelegate
         //scaling is applied if zoom feature is in use
         if(scaling == 0)
         {
-            //do nothing
+            //Do nothing
         }
         else if(scaling == 1)
         {
@@ -1026,51 +1041,51 @@ class View_PeriodicFlow: UIViewController, UITextFieldDelegate
                 coordArray2[c][0] = coordArray2[c][0] * Float(4)
                 c += 1
             }
-            var nextHour = startHour
-            var nextMin = startMinute
-            var minSpacer = ""
+            var date = currDate
+            let calendar = Calendar.current
+            var hour = calendar.component(.hour, from: date)
+            var minute = calendar.component(.minute, from: date)
             var timeLabel = "AM"
-            if(nextHour > 12)
-            {
-                timeLabel = "PM"
-                nextHour = nextHour - 12
-            }
-            if(nextMin < 10){minSpacer = "0"}
-            yScale6_1.text = "\(Int(nextHour))" + ":" + minSpacer + "\(Int(nextMin))" + timeLabel
-            var c2 = 0
-            while(c2 < 3)
-            {
-                minSpacer = ""
-                nextMin += 30
-                if(nextMin > 59)
-                {
-                    nextHour += 1
-                    nextMin -= 60
-                }
-                nextHour += 1
-                if(nextHour > 12)
-                {
-                    if(timeLabel == "PM"){timeLabel = "AM"}
-                    else if(timeLabel == "AM"){timeLabel = "PM"}
-                    nextHour -= 12
-                }
-                if(c2 == 0)
-                {
-                    if(nextMin < 10){minSpacer = "0"}
-                    yScale6_2.text = "\(Int(nextHour))" + ":" + minSpacer + "\(Int(nextMin))" + timeLabel
-                }
-                if(c2 == 1)
-                {
-                    if(startMinute < 10){minSpacer = "0"}
-                    yScale6_3.text = "\(Int(nextHour))" + ":" + minSpacer + "\(Int(nextMin))" + timeLabel
-                }
-                if(c2 == 2)
-                {
-                    if(startMinute < 10){minSpacer = "0"}
-                    yScale6_4.text = "\(Int(nextHour))" + ":" + minSpacer + "\(Int(nextMin))" + timeLabel
-                }
-                c2 += 1
-            }
+            var minuteSpacer = ""
+            if(hour >= 12) {timeLabel = "PM"}
+            else {timeLabel = "AM"}
+            if(hour > 12) {hour = hour - 12}
+            if(minute < 10) {minuteSpacer = "0"}
+            else {minuteSpacer = ""}
+            yScale6_1.text = "\(hour)" + ":" + minuteSpacer + "\(minute)" + " " + timeLabel
+            date = date.addingTimeInterval(60*60*1.5)
+            hour = calendar.component(.hour, from: date)
+            minute = calendar.component(.minute, from: date)
+            timeLabel = "AM"
+             minuteSpacer = ""
+            if(hour >= 12) {timeLabel = "PM"}
+            else {timeLabel = "AM"}
+            if(hour > 12) {hour = hour - 12}
+            if(minute < 10) {minuteSpacer = "0"}
+            else {minuteSpacer = ""}
+            yScale6_2.text = "\(hour)" + ":" + minuteSpacer + "\(minute)" + " " + timeLabel
+            date = date.addingTimeInterval(60*60*1.5)
+            hour = calendar.component(.hour, from: date)
+            minute = calendar.component(.minute, from: date)
+            timeLabel = "AM"
+            minuteSpacer = ""
+            if(hour >= 12) {timeLabel = "PM"}
+            else {timeLabel = "AM"}
+            if(hour > 12) {hour = hour - 12}
+            if(minute < 10) {minuteSpacer = "0"}
+            else {minuteSpacer = ""}
+            yScale6_3.text = "\(hour)" + ":" + minuteSpacer + "\(minute)" + " " + timeLabel
+            date = date.addingTimeInterval(60*60*1.5)
+            hour = calendar.component(.hour, from: date)
+            minute = calendar.component(.minute, from: date)
+            timeLabel = "AM"
+            minuteSpacer = ""
+            if(hour >= 12) {timeLabel = "PM"}
+            else {timeLabel = "AM"}
+            if(hour > 12) {hour = hour - 12}
+            if(minute < 10) {minuteSpacer = "0"}
+            else {minuteSpacer = ""}
+            yScale6_4.text = "\(hour)" + ":" + minuteSpacer + "\(minute)" + " " + timeLabel
         }
         else if(scaling == 2)
         {
@@ -1081,34 +1096,29 @@ class View_PeriodicFlow: UIViewController, UITextFieldDelegate
                 coordArray2[c][0] = coordArray2[c][0] * 48
                 c += 1
             }
-            var nextHour = startHour
-            var nextMin = startMinute
-            var minSpacer = ""
+            var date = currDate
+            let calendar = Calendar.current
+            var hour = calendar.component(.hour, from: date)
+            var minute = calendar.component(.minute, from: date)
             var timeLabel = "AM"
-            if(nextHour > 12)
-            {
-                timeLabel = "PM"
-                nextHour = nextHour - 12
-            }
-            if(nextMin < 10){minSpacer = "0"}
-            yScale30_1.text = "\(Int(nextHour))" + ":" + minSpacer + "\(Int(nextMin))" + timeLabel
-            
-            nextMin += 15
-            minSpacer = ""
-            if(nextMin > 59)
-            {
-                nextHour += 1
-                nextMin -= 60
-            }
-            if(nextHour > 12)
-            {
-                if(timeLabel == "PM"){timeLabel = "AM"}
-                else if(timeLabel == "AM"){timeLabel = "PM"}
-                nextHour -= 12
-            }
-            if(nextMin < 10){minSpacer = "0"}
-            yScale30_2.text = "\(Int(nextHour))" + ":" + minSpacer + "\(Int(nextMin))" + timeLabel
-            
+            var minuteSpacer = ""
+            if(hour >= 12) {timeLabel = "PM"}
+            else {timeLabel = "AM"}
+            if(hour > 12) {hour = hour - 12}
+            if(minute < 10) {minuteSpacer = "0"}
+            else {minuteSpacer = ""}
+            yScale30_1.text = "\(hour)" + ":" + minuteSpacer + "\(minute)" + " " + timeLabel
+            date = date.addingTimeInterval(15*60)
+            hour = calendar.component(.hour, from: date)
+            minute = calendar.component(.minute, from: date)
+            timeLabel = "AM"
+            minuteSpacer = ""
+            if(hour >= 12) {timeLabel = "PM"}
+            else {timeLabel = "AM"}
+            if(hour > 12) {hour = hour - 12}
+            if(minute < 10) {minuteSpacer = "0"}
+            else {minuteSpacer = ""}
+            yScale30_2.text = "\(hour)" + ":" + minuteSpacer + "\(minute)" + " " + timeLabel
         }
         
         //add points to path
@@ -1157,14 +1167,14 @@ class View_PeriodicFlow: UIViewController, UITextFieldDelegate
         
         let shapeLayer2 = CAShapeLayer()
         shapeLayer2.fillColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0).cgColor
-        shapeLayer2.strokeColor = #colorLiteral(red: 0.5819664598, green: 0.7728845477, blue: 0, alpha: 1).cgColor
+        shapeLayer2.strokeColor = #colorLiteral(red: 0.5803921569, green: 0.7725490196, blue: 0, alpha: 1).cgColor
         shapeLayer2.lineWidth = 3
         shapeLayer2.path = path2.cgPath
         shapeLayer2.lineCap = kCALineCapRound
         shapeLayer2.lineJoin = kCALineJoinRound
         mainView.layer.addSublayer(shapeLayer2)
     
-        if(doseSlider.value == 0)
+        if(doseSlider.value == 0 || scaling != 0)
         {
             bolusDoseLabel.alpha = 0
             doseBracket.alpha = 0
@@ -1180,7 +1190,7 @@ class View_PeriodicFlow: UIViewController, UITextFieldDelegate
         {
             labelX += cycWidth
         }
-        let labelY = (graphHeight + graphY2) - bolHeight
+        let labelY = ((graphHeight + graphY2) - bolHeight2) - 35
         doseBracketWidth.constant = CGFloat(bolWidth)
         doseTop.constant = CGFloat(labelY)
         doseLeading.constant = CGFloat(labelX)
@@ -1310,10 +1320,13 @@ class View_PeriodicFlow: UIViewController, UITextFieldDelegate
         //scaling is applied if zoom feature is in use
         if(scaling == 0)
         {
-            //do nothing
+            bolusDoseLabel.alpha = 1
+            doseBracket.alpha = 1
         }
         else if(scaling == 1)
         {
+            bolusDoseLabel.alpha = 0
+            doseBracket.alpha = 0
             c = 0
             while(c < coordArray.count)
             {
@@ -1368,6 +1381,8 @@ class View_PeriodicFlow: UIViewController, UITextFieldDelegate
         }
         else if(scaling == 2)
         {
+            bolusDoseLabel.alpha = 0
+            doseBracket.alpha = 0
             c = 0
             while(c < coordArray.count)
             {
@@ -1424,7 +1439,7 @@ class View_PeriodicFlow: UIViewController, UITextFieldDelegate
         //create shape layer for that path
         let shapeLayer = CAShapeLayer()
         shapeLayer.fillColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0).cgColor
-        shapeLayer.strokeColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+        shapeLayer.strokeColor = #colorLiteral(red: 0.5803921569, green: 0.7725490196, blue: 0, alpha: 1).cgColor
         shapeLayer.lineWidth = 3
         shapeLayer.path = path.cgPath
         shapeLayer.lineCap = kCALineCapRound
@@ -1447,7 +1462,6 @@ class View_PeriodicFlow: UIViewController, UITextFieldDelegate
         else{ cap = 2 + roundTo }
         return String(inputText.characters.prefix(cap))
     }
-    
     
     
     override func viewWillAppear(_ animated: Bool)
@@ -1499,6 +1513,7 @@ class View_PeriodicFlow: UIViewController, UITextFieldDelegate
         
         let date = Date()
         let calendar = Calendar.current
+        currDate = Date()
         startHour = Float(calendar.component(.hour, from: date))
         startMinute = Float(calendar.component(.minute, from: date))
         
@@ -1564,6 +1579,7 @@ class View_PeriodicFlow: UIViewController, UITextFieldDelegate
         attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
         yScale30_2.attributedText = attrString
 
+        prevDate = durationPicker.date
         initializeUI()
     }
     

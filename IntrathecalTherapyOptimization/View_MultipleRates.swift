@@ -82,6 +82,7 @@ class View_MultipleRates: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var unitSwitch: UISwitch!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var mainView: UIView!
+    @IBOutlet weak var dosePerVAField: AllowedCharsTextField!
     
     // Advanced Settings
     @IBOutlet weak var advancedSettingsView: UIView!
@@ -493,7 +494,10 @@ class View_MultipleRates: UIViewController, UITextFieldDelegate {
         hour1 = Float(components.hour!)
         minute1 = Float(components.minute!)
         timeInput1.text = dateFormatter.string(from: datePicker.date)
-        updateUI()
+        if(isValid())
+        {
+            updateUI()
+        }
     }
     
     func dismissPicker2()
@@ -504,7 +508,10 @@ class View_MultipleRates: UIViewController, UITextFieldDelegate {
         hour2 = Float(components.hour!)
         minute2 = Float(components.minute!)
         timeInput2.text = dateFormatter.string(from: datePicker.date)
-        updateUI()
+        if(isValid())
+        {
+            updateUI()
+        }
     }
     
     func dismissPicker3()
@@ -515,7 +522,10 @@ class View_MultipleRates: UIViewController, UITextFieldDelegate {
         hour3 = Float(components.hour!)
         minute3 = Float(components.minute!)
         timeInput3.text = dateFormatter.string(from: datePicker.date)
-        updateUI()
+        if(isValid())
+        {
+            updateUI()
+        }
     }
     
     func dismissPicker4()
@@ -526,7 +536,10 @@ class View_MultipleRates: UIViewController, UITextFieldDelegate {
         hour4 = Float(components.hour!)
         minute4 = Float(components.minute!)
         timeInput4.text = dateFormatter.string(from: datePicker.date)
-        updateUI()
+        if(isValid())
+        {
+            updateUI()
+        }
     }
     
     
@@ -770,6 +783,7 @@ class View_MultipleRates: UIViewController, UITextFieldDelegate {
         {
             durTotal = calculateXDistance(startTime: timeInput1.text!, endTime: timeInput2.text!, gWidth: 100.00) + calculateXDistance(startTime: timeInput2.text!, endTime: timeInput3.text!, gWidth: 100.00) + calculateXDistance(startTime: timeInput3.text!, endTime: timeInput4.text!, gWidth: 100.00) + calculateXDistance(startTime: timeInput4.text!, endTime: timeInput1.text!, gWidth: 100.00)
         }
+        print(durTotal)
         if(durTotal > 100.00)
         {
             warningImage.alpha = 1.0
@@ -1006,7 +1020,7 @@ class View_MultipleRates: UIViewController, UITextFieldDelegate {
         }
         else
         {
-            rate1.text = "1 V.A. every \(pumpRate1Round) min"
+            rate1.text = "1 valve actuation every \(pumpRate1Round) min"
         }
         let pumpRate2 = Float(minuteArray[1]) / (doseSlider2.value / bolusGrams)
         let pumpRate2Round = roundValue(inputText: "\(pumpRate2)", roundTo: 1)
@@ -1016,7 +1030,7 @@ class View_MultipleRates: UIViewController, UITextFieldDelegate {
         }
         else
         {
-            rate2.text = "1 V.A. every \(pumpRate2Round) min"
+            rate2.text = "1 valve actuation every \(pumpRate2Round) min"
         }
         if(periods > 2)
         {
@@ -1028,9 +1042,14 @@ class View_MultipleRates: UIViewController, UITextFieldDelegate {
             }
             else
             {
-                rate3.text = "1 V.A. every \(pumpRate3Round) min"
+                rate3.text = "1 valve actuation every \(pumpRate3Round) min"
             }
             totalDose += doseSlider3.value
+        }
+        else
+        {
+            rate3.text = ""
+            rate4.text = ""
         }
         if(periods > 3)
         {
@@ -1042,10 +1061,17 @@ class View_MultipleRates: UIViewController, UITextFieldDelegate {
             }
             else
             {
-                rate4.text = "1 V.A. every \(pumpRate4Round) min"
+                rate4.text = "1 valve actuation every \(pumpRate4Round) min"
             }
             totalDose += doseSlider4.value
         }
+        else
+        {
+            rate4.text = ""
+        }
+        let dosePerVA = accumVol * pumpConFloat
+        let dosePerVAText = roundValue(inputText: "\(dosePerVA)", roundTo: 2)
+        dosePerVAField.text = dosePerVAText
         totalDoseField.text = "\(totalDose)" + " " + unitLabel
         let totalDoseWithPTC = (totalDose / pumpConFloat)   //in mL's
         let daysUntilRefill = Int(pumpVolume / totalDoseWithPTC)
@@ -1241,7 +1267,7 @@ class View_MultipleRates: UIViewController, UITextFieldDelegate {
         //create shape layer for that path
         let shapeLayer = CAShapeLayer()
         shapeLayer.fillColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0).cgColor
-        shapeLayer.strokeColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+        shapeLayer.strokeColor = #colorLiteral(red: 0.5803921569, green: 0.7725490196, blue: 0, alpha: 1).cgColor
         shapeLayer.lineWidth = 3
         shapeLayer.path = path.cgPath
         shapeLayer.lineCap = kCALineCapRound
@@ -1403,7 +1429,7 @@ class View_MultipleRates: UIViewController, UITextFieldDelegate {
         //create shape layer for that path
         let shapeLayer = CAShapeLayer()
         shapeLayer.fillColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0).cgColor
-        shapeLayer.strokeColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+        shapeLayer.strokeColor = #colorLiteral(red: 0.5803921569, green: 0.7725490196, blue: 0, alpha: 1).cgColor
         shapeLayer.lineWidth = 3
         shapeLayer.path = path.cgPath
         shapeLayer.lineCap = kCALineCapRound
